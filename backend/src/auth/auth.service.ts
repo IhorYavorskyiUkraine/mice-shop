@@ -1,14 +1,16 @@
 import {
+   ConflictException,
    ForbiddenException,
    Injectable,
    UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { compare } from 'bcrypt';
+import { UserRole } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { LoginArgs } from './dto';
+import { LoginArgs, RegisterArgs } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -49,9 +51,67 @@ export class AuthService {
             await this.revokeToken(refreshToken.token);
          }
 
-         return this.generateTokens(user);
+         return this.generateTokens(user.id);
       } catch (e) {
-         throw new ForbiddenException(e);
+         console.error('AuthService Error:', e);
+         throw new ForbiddenException('Authentication failed');
+      }
+   }
+
+   async register(args: RegisterArgs) {
+      const { email, password, displayName, confirmPassword } = args;
+
+      try {
+         if (!email || !password || !displayName) {
+            throw new UnauthorizedException('Please enter your credentials');
+         }
+
+         if (password !== confirmPassword) {
+            throw new ForbiddenException('Passwords do not match');
+         }
+
+         const existingUser = await this.userService.findUserByEmail(email);
+
+         if (existingUser) {
+            throw new ConflictException('User already exists');
+         }
+
+         const hashedPassword = await hash(password, 10);
+
+         const newUser = await this.userService.createUser({
+            email,
+            password: hashedPassword,
+            displayName,
+            role: UserRole.USER,
+         });
+
+         if (!newUser) {
+            throw new ForbiddenException('User could not be created');
+         }
+
+         return this.generateTokens(newUser.id);
+      } catch (e) {
+         console.error('AuthService Error:', e);
+         throw new ForbiddenException('Authentication failed');
+      }
+   }
+
+   async logout(userId: number, refreshToken: string) {
+      try {
+         const user = await this.userService.findUserById(userId);
+
+         if (!user || !refreshToken) {
+            throw new ForbiddenException('User or refresh token not found');
+         }
+
+         await this.revokeToken(refreshToken);
+         await this.prisma.refreshToken.deleteMany({
+            where: { userId },
+         });
+
+         return { message: 'Logged out successful' };
+      } catch (e) {
+         throw new ForbiddenException('Logout failed');
       }
    }
 
@@ -72,6 +132,22 @@ export class AuthService {
       return true;
    }
 
+   async validateAccessToken(accessToken: string) {
+      try {
+         const decoded = await this.jwtService.verify(accessToken, {
+            secret: this.config.get('JWT_SECRET'),
+         });
+
+         if (!decoded || !decoded.userId) {
+            throw new UnauthorizedException('Invalid access token');
+         }
+
+         return decoded as { userId: number };
+      } catch (error) {
+         throw new UnauthorizedException('Invalid or expired access token');
+      }
+   }
+
    async validateRefreshToken(refreshToken: string) {
       try {
          const payload = this.jwtService.verify(refreshToken, {
@@ -83,7 +159,12 @@ export class AuthService {
             include: { refreshToken: true },
          });
 
-         if (!user || user.refreshToken.token !== refreshToken) return null;
+         if (
+            !user ||
+            !user.refreshToken ||
+            user.refreshToken.token !== refreshToken
+         )
+            return null;
 
          return user;
       } catch (error) {
@@ -91,47 +172,41 @@ export class AuthService {
       }
    }
 
-   async generateRefreshToken(payload: { userId: number }) {
-      if (!payload.userId) {
-         throw new ForbiddenException('User ID is missing in the payload');
-      }
+   async generateAccessToken(userId: number) {
+      return this.jwtService.sign(
+         { userId },
+         {
+            secret: this.config.get('JWT_SECRET'),
+            expiresIn: this.config.get('JWT_SECRET_EXPIRES_IN'),
+         },
+      );
+   }
 
-      const refreshToken = this.jwtService.sign(payload, {
-         secret: this.config.get('REFRESH_JWT_SECRET'),
-         expiresIn: this.config.get('REFRESH_JWT_SECRET_EXPIRES_IN'),
-      });
+   async generateRefreshToken(userId: number) {
+      const refreshToken = this.jwtService.sign(
+         { userId },
+         {
+            secret: this.config.get('REFRESH_JWT_SECRET'),
+            expiresIn: this.config.get('REFRESH_JWT_SECRET_EXPIRES_IN'),
+         },
+      );
 
-      const newRefreshToken = await this.prisma.refreshToken.create({
+      await this.prisma.refreshToken.create({
          data: {
-            userId: payload.userId,
             token: refreshToken,
+            userId,
             expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
          },
       });
 
-      if (!newRefreshToken) {
-         throw new ForbiddenException('Failed to generate refresh token');
-      }
-
-      return newRefreshToken.token;
+      return refreshToken;
    }
 
-   async generateAccessToken(payload: { email: string; userId: number }) {
-      const token = this.jwtService.sign(payload, {
-         secret: this.config.get('JWT_SECRET'),
-         expiresIn: this.config.get('JWT_SECRET_EXPIRE_IN'),
-      });
-
-      return token;
-   }
-
-   private async generateTokens(user: { id: number; email: string }) {
-      const payload = { email: user.email, userId: user.id };
-
-      const accessToken = await this.generateAccessToken(payload);
-      const refreshToken = await this.generateRefreshToken({ userId: user.id });
-
-      return { accessToken, refreshToken };
+   async generateTokens(userId: number) {
+      return {
+         accessToken: await this.generateAccessToken(userId),
+         refreshToken: await this.generateRefreshToken(userId),
+      };
    }
 
    //REVOKED TOKENS

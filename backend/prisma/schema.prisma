@@ -8,7 +8,8 @@ datasource db {
 }
 
 model User {
-   id           Int           @id @default(autoincrement())
+   id Int @id @default(autoincrement())
+
    displayName  String
    email        String        @unique
    password     String
@@ -16,7 +17,6 @@ model User {
    refreshToken RefreshToken?
    orders       Order[]
    reviews      Review[]
-   liked        Product[]
    cart         Cart?
 
    createdAt DateTime @default(now())
@@ -24,11 +24,55 @@ model User {
 }
 
 model Cart {
-   id       Int       @id @default(autoincrement())
-   products Product[]
-   total    Float
-   user     User      @relation(fields: [userId], references: [id])
-   userId   Int       @unique
+   id Int @id @default(autoincrement())
+
+   items  CartItem[]
+   total  Float
+   user   User       @relation(fields: [userId], references: [id])
+   userId Int        @unique
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+   id Int @id @default(autoincrement())
+
+   model    Model @relation(fields: [modelId], references: [id])
+   modelId  Int
+   quantity Int
+   price    Float
+   cart     Cart? @relation(fields: [cartId], references: [id])
+   cartId   Int?
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Color {
+   id Int @id @default(autoincrement())
+
+   name String
+   hex  String
+
+   modelId Int?
+   model   Model? @relation(fields: [modelId], references: [id])
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Model {
+   id           Int        @id @default(autoincrement())
+   name         String
+   product      Product    @relation(fields: [productId], references: [id])
+   productId    Int
+   price        Float
+   availability Int
+   colors       Color[]
+   specs        Specs[]
+   cartItem     CartItem[]
+   image        String
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -37,28 +81,44 @@ model Cart {
 model Product {
    id          Int      @id @default(autoincrement())
    name        String
-   price       Float
-   quantity    Int
    orders      Order[]
-   image       String
+   images      String[]
    rating      Float    @default(0)
-   colors      String[]
-   models      String[]
-   specs       Specs[]
+   models      Model[]
    description String
    reviews     Review[]
-   brand       String
-   user        User?    @relation(fields: [userId], references: [id])
-   userId      Int?
-   cart        Cart?    @relation(fields: [cartId], references: [id])
-   cartId      Int?
+   brand       Brand    @relation(fields: [brandId], references: [id])
+   brandId     Int
+   category    Category @relation(fields: [categoryId], references: [id])
+   categoryId  Int
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Brand {
+   id Int @id @default(autoincrement())
+
+   name     String
+   products Product[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Category {
+   id Int @id @default(autoincrement())
+
+   name     String
+   products Product[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Review {
-   id        Int     @id @default(autoincrement())
+   id Int @id @default(autoincrement())
+
    user      User    @relation(fields: [userId], references: [id])
    userId    Int
    product   Product @relation(fields: [productId], references: [id])
@@ -71,18 +131,20 @@ model Review {
 }
 
 model Specs {
-   id        Int      @id @default(autoincrement())
-   key       String
-   value     String
-   product   Product? @relation(fields: [productId], references: [id])
-   productId Int?
+   id Int @id @default(autoincrement())
+
+   key     String
+   value   String
+   model   Model? @relation(fields: [modelId], references: [id])
+   modelId Int?
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Order {
-   id       Int         @id @default(autoincrement())
+   id Int @id @default(autoincrement())
+
    user     User        @relation(fields: [userId], references: [id])
    userId   Int
    products Product[]

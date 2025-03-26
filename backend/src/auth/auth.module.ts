@@ -6,9 +6,11 @@ import { UserService } from 'src/user/user.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { TokenHelperService } from './tokenHelper.service';
 
 @Module({
    providers: [
+      TokenHelperService,
       AuthResolver,
       AuthService,
       PrismaService,
@@ -17,5 +19,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
       JwtStrategy,
       ConfigService,
    ],
+   exports: [TokenHelperService],
 })
 export class AuthModule {}

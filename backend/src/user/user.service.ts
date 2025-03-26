@@ -1,10 +1,12 @@
 import {
    BadRequestException,
+   ForbiddenException,
    Injectable,
    NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 
 @Injectable()
@@ -22,10 +24,6 @@ export class UserService {
                email,
             },
          });
-
-         if (!user) {
-            throw new NotFoundException('User not found');
-         }
 
          return user;
       } catch (e) {
@@ -103,5 +101,17 @@ export class UserService {
          console.error(e);
          throw e;
       }
+   }
+
+   async getUserIdFromRequest(context: any): Promise<number> {
+      const { accessToken } = getAuthTokens(context.req);
+
+      if (!accessToken) {
+         throw new ForbiddenException('Authorization token is missing');
+      }
+
+      // const { userId } =
+      //    await this.authService.validateAccessToken(accessToken);
+      return 1;
    }
 }

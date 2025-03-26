@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { JwtGuard } from 'src/auth/guard';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -22,6 +24,7 @@ export class UserResolver {
       return this.userService.createUser(args);
    }
 
+   @UseGuards(JwtGuard)
    @Mutation(() => User)
    async updateUser(@Args('args') args: UpdateUserArgs) {
       //TODO: Get userId from cookies
