@@ -21,13 +21,7 @@ export class GetAllProductsArgs {
    offset: number;
 
    @Field({ nullable: true })
-   categoryId?: number;
-
-   @Field(() => [String], { nullable: true })
-   colors?: string[];
-
-   @Field(type => PriceInput, { nullable: true })
-   price?: PriceInput;
+   tagId?: number;
 
    @Field({ nullable: true })
    brandId?: number;

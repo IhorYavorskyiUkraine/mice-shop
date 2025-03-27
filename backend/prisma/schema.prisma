@@ -8,8 +8,7 @@ datasource db {
 }
 
 model User {
-   id Int @id @default(autoincrement())
-
+   id           Int           @id @default(autoincrement())
    displayName  String
    email        String        @unique
    password     String
@@ -24,81 +23,97 @@ model User {
 }
 
 model Cart {
-   id Int @id @default(autoincrement())
-
-   items  CartItem[]
-   total  Float
-   user   User       @relation(fields: [userId], references: [id])
-   userId Int        @unique
+   id         Int        @id @default(autoincrement())
+   items      CartItem[]
+   totalPrice Float
+   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId     Int        @unique
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model CartItem {
-   id Int @id @default(autoincrement())
-
-   model    Model @relation(fields: [modelId], references: [id])
+   id       Int   @id @default(autoincrement())
+   model    Model @relation(fields: [modelId], references: [id], onDelete: Cascade)
    modelId  Int
    quantity Int
    price    Float
-   cart     Cart? @relation(fields: [cartId], references: [id])
-   cartId   Int?
+   cart     Cart  @relation(fields: [cartId], references: [id], onDelete: Cascade)
+   cartId   Int
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Color {
-   id Int @id @default(autoincrement())
-
-   name String
-   hex  String
-
-   modelId Int?
-   model   Model? @relation(fields: [modelId], references: [id])
+   id      Int    @id @default(autoincrement())
+   name    String
+   hex     String
+   model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+   modelId Int
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Model {
-   id           Int        @id @default(autoincrement())
-   name         String
-   product      Product    @relation(fields: [productId], references: [id])
-   productId    Int
-   price        Float
-   availability Int
-   colors       Color[]
-   specs        Specs[]
-   cartItem     CartItem[]
-   image        String
+   id        Int         @id @default(autoincrement())
+   name      String
+   product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+   productId Int
+   price     Float
+   stock     Int
+   colors    Color[]
+   specs     Specs[]
+   cartItem  CartItem[]
+   image     String
+   orderItem OrderItem[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Product {
-   id          Int      @id @default(autoincrement())
+   id          Int          @id @default(autoincrement())
    name        String
-   orders      Order[]
    images      String[]
-   rating      Float    @default(0)
+   rating      Float        @default(0)
    models      Model[]
    description String
    reviews     Review[]
-   brand       Brand    @relation(fields: [brandId], references: [id])
+   brand       Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
    brandId     Int
-   category    Category @relation(fields: [categoryId], references: [id])
+   category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
    categoryId  Int
+   tags        ProductTag[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Tag {
+   id       Int          @id @default(autoincrement())
+   name     String       @unique
+   products ProductTag[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model ProductTag {
+   id        Int     @id @default(autoincrement())
+   productId Int
+   product   Product @relation(fields: [productId], references: [id])
+   tagId     Int
+   tag       Tag     @relation(fields: [tagId], references: [id])
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Brand {
-   id Int @id @default(autoincrement())
-
+   id       Int       @id @default(autoincrement())
    name     String
    products Product[]
 
@@ -107,8 +122,7 @@ model Brand {
 }
 
 model Category {
-   id Int @id @default(autoincrement())
-
+   id       Int       @id @default(autoincrement())
    name     String
    products Product[]
 
@@ -117,11 +131,10 @@ model Category {
 }
 
 model Review {
-   id Int @id @default(autoincrement())
-
-   user      User    @relation(fields: [userId], references: [id])
+   id        Int     @id @default(autoincrement())
+   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
    userId    Int
-   product   Product @relation(fields: [productId], references: [id])
+   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
    productId Int
    rating    Int
    comment   String
@@ -131,29 +144,40 @@ model Review {
 }
 
 model Specs {
-   id Int @id @default(autoincrement())
-
+   id      Int    @id @default(autoincrement())
    key     String
    value   String
-   model   Model? @relation(fields: [modelId], references: [id])
-   modelId Int?
+   model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+   modelId Int
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
 }
 
 model Order {
-   id Int @id @default(autoincrement())
+   id        Int         @id @default(autoincrement())
+   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId    Int
+   status    OrderStatus @default(PENDING)
+   total     Float
+   address   String
+   phone     String
+   email     String      @unique
+   name      String
+   orderItem OrderItem[]
 
-   user     User        @relation(fields: [userId], references: [id])
-   userId   Int
-   products Product[]
-   status   OrderStatus @default(PENDING)
-   total    Float
-   address  String
-   phone    String
-   email    String
-   name     String
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+   id       Int   @id @default(autoincrement())
+   order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+   orderId  Int
+   model    Model @relation(fields: [modelId], references: [id], onDelete: Cascade)
+   modelId  Int
+   quantity Int
+   price    Float
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -162,7 +186,7 @@ model Order {
 model RefreshToken {
    id     Int    @id @default(autoincrement())
    token  String @unique
-   user   User   @relation(fields: [userId], references: [id])
+   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
    userId Int    @unique
 
    createdAt DateTime @default(now())

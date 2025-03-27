@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+   BadRequestException,
+   Injectable,
+   InternalServerErrorException,
+   NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetAllProductsArgs } from './dto';
 
@@ -7,44 +12,74 @@ export class ProductService {
    constructor(private prisma: PrismaService) {}
 
    async getAllProducts(args: GetAllProductsArgs) {
-      const {
-         name,
-         categoryId,
-         colors,
-         price,
-         brandId,
-         rating,
-         orderBy,
-         limit,
-         offset,
-      } = args;
+      try {
+         const { name, tagId, brandId, rating, orderBy, limit, offset } = args;
 
-      return this.prisma.product.findMany({
-         where: {
-            name: name ? { contains: name, mode: 'insensitive' } : undefined,
+         if (limit && limit <= 0) {
+            throw new BadRequestException('Limit must be a positive number');
+         }
 
-            categoryId: categoryId ? categoryId : undefined,
+         if (offset && offset < 0) {
+            throw new BadRequestException('Offset cannot be negative');
+         }
 
-            colors:
-               colors && colors.length > 0 ? { hasSome: colors } : undefined,
+         const products = await this.prisma.product.findMany({
+            where: {
+               name: name ? { contains: name, mode: 'insensitive' } : undefined,
 
-            price: price ? { gte: price.min, lte: price.max } : undefined,
+               tags: tagId
+                  ? {
+                       some: {
+                          tagId: tagId,
+                       },
+                    }
+                  : undefined,
+               brandId: brandId ? brandId : undefined,
 
-            brandId: brandId ? brandId : undefined,
+               rating: rating ? { gte: rating } : undefined,
+            },
+            orderBy: {
+               rating: orderBy === 'asc' ? 'asc' : 'desc',
+            },
+            take: limit ? limit : 10,
+            skip: offset ? offset : 0,
+         });
 
-            rating: rating ? { gte: rating } : undefined,
-         },
-         orderBy: {
-            rating: orderBy === 'asc' ? 'asc' : 'desc',
-         },
-         take: limit ? limit : 10,
-         skip: offset ? offset : 0,
-      });
+         if (products.length === 0) {
+            throw new NotFoundException(
+               'No products found matching the criteria.',
+            );
+         }
+
+         return products;
+      } catch (e) {
+         console.error('Error fetching products:', e);
+         throw new InternalServerErrorException(
+            'Error fetching products. Please try again later.',
+         );
+      }
    }
 
-   async getProduct(id: number) {
-      return this.prisma.product.findUnique({
-         where: { id },
-      });
+   async getProductById(id: number) {
+      try {
+         if (!id || id <= 0) {
+            throw new BadRequestException('Invalid product ID');
+         }
+
+         const product = await this.prisma.product.findUnique({
+            where: { id },
+         });
+
+         if (!product) {
+            throw new NotFoundException('Product not found');
+         }
+
+         return product;
+      } catch (e) {
+         console.error('Error fetching product:', e);
+         throw new InternalServerErrorException(
+            'Error fetching product. Please try again later.',
+         );
+      }
    }
 }

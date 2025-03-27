@@ -19,6 +19,6 @@ import { TokenHelperService } from './tokenHelper.service';
       JwtStrategy,
       ConfigService,
    ],
-   exports: [TokenHelperService],
+   exports: [TokenHelperService, AuthService],
 })
 export class AuthModule {}

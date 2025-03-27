@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CartService } from './cart.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CartResolver } from './cart.resolver';
+import { CartService } from './cart.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  providers: [CartResolver, CartService],
+   imports: [AuthModule],
+   providers: [CartResolver, CartService, PrismaService],
 })
 export class CartModule {}

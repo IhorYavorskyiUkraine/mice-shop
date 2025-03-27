@@ -13,7 +13,7 @@ export class ProductResolver {
    }
 
    @Query(() => Product)
-   async getProduct(@Args('id', { type: () => Int }) id: number) {
-      return this.productService.getProduct(id);
+   async getProductById(@Args('id', { type: () => Int }) id: number) {
+      return this.productService.getProductById(id);
    }
 }

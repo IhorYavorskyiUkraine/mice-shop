@@ -8,10 +8,10 @@ export class Cart {
    id: number;
 
    @Field(type => [Product])
-   products: Product[];
+   items: Product[];
 
    @Field(type => Float)
-   total: number;
+   totalPrice: number;
 
    @Field(type => User)
    user: User;
