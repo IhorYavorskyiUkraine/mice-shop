@@ -2,9 +2,9 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateProductArgs {
-   @Field(type => Int)
+   @Field(() => Int)
    modelId: number;
 
-   @Field(type => Int)
+   @Field(() => Int)
    quantity: number;
 }

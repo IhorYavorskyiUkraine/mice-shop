@@ -1,22 +1,22 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { Product } from 'src/product/product.model';
 import { User } from 'src/user/user.model';
+import { CartItem } from './cartItem.model';
 
 @ObjectType()
 export class Cart {
-   @Field(type => Int)
+   @Field(() => Int)
    id: number;
 
-   @Field(type => [Product])
-   items: Product[];
+   @Field(() => [CartItem])
+   items: CartItem[];
 
-   @Field(type => Float)
+   @Field(() => Float)
    totalPrice: number;
 
-   @Field(type => User)
+   @Field(() => User)
    user: User;
 
-   @Field(type => Int)
+   @Field(() => Int)
    userId: number;
 
    @Field()

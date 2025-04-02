@@ -1,3 +1,5 @@
+import { Container } from '@/components/ui';
+
 export default function Home() {
-   return <div></div>;
+   return <Container>PAGE</Container>;
 }

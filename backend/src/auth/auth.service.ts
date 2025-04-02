@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@prisma/client';
-import { compare, hash } from 'bcrypt';
+import { argon2id, hash, verify } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { LoginArgs, RegisterArgs } from './dto';
@@ -76,7 +76,12 @@ export class AuthService {
             throw new ConflictException('User already exists');
          }
 
-         const hashedPassword = await hash(password, 10);
+         const hashedPassword = await hash(password, {
+            type: argon2id,
+            timeCost: 3,
+            memoryCost: 65536,
+            parallelism: 1,
+         });
 
          const newUser = await this.userService.createUser({
             email,
@@ -124,7 +129,7 @@ export class AuthService {
    }
 
    private async validatePassword(password: string, hashedPassword: string) {
-      const isPasswordCorrect = await compare(password, hashedPassword);
+      const isPasswordCorrect = await verify(hashedPassword, password);
       if (!isPasswordCorrect) {
          throw new ForbiddenException('Credentials are not correct');
       }

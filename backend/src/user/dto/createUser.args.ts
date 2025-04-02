@@ -12,6 +12,6 @@ export class CreateUserArgs {
    @Field()
    password: string;
 
-   @Field(type => UserRole, { defaultValue: UserRole.USER })
+   @Field(() => UserRole, { defaultValue: UserRole.USER })
    role: UserRole;
 }

@@ -6,8 +6,8 @@ import {
    registerEnumType,
 } from '@nestjs/graphql';
 import { OrderStatus } from '@prisma/client';
-import { Product } from 'src/product/product.model';
 import { User } from 'src/user/user.model';
+import { OrderItem } from './orderItem.model';
 
 registerEnumType(OrderStatus, {
    name: 'OrderStatus',
@@ -15,22 +15,19 @@ registerEnumType(OrderStatus, {
 
 @ObjectType()
 export class Order {
-   @Field(type => Int)
+   @Field(() => Int)
    id: number;
 
-   @Field(type => User)
+   @Field(() => User)
    user: User;
 
-   @Field(type => Int)
+   @Field(() => Int)
    userId: number;
 
-   @Field(type => [Product])
-   products: Product[];
-
-   @Field(type => String)
+   @Field(() => String)
    status: OrderStatus;
 
-   @Field(type => Float)
+   @Field(() => Float)
    total: number;
 
    @Field()
@@ -44,6 +41,9 @@ export class Order {
 
    @Field()
    name: string;
+
+   @Field(() => [OrderItem])
+   orderItem: OrderItem[];
 
    @Field()
    createdAt: Date;

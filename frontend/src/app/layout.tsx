@@ -1,3 +1,5 @@
+import { Header } from '@/components/shared';
+import { MainProvider } from '@/providers/mainProvider';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -13,7 +15,12 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="en">
-         <body>{children}</body>
+         <body>
+            <MainProvider>
+               <Header />
+               {children}
+            </MainProvider>
+         </body>
       </html>
    );
 }

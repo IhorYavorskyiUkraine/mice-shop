@@ -1,9 +1,9 @@
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-import { Cart } from './cart.model';
 import { CartService } from './cart.service';
 import { UpdateProductArgs } from './dto/updateProduct.args';
+import { Cart } from './models/cart.model';
 
 // @UseGuards(JwtGuard)
 @Resolver()

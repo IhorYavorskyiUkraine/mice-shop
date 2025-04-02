@@ -23,6 +23,10 @@ export class ProductService {
             throw new BadRequestException('Offset cannot be negative');
          }
 
+         if (name !== undefined && name.trim() === '') {
+            return [];
+         }
+
          const products = await this.prisma.product.findMany({
             where: {
                name: name ? { contains: name, mode: 'insensitive' } : undefined,
@@ -43,6 +47,9 @@ export class ProductService {
             },
             take: limit ? limit : 10,
             skip: offset ? offset : 0,
+            include: {
+               models: true,
+            },
          });
 
          if (products.length === 0) {

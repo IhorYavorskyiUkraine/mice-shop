@@ -1,25 +1,25 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Product } from 'src/product/product.model';
+import { Product } from 'src/product/models/product.model';
 import { User } from 'src/user/user.model';
 
 @ObjectType()
 export class Review {
-   @Field(type => Int)
+   @Field(() => Int)
    id: number;
 
-   @Field(type => User)
+   @Field(() => User)
    user: User;
 
-   @Field(type => Int)
+   @Field(() => Int)
    userId: number;
 
-   @Field(type => Product)
+   @Field(() => Product)
    product: Product;
 
-   @Field(type => Int)
+   @Field(() => Int)
    productId: number;
 
-   @Field(type => Int)
+   @Field(() => Int)
    rating: number;
 
    @Field()

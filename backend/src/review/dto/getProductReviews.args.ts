@@ -2,15 +2,15 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class GetProductReviewsArgs {
-   @Field(type => Int)
+   @Field(() => Int)
    productId: number;
 
    @Field({ nullable: true })
    orderBy: string;
 
-   @Field(type => Int, { nullable: true })
+   @Field(() => Int, { nullable: true })
    limit: number;
 
-   @Field(type => Int, { nullable: true })
+   @Field(() => Int, { nullable: true })
    offset: number;
 }

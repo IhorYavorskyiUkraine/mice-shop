@@ -1,6 +1,6 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { GetAllProductsArgs } from './dto';
-import { Product } from './product.model';
+import { Product } from './models/product.model';
 import { ProductService } from './product.service';
 
 @Resolver()

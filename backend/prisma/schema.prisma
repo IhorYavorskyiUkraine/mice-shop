@@ -155,16 +155,16 @@ model Specs {
 }
 
 model Order {
-   id        Int         @id @default(autoincrement())
-   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-   userId    Int
-   status    OrderStatus @default(PENDING)
-   total     Float
-   address   String
-   phone     String
-   email     String      @unique
-   name      String
-   orderItem OrderItem[]
+   id         Int         @id @default(autoincrement())
+   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId     Int
+   status     OrderStatus @default(PENDING)
+   total      Float
+   address    String
+   phone      String
+   email      String      @unique
+   name       String
+   orderItems OrderItem[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
