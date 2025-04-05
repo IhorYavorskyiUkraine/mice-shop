@@ -15,48 +15,30 @@ export class ProductService {
       try {
          const { name, tagId, brandId, rating, orderBy, limit, offset } = args;
 
-         if (limit && limit <= 0) {
+         if (limit !== undefined && limit <= 0) {
             throw new BadRequestException('Limit must be a positive number');
          }
-
-         if (offset && offset < 0) {
+         if (offset !== undefined && offset < 0) {
             throw new BadRequestException('Offset cannot be negative');
-         }
-
-         if (name !== undefined && name.trim() === '') {
-            return [];
          }
 
          const products = await this.prisma.product.findMany({
             where: {
                name: name ? { contains: name, mode: 'insensitive' } : undefined,
-
-               tags: tagId
-                  ? {
-                       some: {
-                          tagId: tagId,
-                       },
-                    }
-                  : undefined,
-               brandId: brandId ? brandId : undefined,
-
+               tags: tagId ? { some: { tagId } } : undefined,
+               brandId: brandId ?? undefined,
                rating: rating ? { gte: rating } : undefined,
             },
             orderBy: {
                rating: orderBy === 'asc' ? 'asc' : 'desc',
             },
-            take: limit ? limit : 10,
-            skip: offset ? offset : 0,
+            take: limit ?? 10,
+            skip: offset ?? 0,
             include: {
                models: true,
+               category: true,
             },
          });
-
-         if (products.length === 0) {
-            throw new NotFoundException(
-               'No products found matching the criteria.',
-            );
-         }
 
          return products;
       } catch (e) {

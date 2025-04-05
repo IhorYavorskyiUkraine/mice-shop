@@ -6,6 +6,9 @@ export const GET_ALL_PRODUCTS = gql`
          id
          name
          rating
+         category {
+            name
+         }
          models {
             image
             price

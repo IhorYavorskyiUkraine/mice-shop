@@ -2,30 +2,34 @@ import {
    Drawer,
    DrawerClose,
    DrawerContent,
-   DrawerDescription,
-   DrawerFooter,
    DrawerHeader,
    DrawerTitle,
    DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Menu } from 'lucide-react';
+import Link from 'next/link';
+import { links } from '../header.data';
 
 export const Burger: React.FC = () => {
    return (
-      <Drawer>
+      <Drawer direction="left">
          <DrawerTrigger>
             <Menu />
          </DrawerTrigger>
-         <DrawerContent>
-            <DrawerHeader>
-               <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-               <DrawerDescription>
-                  This action cannot be undone.
-               </DrawerDescription>
+         <DrawerContent className="bg-secondary py-sm px-sm text-primary">
+            <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
+               <DrawerTitle className="text-l">MENU</DrawerTitle>
+               <DrawerClose className="text-m2">Х</DrawerClose>
             </DrawerHeader>
-            <DrawerFooter>
-               <DrawerClose>Х</DrawerClose>
-            </DrawerFooter>
+            <div className="text-l">
+               <ul className="flex flex-col gap-4">
+                  {links.map(link => (
+                     <li key={link.name}>
+                        <Link href={link.path}>{link.name}</Link>
+                     </li>
+                  ))}
+               </ul>
+            </div>
          </DrawerContent>
       </Drawer>
    );

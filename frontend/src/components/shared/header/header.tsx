@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
                </div>
 
                <h2 className="text-m2 text-center whitespace-nowrap">
-                  PIXELMOUSE
+                  <Link href="/">PIXELMOUSE</Link>
                </h2>
 
                <div className="flex justify-end gap-4">
@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
             {/* Desktop layout (3 columns) */}
             <div className="hidden md:grid grid-cols-[minmax(160px,auto)_1fr_minmax(160px,auto)] items-center gap-8">
                <h2 className="text-l font-medium whitespace-nowrap">
-                  PIXELMOUSE
+                  <Link href="/">PIXELMOUSE</Link>
                </h2>
 
                <nav className="flex justify-center">
