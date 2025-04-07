@@ -1,5 +1,12 @@
-import { Container } from '@/components/ui';
+import { Banner, ProductBlock, ProductTiles } from '@/components/shared';
 
 export default function Home() {
-   return <Container>PAGE</Container>;
+   return (
+      <>
+         <Banner />
+         <ProductTiles title="ТРЕНДИ" />
+         <ProductBlock title="НОВИНКИ" />
+         <ProductBlock title="РЕKOМЕНДOВАНЕ" />
+      </>
+   );
 }

@@ -80,13 +80,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
    const renderContent = () => {
       if (loading) {
          return (
-            <div
-               className={
-                  isMobile
-                     ? 'p-4 grid grid-cols-2 gap-4'
-                     : 'px-[25px] py-[22px] flex gap-[25px] flex-wrap'
-               }
-            >
+            <div className="p-4 grid grid-cols-2 gap-4 md:px-[25px] md:py-[22px] md:flex md:gap-[25px] md:flex-wrap">
                {Array.from({ length: isMobile ? 6 : 4 }).map((_, i) => (
                   <div key={i}>
                      <UniversalSkeleton searchItems />
@@ -114,7 +108,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
 
       if (!debouncedValue.trim() && searchHistory.length > 0) {
          return (
-            <div className={isMobile ? 'p-4' : 'px-[25px] py-[22px]'}>
+            <div className="p-4 md:px-[25px] md:py-[22px]">
                <h3 className="text-sm font-medium text-gray-500">
                   НЕЩОДАВНІ ЗАПИТИ
                </h3>
@@ -127,7 +121,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                               setSearch(query);
                               setDebouncedValue(query);
                            }}
-                           className="px-3 cursor-pointer uppercase  py-1 bg-gray-100 text-sm text-gray-800 hover:bg-gray-200"
+                           className="px-3 transition cursor-pointer uppercase  py-1 bg-primary md:bg-secondary text-sm text-secondary md:text-primary hover:bg-[var(--hover-white)]"
                         >
                            {query}
                         </button>
@@ -140,7 +134,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
 
       if (hasSearchResults) {
          return (
-            <div className={isMobile ? 'p-4' : 'px-[25px] py-[22px]'}>
+            <div className="p-4 md:px-[25px] md:py-[22px]">
                {isMobile ? (
                   <Carousel
                      opts={{
@@ -198,7 +192,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                                     autoFocus
                                     value={search}
                                     placeholder="ПОШУК"
-                                    className="w-full !text-b text-gray-900 border-0 py-3 text-lg"
+                                    className="w-full !text-b uppercase text-gray-900 border-0 py-3 text-lg"
                                     onChange={e => setSearch(e.target.value)}
                                  />
                               </div>
