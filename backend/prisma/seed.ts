@@ -6,7 +6,7 @@ async function up() {
    await prisma.brand.create({
       data: {
          id: 1,
-         name: 'VXE',
+         name: 'Vxe',
       },
    });
 
@@ -17,35 +17,42 @@ async function up() {
       },
    });
 
+   await prisma.category.create({
+      data: {
+         id: 2,
+         name: 'Ігрові килими',
+      },
+   });
+
    await prisma.tag.create({
       data: {
          id: 1,
-         name: 'ТРЕНДИ',
+         name: 'Тренди',
       },
    });
 
    await prisma.tag.create({
       data: {
          id: 2,
-         name: 'НОВИНКИ',
+         name: 'Новинки',
       },
    });
 
    await prisma.tag.create({
       data: {
          id: 3,
-         name: 'РЕКОМЕНДОВАНЕ',
+         name: 'Рекомендоване',
       },
    });
 
    await prisma.product.create({
       data: {
-         name: 'VXE MAD R',
+         name: 'Vxe mad r',
          images: [
             'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
          ],
          description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
          brand: {
             connect: { id: 1 },
          },
@@ -56,7 +63,7 @@ async function up() {
          models: {
             create: [
                {
-                  name: 'VXE MAD R MAJOR +',
+                  name: 'Vxe mad r major +',
                   price: 79,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -68,20 +75,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R MAJOR',
+                  name: 'Vxe mad r major',
                   price: 76,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -93,20 +100,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R +',
+                  name: 'Vxe mad r +',
                   price: 59,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -118,20 +125,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R',
+                  name: 'Vxe mad r',
                   price: 46,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -143,258 +150,15 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
-                        },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-            ],
-         },
-      },
-   });
-
-   await prisma.product.create({
-      data: {
-         name: 'VXE MAD R',
-         images: [
-            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-         ],
-         description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
-         brand: {
-            connect: { id: 1 },
-         },
-         tags: {
-            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
-         },
-         category: { connect: { id: 1 } },
-         models: {
-            create: [
-               {
-                  name: 'VXE MAD R MAJOR +',
-                  price: 79,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R MAJOR',
-                  price: 76,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R +',
-                  price: 59,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R',
-                  price: 46,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
-                        },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-            ],
-         },
-      },
-   });
-   await prisma.product.create({
-      data: {
-         name: 'VXE MAD R',
-         images: [
-            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-         ],
-         description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
-         brand: {
-            connect: { id: 1 },
-         },
-         tags: {
-            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
-         },
-         category: { connect: { id: 1 } },
-         models: {
-            create: [
-               {
-                  name: 'VXE MAD R MAJOR +',
-                  price: 79,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R MAJOR',
-                  price: 76,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R +',
-                  price: 59,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R',
-                  price: 46,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
-                        },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
@@ -405,12 +169,12 @@ async function up() {
 
    await prisma.product.create({
       data: {
-         name: 'VXE MAD R',
+         name: 'Vxe mad r',
          images: [
-            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
          ],
          description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
          brand: {
             connect: { id: 1 },
          },
@@ -421,128 +185,7 @@ async function up() {
          models: {
             create: [
                {
-                  name: 'VXE MAD R MAJOR +',
-                  price: 79,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R MAJOR',
-                  price: 76,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R +',
-                  price: 59,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1-8К',
-                        },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-               {
-                  name: 'VXE MAD R',
-                  price: 46,
-                  stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
-                  colors: {
-                     create: [
-                        { name: 'Чорний', hex: '#000000' },
-                        { name: 'Білий', hex: '#ffffff' },
-                     ],
-                  },
-                  specs: {
-                     create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
-                        {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
-                        },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
-                     ],
-                  },
-               },
-            ],
-         },
-      },
-   });
-   await prisma.product.create({
-      data: {
-         name: 'VXE MAD R',
-         images: [
-            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
-         ],
-         description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
-         brand: {
-            connect: { id: 1 },
-         },
-         tags: {
-            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
-         },
-         category: { connect: { id: 1 } },
-         models: {
-            create: [
-               {
-                  name: 'VXE MAD R MAJOR +',
+                  name: 'Vxe mad r major +',
                   price: 79,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -554,20 +197,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R MAJOR',
+                  name: 'Vxe mad r major',
                   price: 76,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -579,20 +222,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R +',
+                  name: 'Vxe mad r +',
                   price: 59,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -604,20 +247,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R',
+                  name: 'Vxe mad r',
                   price: 46,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -629,15 +272,15 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
+                           key: 'Частота опитування',
+                           value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
@@ -648,12 +291,12 @@ async function up() {
 
    await prisma.product.create({
       data: {
-         name: 'VXE MAD R',
+         name: 'Vxe mad r',
          images: [
             'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
          ],
          description:
-            'VXE MAD R — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
          brand: {
             connect: { id: 1 },
          },
@@ -664,10 +307,10 @@ async function up() {
          models: {
             create: [
                {
-                  name: 'VXE MAD R MAJOR +',
+                  name: 'Vxe mad r major +',
                   price: 79,
                   stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
                   colors: {
                      create: [
                         { name: 'Чорний', hex: '#000000' },
@@ -676,20 +319,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R MAJOR',
+                  name: 'Vxe mad r major',
                   price: 76,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -701,20 +344,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R +',
+                  name: 'Vxe mad r +',
                   price: 59,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -726,20 +369,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R',
+                  name: 'Vxe mad r',
                   price: 46,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -751,15 +394,15 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
+                           key: 'Частота опитування',
+                           value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
@@ -770,12 +413,12 @@ async function up() {
 
    await prisma.product.create({
       data: {
-         name: 'VXE R1',
+         name: 'Vxe mad r',
          images: [
-            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
          ],
          description:
-            'VXE R1 — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
          brand: {
             connect: { id: 1 },
          },
@@ -786,10 +429,10 @@ async function up() {
          models: {
             create: [
                {
-                  name: 'VXE R1 SE+',
+                  name: 'Vxe mad r major +',
                   price: 79,
                   stock: 100,
-                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
                   colors: {
                      create: [
                         { name: 'Чорний', hex: '#000000' },
@@ -798,20 +441,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE R1',
+                  name: 'Vxe mad r major',
                   price: 76,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
@@ -823,20 +466,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3950' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE R1 PRO',
+                  name: 'Vxe mad r +',
                   price: 59,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -848,20 +491,20 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
+                           key: 'Частота опитування',
                            value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '42 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },
                {
-                  name: 'VXE MAD R',
+                  name: 'Vxe mad r',
                   price: 46,
                   stock: 100,
                   image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
@@ -873,15 +516,259 @@ async function up() {
                   },
                   specs: {
                      create: [
-                        { key: 'СЕНСОР', value: 'PAW3395' },
-                        { key: 'МIKРOKOНТРOЛЕР', value: 'NORDIC 52840' },
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
                         {
-                           key: 'ЧАСТOТА OПИТУВАННЯ',
-                           value: '1К',
+                           key: 'Частота опитування',
+                           value: '1-8К',
                         },
-                        { key: 'ВАГА:', value: '36 Г' },
-                        { key: 'ПOKРИТТЯ:', value: 'ICE-FEELING' },
-                        { key: 'РOЗМІРИ:', value: '120.1ММ × 63.2ММ × 38.1ММ' },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Vxe mad r',
+         images: [
+            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+         ],
+         description:
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+         brand: {
+            connect: { id: 1 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         models: {
+            create: [
+               {
+                  name: 'Vxe mad r major +',
+                  price: 79,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r major',
+                  price: 76,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r +',
+                  price: 59,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r',
+                  price: 46,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Vxe mad r',
+         images: [
+            'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_Black.jpg?v=1741849048',
+         ],
+         description:
+            'Vxe mad r — це ультралегка бездротова ігрова миша з сенсором PAW3950, підтримкою трьох режимів підключення та мінімальною вагою всього 36 грамів. Ідеальний вибір для кіберспортсменів.',
+         brand: {
+            connect: { id: 1 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         models: {
+            create: [
+               {
+                  name: 'Vxe mad r major +',
+                  price: 79,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r major',
+                  price: 76,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_Major_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r +',
+                  price: 59,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '42 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
+                     ],
+                  },
+               },
+               {
+                  name: 'Vxe mad r',
+                  price: 46,
+                  stock: 100,
+                  image: 'https://www.atk.store/cdn/shop/files/VXE_MAD_R_White.jpg?v=1741849048',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3395' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага:', value: '36 Г' },
+                        { key: 'Покриття:', value: 'Ice-feeling' },
+                        { key: 'Розміри:', value: '120.1мм × 63.2мм × 38.1мм' },
                      ],
                   },
                },

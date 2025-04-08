@@ -71,4 +71,25 @@ export class ProductService {
          );
       }
    }
+
+   async getAllProductCategories() {
+      try {
+         const categories = await this.prisma.category.findMany({
+            include: {
+               products: true,
+            },
+         });
+
+         if (!categories) {
+            throw new NotFoundException('No categories found');
+         }
+
+         return categories;
+      } catch (e) {
+         console.error(e);
+         throw new InternalServerErrorException(
+            'Error fetching categories. Please try again later.',
+         );
+      }
+   }
 }

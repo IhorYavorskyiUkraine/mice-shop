@@ -16,8 +16,8 @@ export const Title: React.FC<Props> = ({ text, size = 'lg', className }) => {
    } as const;
 
    const mapClassNameBySize = {
-      lg: 'text-[32px] md:text-[38px] uppercase',
-      xl: 'text-[40px] md:text-[48px] uppercase',
+      lg: 'text-[32px] md:text-[38px]',
+      xl: 'text-[40px] md:text-[48px]',
    } as const;
 
    return React.createElement(

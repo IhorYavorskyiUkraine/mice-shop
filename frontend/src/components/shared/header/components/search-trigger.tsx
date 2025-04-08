@@ -36,6 +36,10 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       [search],
    );
 
+   const clearHistory = () => {
+      setSearchHistory([]);
+   };
+
    const onClose = () => {
       setIsOpen(false);
       setSearch('');
@@ -93,7 +97,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (error) {
          return (
             <p className="py-sm text-center text-primary md:text-secondary">
-               ПОМИЛКА ЗАВАНТАЖЕННЯ
+               Помилка при завантаженні товарів
             </p>
          );
       }
@@ -101,7 +105,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (shouldShowEmptyState) {
          return (
             <p className="py-sm text-center text-primary md:text-secondary">
-               ТОВАРИ НЕ ЗНАЙДЕНО
+               Товарів не знайдено за запитом <span>"{debouncedValue}"</span>
             </p>
          );
       }
@@ -109,9 +113,15 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (!debouncedValue.trim() && searchHistory.length > 0) {
          return (
             <div className="p-4 md:px-[25px] md:py-[22px]">
-               <h3 className="text-sm font-medium text-gray-500">
-                  НЕЩОДАВНІ ЗАПИТИ
-               </h3>
+               <div className="text-sm flex justify-between font-medium text-gray-500">
+                  <h3>Нещодавні запити</h3>
+                  <button
+                     onClick={clearHistory}
+                     className="cursor-pointer uppercase"
+                  >
+                     Очистити
+                  </button>
+               </div>
                <div className="flex flex-wrap gap-2 pt-4 ">
                   {searchHistory.map((query, index) =>
                      query === '' ? null : (
@@ -121,7 +131,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                               setSearch(query);
                               setDebouncedValue(query);
                            }}
-                           className="px-3 transition cursor-pointer uppercase  py-1 bg-primary md:bg-secondary text-sm text-secondary md:text-primary hover:bg-[var(--hover-white)]"
+                           className="px-3 uppercase transition cursor-pointer py-1 bg-primary md:bg-secondary text-sm text-secondary md:text-primary hover:bg-[var(--hover-white)]"
                         >
                            {query}
                         </button>
@@ -166,7 +176,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
 
       return (
          <div className="px-[25px] py-[22px] text-center text-secondary">
-            ВВЕДІТЬ ЗАПИТ ДЛЯ ПОШУКУ ТОВАРІВ
+            Введіть запит для пошуку товарів
          </div>
       );
    };
@@ -192,7 +202,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                                     autoFocus
                                     value={search}
                                     placeholder="ПОШУК"
-                                    className="w-full !text-b uppercase text-gray-900 border-0 py-3 text-lg"
+                                    className="w-full !text-b text-gray-900 border-0 py-3 text-lg"
                                     onChange={e => setSearch(e.target.value)}
                                  />
                               </div>
@@ -217,7 +227,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                                  autoFocus
                                  value={search}
                                  placeholder="Пошук"
-                                 className="w-full !text-b uppercase text-secondary border-0 rounded-none py-4 text-lg"
+                                 className="w-full !text-b text-secondary border-0 rounded-none py-4 text-lg"
                                  onChange={e => setSearch(e.target.value)}
                                  onKeyDown={e =>
                                     e.key === 'Escape' && onClose()

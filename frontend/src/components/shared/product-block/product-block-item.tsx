@@ -7,8 +7,8 @@ interface Props {
 
 export const ProductBlockItem: React.FC<Props> = ({ product }) => {
    return (
-      <div className="md:size-[379px] bg-secondary">
-         <div className="relative w-full h-full mb-sm">
+      <div className="md:h-[435px] md:w-[379px] bg-secondary">
+         <div className="relative md:size-[379px] mb-sm">
             <Link href={`/product/${product.id}`}>
                <Image src={product.models[0].image} alt={product.name} fill />
             </Link>

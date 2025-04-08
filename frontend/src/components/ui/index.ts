@@ -4,5 +4,6 @@ export { Container } from '@/components/ui/container';
 export { Input } from '@/components/ui/input';
 export { Title } from '@/components/ui/title';
 export * from './drawer';
+export { Logo } from './logo';
 export { Overlay } from './overlay';
 export { Spinner } from './spinner';

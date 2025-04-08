@@ -1,4 +1,4 @@
-import { Container } from '@/components/ui';
+import { Container, Logo } from '@/components/ui';
 import Link from 'next/link';
 import { Burger } from './components/burger';
 import { SearchTrigger } from './components/search-trigger';
@@ -11,17 +11,15 @@ export const Header: React.FC = () => {
       <header className="bg-primary text-secondary sticky top-0 z-50">
          <Container className="py-sm md:py-6">
             {/* Mobile layout (3 columns) */}
-            <div className="grid grid-cols-3 items-center md:hidden">
+            <div className="flex justify-between items-center md:hidden px-4 h-14">
                <div className="flex items-center gap-4">
                   <Burger />
                   {searchIcon && <SearchTrigger data={searchIcon} />}
                </div>
 
-               <h2 className="text-m2 text-center whitespace-nowrap">
-                  <Link href="/">PIXELMOUSE</Link>
-               </h2>
+               <Logo />
 
-               <div className="flex justify-end gap-4">
+               <div className="flex justify-end items-center gap-4">
                   {icons
                      .filter(icon => !['search', 'burger'].includes(icon.name))
                      .map(icon => (
@@ -38,9 +36,7 @@ export const Header: React.FC = () => {
 
             {/* Desktop layout (3 columns) */}
             <div className="hidden md:grid grid-cols-[minmax(160px,auto)_1fr_minmax(160px,auto)] items-center gap-8">
-               <h2 className="text-l font-medium whitespace-nowrap">
-                  <Link href="/">PIXELMOUSE</Link>
-               </h2>
+               <Logo />
 
                <nav className="flex justify-center">
                   <ul className="flex gap-8 xl:gap-12">

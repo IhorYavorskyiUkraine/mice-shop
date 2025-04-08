@@ -18,8 +18,8 @@ export const Burger: React.FC = () => {
          </DrawerTrigger>
          <DrawerContent className="bg-secondary py-sm px-sm text-primary">
             <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
-               <DrawerTitle className="text-l">MENU</DrawerTitle>
-               <DrawerClose className="text-m2">Х</DrawerClose>
+               <DrawerTitle className="text-l">Menu</DrawerTitle>
+               <DrawerClose className="text-m2 uppercase">x</DrawerClose>
             </DrawerHeader>
             <div className="text-l">
                <ul className="flex flex-col gap-4">
