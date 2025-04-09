@@ -1,50 +1,42 @@
-'use client';
-
 import { cn } from '@/lib';
 import Image from 'next/image';
-import { useState } from 'react';
-import { useMedia } from 'react-use';
 import { ProductOverflow } from './product-overflow';
 
 interface Props {
-   name: string;
-   image: string;
+   product: any;
    className?: string;
+   index: number;
 }
 
 export const ProductTilesItem: React.FC<Props> = ({
-   name,
-   image,
+   product,
    className,
+   index,
 }) => {
-   const [open, setOpen] = useState(false);
-   const isMobile = useMedia('(max-width: 768px)', false);
-
-   const onClick = () => {
-      isMobile ? setOpen(!open) : null;
-   };
+   const minPrice = Math.min(...product.models.map(model => model.price));
 
    return (
       <div
          className={cn(
             className,
-            'bg-primary cursor-pointer group overflow-hidden  lg:max-h-[636px] w-full lg:max-w-[512px] p-6 relative flex flex-col',
+            'bg-primary cursor-pointer group overflow-hidden max-h-[320px] lg:max-h-[636px]! w-full lg:max-w-[512px] p-6 relative flex flex-col',
          )}
-         onClick={onClick}
       >
-         {name === '' ? null : (
-            <h3 className="text-secondary text-xl absolute">{name}</h3>
+         {product.name === '' ? null : (
+            <h3 className="text-secondary text-xl absolute">{product.name}</h3>
          )}
          <div className="flex-1 flex justify-center items-center">
             <Image
-               src={image}
-               height={240}
-               width={240}
+               src={product.image}
+               height={index === 1 || index === 2 ? 300 : 240}
+               width={index === 1 || index === 2 ? 300 : 240}
                alt="Product Image"
+               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+               loading="lazy"
                className="object-contain max-h-full max-w-full transition-transform duration-300 group-hover:scale-105"
             />
          </div>
-         <ProductOverflow />
+         <ProductOverflow specs={product.generalSpecs} price={minPrice} />
       </div>
    );
 };

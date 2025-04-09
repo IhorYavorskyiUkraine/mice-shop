@@ -13,8 +13,8 @@ export default function Home() {
          <ProductTiles title="Тренди">
             <ProductTilesContent />
          </ProductTiles>
-         <ProductBlock title="Новинки" />
-         <ProductBlock title="Рекомендоване" />
+         <ProductBlock title="Новинки" tag="new" />
+         <ProductBlock title="Рекомендоване" tag="views" />
          <ProductTiles title="Категорії" className="!pt-0">
             <CategoriesTilesContent />
          </ProductTiles>

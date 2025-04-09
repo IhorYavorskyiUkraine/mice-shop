@@ -3,6 +3,7 @@ import { Review } from 'src/review/review.model';
 import { Brand } from './productBrand.model';
 import { Category } from './productCategory.model';
 import { Model } from './productModel.model';
+import { Specs } from './productSpecs.model';
 import { ProductTag } from './productTag.model';
 
 @ObjectType()
@@ -13,8 +14,11 @@ export class Product {
    @Field()
    name: string;
 
-   @Field(() => [String])
-   images: string[];
+   @Field(() => String)
+   image: string;
+
+   @Field(() => [Specs])
+   generalSpecs: Specs[];
 
    @Field(() => Float)
    rating: number;
@@ -43,6 +47,10 @@ export class Product {
    @Field(() => [ProductTag])
    tags: ProductTag[];
 
+   @Field(() => Int)
+   views: number;
+
+   @Field(() => Int)
    @Field()
    createdAt: Date;
 

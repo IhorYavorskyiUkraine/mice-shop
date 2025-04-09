@@ -1,4 +1,4 @@
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ProductTag } from './productTag.model';
 
 @ObjectType()

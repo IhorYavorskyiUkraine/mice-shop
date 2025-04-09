@@ -30,5 +30,11 @@ export class GetAllProductsArgs {
    name?: string;
 
    @Field({ nullable: true })
+   views?: string;
+
+   @Field({ nullable: true })
+   new?: string;
+
+   @Field({ nullable: true })
    rating?: number;
 }

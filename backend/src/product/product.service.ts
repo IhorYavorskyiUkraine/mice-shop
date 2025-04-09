@@ -13,7 +13,17 @@ export class ProductService {
 
    async getAllProducts(args: GetAllProductsArgs) {
       try {
-         const { name, tagId, brandId, rating, orderBy, limit, offset } = args;
+         const {
+            name,
+            tagId,
+            brandId,
+            views,
+            new: newProduct,
+            rating,
+            orderBy,
+            limit,
+            offset,
+         } = args;
 
          if (limit !== undefined && limit <= 0) {
             throw new BadRequestException('Limit must be a positive number');
@@ -30,13 +40,25 @@ export class ProductService {
                rating: rating ? { gte: rating } : undefined,
             },
             orderBy: {
-               rating: orderBy === 'asc' ? 'asc' : 'desc',
+               rating: orderBy ? 'desc' : undefined,
+               createdAt: newProduct ? 'desc' : undefined,
+               views: views ? 'desc' : undefined,
             },
             take: limit ?? 10,
             skip: offset ?? 0,
             include: {
-               models: true,
+               generalSpecs: true,
+               models: {
+                  include: {
+                     specs: true,
+                  },
+               },
                category: true,
+               tags: {
+                  include: {
+                     tag: true,
+                  },
+               },
             },
          });
 

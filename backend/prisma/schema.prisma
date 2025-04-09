@@ -75,18 +75,20 @@ model Model {
 }
 
 model Product {
-   id          Int          @id @default(autoincrement())
-   name        String
-   images      String[]
-   rating      Float        @default(0)
-   models      Model[]
-   description String
-   reviews     Review[]
-   brand       Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
-   brandId     Int
-   category    Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-   categoryId  Int
-   tags        ProductTag[]
+   id           Int          @id @default(autoincrement())
+   name         String
+   image        String
+   generalSpecs Specs[]
+   rating       Float        @default(0)
+   models       Model[]
+   description  String
+   reviews      Review[]
+   brand        Brand        @relation(fields: [brandId], references: [id], onDelete: Cascade)
+   brandId      Int
+   category     Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+   categoryId   Int
+   tags         ProductTag[]
+   views        Int          @default(0)
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -144,11 +146,13 @@ model Review {
 }
 
 model Specs {
-   id      Int    @id @default(autoincrement())
-   key     String
-   value   String
-   model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
-   modelId Int
+   id        Int      @id @default(autoincrement())
+   key       String
+   value     String
+   model     Model?   @relation(fields: [modelId], references: [id], onDelete: Cascade)
+   modelId   Int?
+   product   Product? @relation(fields: [productId], references: [id])
+   productId Int?
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

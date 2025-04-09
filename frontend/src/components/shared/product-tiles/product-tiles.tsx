@@ -14,8 +14,12 @@ export const ProductTiles: React.FC<Props> = ({
 }) => {
    return (
       <section>
-         <Container className={cn(className, 'py-md')}>
-            <Title className="text-center mb-md" text={title} size="xl" />
+         <Container className={cn(className, 'py-sm lg:py-md')}>
+            <Title
+               className="text-center mb-sm lg:mb-md"
+               text={title}
+               size="xl"
+            />
             {children}
          </Container>
       </section>
