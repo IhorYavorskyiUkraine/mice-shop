@@ -1,7 +1,13 @@
 'use client';
 
-import { Container, Title } from '@/components/ui';
+import {
+   Container,
+   ErrorMessage,
+   Title,
+   UniversalSkeleton,
+} from '@/components/ui';
 import { cn } from '@/lib';
+import { Product } from '@/types/product.type';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PRODUCTS } from '../header/header.graphql';
 import { ProductBlockItem } from './product-block-item';
@@ -13,11 +19,15 @@ interface Props {
 }
 
 export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
-   const { data, loading } = useQuery(GET_ALL_PRODUCTS, {
+   const { data, loading, error } = useQuery(GET_ALL_PRODUCTS, {
       variables: {
          args: { limit: 4, [tag]: 'desc' },
       },
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'network-only',
    });
+
+   if (error) return <ErrorMessage message={error.message} />;
 
    return (
       <section>
@@ -28,9 +38,19 @@ export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
                size="xl"
             />
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-               {data?.getAllProducts?.map(product => (
-                  <ProductBlockItem key={product.id} product={product} />
-               ))}
+               {loading ? (
+                  Array.from({ length: 4 }).map((_, index) => (
+                     <UniversalSkeleton productBlockItem key={index} />
+                  ))
+               ) : data?.getAllProducts?.length ? (
+                  data.getAllProducts.map((product: Product) => (
+                     <ProductBlockItem key={product.id} product={product} />
+                  ))
+               ) : (
+                  <div className="col-span-full text-center py-10">
+                     Товарів не знайдено
+                  </div>
+               )}
             </div>
          </Container>
       </section>

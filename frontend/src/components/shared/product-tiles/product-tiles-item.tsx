@@ -1,9 +1,10 @@
 import { cn } from '@/lib';
+import { Product } from '@/types/product.type';
 import Image from 'next/image';
 import { ProductOverflow } from './product-overflow';
 
 interface Props {
-   product: any;
+   product: Product;
    className?: string;
    index: number;
 }

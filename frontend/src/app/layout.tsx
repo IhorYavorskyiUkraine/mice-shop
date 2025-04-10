@@ -1,4 +1,4 @@
-import { Footer, Header } from '@/components/shared';
+import { Footer, Header, ScrollToTopButton } from '@/components/shared';
 import { MainProvider } from '@/providers/mainProvider';
 import type { Metadata } from 'next';
 import './globals.css';
@@ -19,6 +19,7 @@ export default function RootLayout({
             <MainProvider>
                <Header />
                {children}
+               <ScrollToTopButton />
                <Footer />
             </MainProvider>
          </body>

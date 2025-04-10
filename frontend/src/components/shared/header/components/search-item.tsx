@@ -1,10 +1,11 @@
 import { cn } from '@/lib';
+import { Product } from '@/types/product.type';
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
    className?: string;
-   product: any;
+   product: Product;
 }
 
 export const SearchItem: React.FC<Props> = ({ product, className }) => {
@@ -25,7 +26,7 @@ export const SearchItem: React.FC<Props> = ({ product, className }) => {
             </div>
             <div className="flex flex-col gap-1">
                <h2 className="text-l">{product.name}</h2>
-               <p className="text-md">{product.category.name}</p>
+               <p className="text-md">{product.category?.name}</p>
                <p className="text-md">Rating: {product.rating}</p>
                <p className="text-l">${product.models[0].price}</p>
             </div>
