@@ -5,6 +5,9 @@ export const GET_ALL_PRODUCTS = gql`
       getAllProducts(args: $args) {
          id
          name
+         category {
+            name
+         }
          models {
             image
             price

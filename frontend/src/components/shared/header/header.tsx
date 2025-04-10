@@ -1,4 +1,5 @@
 import { Container, Logo } from '@/components/ui';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Burger } from './components/burger';
 import { SearchTrigger } from './components/search-trigger';
@@ -9,7 +10,7 @@ export const Header: React.FC = () => {
 
    return (
       <header className="bg-primary text-secondary sticky top-0 z-50">
-         <Container className="py-sm md:py-6">
+         <Container className="py-[10px] md:py-5">
             {/* Mobile layout (3 columns) */}
             <div className="flex justify-between items-center md:hidden px-4 h-14">
                <div className="flex items-center gap-4">
@@ -24,7 +25,9 @@ export const Header: React.FC = () => {
                      .filter(icon => !['search', 'burger'].includes(icon.name))
                      .map(icon => (
                         <Link key={icon.name} href={icon.url || '#'}>
-                           <img
+                           <Image
+                              width={24}
+                              height={24}
                               src={icon.image}
                               alt={icon.name}
                               className="h-6 w-6"
@@ -62,7 +65,9 @@ export const Header: React.FC = () => {
                         <SearchTrigger key={icon.name} data={icon} />
                      ) : (
                         <Link key={icon.name} href={icon.url || '#'}>
-                           <img
+                           <Image
+                              width={24}
+                              height={24}
                               src={icon.image}
                               alt={icon.name}
                               className="h-6 w-6 hover:opacity-80 transition"

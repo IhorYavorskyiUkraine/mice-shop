@@ -1,21 +1,22 @@
 'use client';
 
-import { Container, Input, Overlay } from '@/components/ui';
+import { Container, Input, Overlay, UniversalSkeleton } from '@/components/ui';
 import {
    Carousel,
    CarouselContent,
    CarouselItem,
 } from '@/components/ui/carousel';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
-import { UniversalSkeleton } from '@/components/ui/universal-skeleton';
+import { Product } from '@/types/product.type';
 import { useQuery } from '@apollo/client';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDebounce, useMedia } from 'react-use';
 import { GET_ALL_PRODUCTS } from '../header.graphql';
 import { SearchItem } from './search-item';
 
 interface Props {
-   data: { image?: string; name: string };
+   data: { image: string; name: string };
 }
 
 export const SearchTrigger: React.FC<Props> = ({ data }) => {
@@ -97,7 +98,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (error) {
          return (
             <p className="py-sm text-center text-primary md:text-secondary">
-               Помилка при завантаженні товарів
+               Помилка при завантаженні товарів: {error.message}
             </p>
          );
       }
@@ -105,7 +106,8 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (shouldShowEmptyState) {
          return (
             <p className="py-sm text-center text-primary md:text-secondary">
-               Товарів не знайдено за запитом <span>"{debouncedValue}"</span>
+               Товарів не знайдено за запитом{' '}
+               <span>&quot;{debouncedValue}&quot;</span>
             </p>
          );
       }
@@ -113,7 +115,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       if (!debouncedValue.trim() && searchHistory.length > 0) {
          return (
             <div className="p-4 md:px-[25px] md:py-[22px]">
-               <div className="text-sm flex justify-between font-medium text-gray-500">
+               <div className="text-t1 flex justify-between font-medium text-gray-500">
                   <h3>Нещодавні запити</h3>
                   <button
                      onClick={clearHistory}
@@ -131,7 +133,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                               setSearch(query);
                               setDebouncedValue(query);
                            }}
-                           className="px-3 uppercase transition cursor-pointer py-1 bg-primary md:bg-secondary text-sm text-secondary md:text-primary hover:bg-[var(--hover-white)]"
+                           className="px-3 uppercase transition cursor-pointer py-1 bg-primary md:bg-secondary text-t1 text-secondary md:text-primary hover:bg-[var(--hover-white)]"
                         >
                            {query}
                         </button>
@@ -153,7 +155,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                      onPointerDown={e => e.stopPropagation()}
                   >
                      <CarouselContent>
-                        {products.getAllProducts.map((product: any) => (
+                        {products.getAllProducts.map((product: Product) => (
                            <CarouselItem key={product.id} className="basis-1/2">
                               <SearchItem
                                  className="!text-primary"
@@ -165,7 +167,7 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                   </Carousel>
                ) : (
                   <div className="flex gap-[25px] flex-wrap">
-                     {products.getAllProducts.map((product: any) => (
+                     {products.getAllProducts.map((product: Product) => (
                         <SearchItem key={product.id} product={product} />
                      ))}
                   </div>
@@ -240,7 +242,9 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                   )}
                </>
             ) : (
-               <img
+               <Image
+                  width={24}
+                  height={24}
                   onClick={() => setIsOpen(true)}
                   className="cursor-pointer h-6 w-6"
                   src={data.image}

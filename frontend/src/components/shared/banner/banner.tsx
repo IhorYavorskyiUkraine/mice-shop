@@ -59,13 +59,16 @@ export const Banner: React.FC<Props> = ({ className }) => {
             }),
             Fade(),
          ]}
-         className={cn(className, 'relative')}
+         className={cn(className, 'relative w-full')}
       >
          <CarouselContent>
             {slides.map(slide => (
                <CarouselItem key={slide.id} className="pl-0 basis-full">
                   <div className="h-[calc(100vh-76px)] md:h-[calc(100vh-88px)]">
-                     <Link href={slide.href}>
+                     <Link
+                        href={slide.href}
+                        className="relative block h-full w-full"
+                     >
                         {/* ПК */}
                         <Image
                            src={slide.imagePc}
@@ -73,7 +76,7 @@ export const Banner: React.FC<Props> = ({ className }) => {
                            fill
                            priority
                            quality={85}
-                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+                           sizes="(max-width: 768px) 100vw, 100vw"
                            className="hidden md:block object-cover"
                         />
 
@@ -84,8 +87,8 @@ export const Banner: React.FC<Props> = ({ className }) => {
                            fill
                            priority
                            quality={85}
-                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
                            className="md:hidden object-cover"
+                           sizes="100vw"
                         />
                      </Link>
                   </div>
