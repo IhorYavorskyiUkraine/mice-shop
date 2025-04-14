@@ -13,6 +13,7 @@ export const ProductTilesContent: React.FC = ({}) => {
          args: {
             limit: 4,
             tagId: 1,
+            offset: 0,
          },
       },
    });

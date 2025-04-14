@@ -1,23 +1,14 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
-class PriceInput {
-   @Field(() => Int, { nullable: true })
-   min?: number;
-
-   @Field(() => Int, { nullable: true })
-   max?: number;
-}
-
-@InputType()
 export class GetAllProductsArgs {
    @Field({ nullable: true })
-   orderBy: string;
+   orderBy?: string;
 
-   @Field(() => Int, { nullable: true })
+   @Field(() => Int)
    limit: number;
 
-   @Field(() => Int, { nullable: true })
+   @Field(() => Int)
    offset: number;
 
    @Field({ nullable: true })

@@ -1,5 +1,6 @@
 export { Banner } from './banner/banner';
 export { Breadcrumb } from './breadcrumb';
+export { CheckboxWithText } from './checkbox';
 export { Footer } from './footer/footer';
 export { Header } from './header/header';
 export { ProductBlock } from './product-block/product-block';

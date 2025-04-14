@@ -21,7 +21,7 @@ interface Props {
 export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
    const { data, loading, error } = useQuery(GET_ALL_PRODUCTS, {
       variables: {
-         args: { limit: 4, [tag]: 'desc' },
+         args: { limit: 4, [tag]: 'desc', offset: 0 },
       },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'network-only',

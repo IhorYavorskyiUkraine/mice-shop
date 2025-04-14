@@ -51,6 +51,7 @@ export class ProductService {
                models: {
                   include: {
                      specs: true,
+                     colors: true,
                   },
                },
                category: true,
@@ -59,6 +60,7 @@ export class ProductService {
                      tag: true,
                   },
                },
+               brand: true,
             },
          });
 

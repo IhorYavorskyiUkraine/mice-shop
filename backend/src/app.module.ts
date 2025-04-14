@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { ProductFiltersModule } from './product-filters/product-filters.module';
 
 @Module({
    imports: [
@@ -27,6 +28,7 @@ import { UserModule } from './user/user.module';
       ProductModule,
       CartModule,
       ReviewModule,
+      ProductFiltersModule,
    ],
    providers: [AppService, AppResolver],
 })

@@ -22,8 +22,6 @@ export class AuthResolver {
    ) {
       const { accessToken, refreshToken } = await this.authService.login(args);
 
-      console.log(accessToken);
-
       setAuthCookies(context.res, accessToken, refreshToken);
 
       return { message: 'Login successful' };
