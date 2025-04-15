@@ -7,7 +7,7 @@ export default function Shop() {
    return (
       <Container>
          <Breadcrumb links={[{ name: 'Магазин', path: '/shop' }]} />
-         <div className="grid pb-sm gap-[30px] lg:grid-cols-[300px_1fr]">
+         <div className="grid items-start pb-sm gap-[30px] lg:grid-cols-[300px_1fr]">
             <Sidebar />
             <div>
                <Title text="Магазин" className="hidden lg:block" />

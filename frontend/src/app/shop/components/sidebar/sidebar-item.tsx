@@ -27,7 +27,7 @@ export const SidebarItem: React.FC<Props> = ({
             </button>
             <ChevronDown className={open ? 'rotate-180' : ''} />
          </div>
-         {open && <ul className="pb-[10px]">{content}</ul>}
+         {open && <ul className="pb-[10px] ">{content}</ul>}
       </article>
    );
 };

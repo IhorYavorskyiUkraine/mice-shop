@@ -9,4 +9,6 @@ export interface ProductFilters {
    price: PriceRange;
    colors: string[];
    specs: string[];
+   limit: number;
+   offset: number;
 }

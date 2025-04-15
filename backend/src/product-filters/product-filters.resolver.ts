@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { Product } from 'src/product/models/product.model';
 import { ProductFiltersArgs } from './dto/filtered-products.dto';
+import { PaginatedProductsResponse } from './models/paginated-product-response.model';
 import { ProductFilters } from './models/product-category.model';
 import { ProductFiltersService } from './product-filters.service';
 
@@ -13,7 +13,7 @@ export class ProductFiltersResolver {
       return this.productFiltersService.getAllProductFilters();
    }
 
-   @Query(() => [Product])
+   @Query(() => PaginatedProductsResponse)
    async getFilteredProducts(@Args('args') args: ProductFiltersArgs) {
       return this.productFiltersService.getFilteredProducts(args);
    }

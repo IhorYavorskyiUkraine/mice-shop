@@ -786,6 +786,1266 @@ async function up() {
          },
       },
    });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
+
+   await prisma.product.create({
+      data: {
+         name: 'Attack Shark R5 Ultra',
+         image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+         description:
+            '39g SUPERLIGHT, PixArt PAW3950MAX Gaming Sensor, 8000Hz Wireless Polling Rate, MCU Nordic 52840, DPI up to 42000, BT/2.4G Wireless/Wired',
+         generalSpecs: {
+            create: [
+               { key: 'Сенсор', value: 'PAW3950 MAX' },
+               { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+               {
+                  key: 'Частота опитування',
+                  value: '1-8К',
+               },
+               { key: 'Вага', value: '39 Г' },
+               { key: 'Покриття', value: 'Ice-feeling' },
+               { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+            ],
+         },
+         brand: {
+            connect: { id: 2 },
+         },
+         tags: {
+            create: [{ tagId: 1 }, { tagId: 2 }, { tagId: 3 }],
+         },
+         category: { connect: { id: 1 } },
+         views: 10,
+         rating: 5,
+         models: {
+            create: [
+               {
+                  name: 'Attack Shark R5 Ultra',
+                  price: 82,
+                  stock: 100,
+                  image: 'https://attackshark.com/cdn/shop/files/1_8ccb8243-721f-4858-9cae-dc3a31570373.jpg?v=1744026232&width=800',
+                  colors: {
+                     create: [
+                        { name: 'Чорний', hex: '#000000' },
+                        { name: 'Білий', hex: '#ffffff' },
+                     ],
+                  },
+                  specs: {
+                     create: [
+                        { key: 'Сенсор', value: 'PAW3950 MAX' },
+                        { key: 'Мікроконтролер', value: 'NORDIC 52840' },
+                        {
+                           key: 'Частота опитування',
+                           value: '1-8К',
+                        },
+                        { key: 'Вага', value: '39 Г' },
+                        { key: 'Покриття', value: 'Ice-feeling' },
+                        { key: 'Розміри', value: '119.5мм × 61мм × 36.3мм' },
+                     ],
+                  },
+               },
+            ],
+         },
+      },
+   });
 }
 
 async function down() {

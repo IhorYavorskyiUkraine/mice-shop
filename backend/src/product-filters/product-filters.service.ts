@@ -77,9 +77,72 @@ export class ProductFiltersService {
       }
    }
 
+   async getTotalPages(args: ProductFiltersArgs) {
+      try {
+         const { tags, brands, price, colors, specs, limit, offset } = args;
+
+         const totalProducts = await this.prisma.product.count({
+            where: {
+               ...(brands.length && {
+                  brand: {
+                     name: { in: brands },
+                  },
+               }),
+               ...(tags.length && {
+                  tags: {
+                     some: {
+                        tag: {
+                           name: { in: tags },
+                        },
+                     },
+                  },
+               }),
+               models: {
+                  some: {
+                     ...(colors.length && {
+                        colors: {
+                           some: {
+                              name: { in: colors },
+                           },
+                        },
+                     }),
+                     ...(specs.length && {
+                        specs: {
+                           some: {
+                              AND: specs.map(s => {
+                                 const [key, value] = s
+                                    .split(':')
+                                    .map(str => str.trim());
+                                 return {
+                                    key,
+                                    value,
+                                 };
+                              }),
+                           },
+                        },
+                     }),
+                     price: {
+                        gte: price.min,
+                        lte: price.max,
+                     },
+                  },
+               },
+            },
+         });
+
+         const totalPages = Math.ceil(totalProducts / limit);
+
+         const currentPage = offset / limit + 1;
+
+         return { totalPages, totalProducts, currentPage };
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
    async getFilteredProducts(args: ProductFiltersArgs) {
       try {
-         const { tags, brands, price, colors, specs } = args;
+         const { tags, brands, price, colors, specs, limit, offset } = args;
 
          const products = await this.prisma.product.findMany({
             where: {
@@ -131,9 +194,14 @@ export class ProductFiltersService {
             include: {
                models: true,
             },
+            take: limit ?? 8,
+            skip: offset ?? 0,
          });
 
-         return products;
+         const { totalPages, totalProducts, currentPage } =
+            await this.getTotalPages(args);
+
+         return { products, totalPages, totalProducts, currentPage };
       } catch (e) {
          console.error(e);
          throw new InternalServerErrorException(

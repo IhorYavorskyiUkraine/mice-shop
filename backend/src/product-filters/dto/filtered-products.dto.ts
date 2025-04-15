@@ -1,4 +1,4 @@
-import { Field, Float, InputType } from '@nestjs/graphql';
+import { Field, Float, InputType, Int } from '@nestjs/graphql';
 @InputType()
 export class PriceRangeInput {
    @Field(() => Float)
@@ -24,4 +24,10 @@ export class ProductFiltersArgs {
 
    @Field(() => [String])
    specs: string[];
+
+   @Field(() => Int)
+   limit: number;
+
+   @Field(() => Int)
+   offset: number;
 }
