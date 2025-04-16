@@ -11,4 +11,5 @@ export interface ProductFilters {
    specs: string[];
    limit: number;
    offset: number;
+   sort: [string, 'asc' | 'desc'];
 }

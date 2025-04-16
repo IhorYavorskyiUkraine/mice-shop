@@ -30,4 +30,7 @@ export class ProductFiltersArgs {
 
    @Field(() => Int)
    offset: number;
+
+   @Field(() => [String])
+   sort: [string, 'asc' | 'desc'];
 }

@@ -142,7 +142,8 @@ export class ProductFiltersService {
 
    async getFilteredProducts(args: ProductFiltersArgs) {
       try {
-         const { tags, brands, price, colors, specs, limit, offset } = args;
+         const { tags, brands, price, colors, specs, limit, offset, sort } =
+            args;
 
          const products = await this.prisma.product.findMany({
             where: {
@@ -194,9 +195,27 @@ export class ProductFiltersService {
             include: {
                models: true,
             },
+            orderBy:
+               sort.length && sort[0] === 'rating'
+                  ? {
+                       [sort[0]]: sort[1],
+                    }
+                  : undefined,
             take: limit ?? 8,
             skip: offset ?? 0,
          });
+
+         const getMinPrice = (models: { price: number }[]) =>
+            Math.min(...models.map(m => m.price));
+
+         if (sort[0] === 'price') {
+            products.sort((a, b) => {
+               const aMin = getMinPrice(a.models);
+               const bMin = getMinPrice(b.models);
+
+               return sort[1] === 'asc' ? aMin - bMin : bMin - aMin;
+            });
+         }
 
          const { totalPages, totalProducts, currentPage } =
             await this.getTotalPages(args);

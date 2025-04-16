@@ -5,7 +5,7 @@ import React from 'react';
 
 interface Props {
    title: string;
-   content?: React.ReactNode;
+   content: React.ReactNode;
    open: boolean;
    setOpen: (open: boolean) => void;
 }

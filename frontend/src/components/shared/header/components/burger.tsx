@@ -1,21 +1,17 @@
 import {
-   Drawer,
    DrawerClose,
    DrawerContent,
    DrawerHeader,
    DrawerTitle,
-   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import { Drawer } from '../../drawer';
 import { links } from '../header.data';
 
 export const Burger: React.FC = () => {
    return (
-      <Drawer direction="left">
-         <DrawerTrigger>
-            <Menu />
-         </DrawerTrigger>
+      <Drawer icon={<Menu />}>
          <DrawerContent className="bg-secondary py-sm px-sm text-primary">
             <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
                <DrawerTitle className="text-l">Menu</DrawerTitle>

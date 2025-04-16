@@ -6,6 +6,7 @@ export { Title } from '@/components/ui/title';
 export * from './breadcrumb';
 export { Checkbox } from './checkbox';
 export * from './drawer';
+export * from './dropdown-menu';
 export { DualRangeSlider } from './dual-range-slider';
 export { ErrorMessage } from './error-message';
 export { Logo } from './logo';

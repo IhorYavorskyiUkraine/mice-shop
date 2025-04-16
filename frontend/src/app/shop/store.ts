@@ -17,6 +17,7 @@ export const useShopStore = create<TShop>(set => ({
       specs: [],
       limit: 8,
       offset: 0,
+      sort: ['rating', 'desc'],
    },
    setFilters: filters => {
       set({ filters });

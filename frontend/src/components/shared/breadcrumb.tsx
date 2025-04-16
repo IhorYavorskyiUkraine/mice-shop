@@ -7,7 +7,7 @@ import {
 } from '@/components/ui';
 
 interface Props {
-   links: { name: string; path: string }[];
+   links: { name: string; path?: string }[];
 }
 
 export const Breadcrumb: React.FC<Props> = ({ links }) => {
@@ -19,8 +19,8 @@ export const Breadcrumb: React.FC<Props> = ({ links }) => {
                   Головна
                </BreadcrumbLink>
             </BreadcrumbItem>
-            {links.map(link => (
-               <div key={link.name} className="flex items-center gap-2">
+            {links.map((link, i) => (
+               <div key={i} className="flex items-center gap-2">
                   <BreadcrumbSeparator />
                   <BreadcrumbItem key={link.name}>
                      <BreadcrumbLink href={link.path}>

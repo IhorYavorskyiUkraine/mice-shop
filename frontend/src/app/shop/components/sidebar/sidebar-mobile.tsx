@@ -1,12 +1,17 @@
-'use client';
-
+import { Drawer } from '@/components/shared/drawer';
 import { Button, ErrorMessage } from '@/components/ui';
+import {
+   DrawerContent,
+   DrawerHeader,
+   DrawerTitle,
+} from '@/components/ui/drawer';
+import { ListFilterPlus } from 'lucide-react';
 import { renderSectionContent } from './sidebar-content-render';
 import { sidebarData } from './sidebar-data.data';
 import { SidebarItem } from './sidebar-item';
 import { useSidebarFilters } from './use-sidebar-filters';
 
-export const Sidebar: React.FC = () => {
+export const SidebarMobile: React.FC = () => {
    const {
       priceValues,
       setPriceValues,
@@ -37,11 +42,14 @@ export const Sidebar: React.FC = () => {
    if (error) return <ErrorMessage message={error.message} />;
 
    return (
-      <aside className="p-[10px] hidden lg:block sticky top-[108px] z-40 border-2 border-black">
-         {sidebarData.map(
-            (item, index) =>
-               item && (
-                  <div key={item.id}>
+      <div className="flex lg:hidden">
+         <Drawer icon={<ListFilterPlus />}>
+            <DrawerContent className="bg-secondary p-4 flex flex-col h-full">
+               <DrawerHeader>
+                  <DrawerTitle className="sr-only">Фільтри</DrawerTitle>
+               </DrawerHeader>
+               <div className="flex flex-col flex-1">
+                  {sidebarData.map(item => (
                      <SidebarItem
                         key={item.id}
                         title={item.title}
@@ -49,17 +57,15 @@ export const Sidebar: React.FC = () => {
                         setOpen={() => toggleSection(item.name)}
                         content={content(item.name)}
                      />
-                     {index !== sidebarData.length - 1 && (
-                        <div className="w-full h-[2px] bg-black" />
-                     )}
-                  </div>
-               ),
-         )}
-         {changed ? (
-            <Button className="w-full mt-[10px]" onClick={resetAll}>
-               Очистити
-            </Button>
-         ) : null}
-      </aside>
+                  ))}
+                  {changed && (
+                     <Button className="w-full mt-auto" onClick={resetAll}>
+                        Очистити
+                     </Button>
+                  )}
+               </div>
+            </DrawerContent>
+         </Drawer>
+      </div>
    );
 };
