@@ -50,6 +50,8 @@ model Color {
    id      Int    @id @default(autoincrement())
    name    String
    hex     String
+   image   String
+   stock   Int
    model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
    modelId Int
 
@@ -63,7 +65,6 @@ model Model {
    product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
    productId Int
    price     Float
-   stock     Int
    colors    Color[]
    specs     Specs[]
    cartItem  CartItem[]

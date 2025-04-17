@@ -6,11 +6,12 @@ import {
 interface Props {
    icon: React.ReactNode;
    children: React.ReactNode;
+   direction?: 'left' | 'top' | 'bottom' | 'right';
 }
 
-export const Drawer: React.FC<Props> = ({ children, icon }) => {
+export const Drawer: React.FC<Props> = ({ children, icon, direction }) => {
    return (
-      <DrawerPrimitive direction="left">
+      <DrawerPrimitive direction={direction ? direction : 'left'}>
          <DrawerTrigger className="cursor-pointer">{icon}</DrawerTrigger>
          {children}
       </DrawerPrimitive>

@@ -143,7 +143,7 @@ export class CartService {
 
    async updateProduct(args: UpdateProductArgs & { userId: number }) {
       try {
-         const { modelId, userId, quantity } = args;
+         const { modelId, userId, color, quantity } = args;
 
          this.validateIds(userId, modelId);
 
@@ -168,13 +168,18 @@ export class CartService {
             throw new BadRequestException('Product not found in cart');
          }
 
-         const product = await this.prisma.model.findUnique({
-            where: { id: modelId },
-            select: { stock: true },
+         const product = await this.prisma.color.findFirst({
+            where: {
+               modelId,
+               name: color,
+            },
+            select: {
+               stock: true,
+            },
          });
 
-         if (!product) {
-            throw new BadRequestException('Product not found');
+         if (!color) {
+            throw new BadRequestException('Color not found');
          }
 
          if (quantity > product.stock) {

@@ -18,6 +18,12 @@ export class Color {
    @Field(() => Int)
    modelId: number;
 
+   @Field(() => Int)
+   stock: number;
+
+   @Field()
+   image: string;
+
    @Field()
    createdAt: Date;
 

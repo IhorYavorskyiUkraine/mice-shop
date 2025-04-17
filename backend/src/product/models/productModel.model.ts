@@ -19,9 +19,6 @@ export class Model {
    @Field(() => [Color])
    colors: Color[];
 
-   @Field(() => Int)
-   stock: number;
-
    @Field()
    image: string;
 

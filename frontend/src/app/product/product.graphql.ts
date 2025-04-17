@@ -11,10 +11,16 @@ export const GET_PRODUCT = gql`
             value
          }
          models {
+            name
             colors {
                name
+               stock
+               image
             }
-            stock
+            specs {
+               key
+               value
+            }
             image
             price
          }

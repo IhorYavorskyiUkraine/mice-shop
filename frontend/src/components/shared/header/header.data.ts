@@ -21,11 +21,9 @@ export const icons = [
    {
       name: 'cart',
       image: '/images/header/cart.svg',
-      url: '/cart',
    },
    {
       name: 'user',
       image: '/images/header/user.svg',
-      url: '/profile',
    },
 ];

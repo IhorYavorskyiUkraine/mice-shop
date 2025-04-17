@@ -10,7 +10,6 @@ export type Model = {
    product: Product;
    productId: number;
    price: number;
-   stock: number;
    colors: Color[];
    specs: Specs[];
    cartItem: CartItem[];

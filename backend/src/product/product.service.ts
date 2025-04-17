@@ -86,6 +86,7 @@ export class ProductService {
                models: {
                   include: {
                      colors: true,
+                     specs: true,
                   },
                },
                reviews: {
