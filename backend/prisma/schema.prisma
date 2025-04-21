@@ -39,6 +39,8 @@ model CartItem {
    modelId  Int
    quantity Int
    price    Float
+   color    Color @relation(fields: [colorId], references: [id], onDelete: Cascade)
+   colorId  Int
    cart     Cart  @relation(fields: [cartId], references: [id], onDelete: Cascade)
    cartId   Int
 
@@ -47,13 +49,14 @@ model CartItem {
 }
 
 model Color {
-   id      Int    @id @default(autoincrement())
-   name    String
-   hex     String
-   image   String
-   stock   Int
-   model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
-   modelId Int
+   id       Int        @id @default(autoincrement())
+   name     String
+   hex      String
+   image    String
+   stock    Int
+   model    Model      @relation(fields: [modelId], references: [id], onDelete: Cascade)
+   modelId  Int
+   cartItem CartItem[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

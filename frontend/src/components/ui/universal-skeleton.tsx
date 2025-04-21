@@ -7,6 +7,8 @@ interface Props {
    tilesCn?: string;
    index?: number;
    categoryTiles?: boolean;
+   productTitle?: boolean;
+   productRating?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -15,6 +17,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
    tilesCn,
    index,
    categoryTiles,
+   productTitle,
+   productRating,
 }) => {
    if (searchItems) {
       return (
@@ -31,8 +35,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
          </div>
       );
    } else if (productBlockItem) {
-      return (
-         <div className="w-full h-full  flex flex-col">
+      return Array.from({ length: 8 }).map((_, index) => (
+         <div key={index} className="w-full h-full  flex flex-col">
             <div className="relative w-full pt-[100%] mb-3">
                <div className="absolute inset-0 block">
                   <Skeleton className="w-full h-full" />
@@ -43,7 +47,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
                <Skeleton className="w-1/2 h-5" />
             </div>
          </div>
-      );
+      ));
    } else if (tilesCn) {
       return (
          <Skeleton
@@ -68,7 +72,13 @@ export const UniversalSkeleton: React.FC<Props> = ({
          </Skeleton>
       );
    } else if (categoryTiles) {
-      return <Skeleton className="h-[300px] md:h-[400px]" />;
+      return Array.from({ length: 8 }).map((_, index) => (
+         <Skeleton key={index} className="h-[300px] md:h-[400px]" />
+      ));
+   } else if (productTitle) {
+      return <Skeleton className="h-[30px] w-[50%] lg:h-[50px]" />;
+   } else if (productRating) {
+      return <Skeleton className="h-[20px] w-[20%] lg:h-[30px]" />;
    }
 
    return null;

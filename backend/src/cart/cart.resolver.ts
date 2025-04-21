@@ -1,7 +1,9 @@
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CartService } from './cart.service';
+import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
 import { Cart } from './models/cart.model';
 
@@ -15,41 +17,50 @@ export class CartResolver {
 
    @Query(() => Cart)
    async getCart(@Context() context: { req: Request }) {
-      // const { accessToken } = getAuthTokens(context.req);
+      const { accessToken } = getAuthTokens(context.req);
 
-      // const { userId } =
-      //    await this.authService.validateAccessToken(accessToken);
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
 
-      return this.cartService.getCart(1);
+      return this.cartService.getCart(userId);
    }
 
    @Mutation(() => Cart)
-   async addProduct(@Args('modelId', { type: () => Int }) modelId: number) {
-      // const { accessToken } = getAuthTokens(context.req);
+   async addProduct(
+      @Args('args') args: AddProductArgs,
+      @Context() context: { req: Request },
+   ) {
+      const { accessToken } = getAuthTokens(context.req);
 
-      // const { userId } =
-      //    await this.authService.validateAccessToken(accessToken);
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
 
-      return this.cartService.addProduct(modelId, 1);
+      return this.cartService.addProduct(args, userId);
    }
 
    @Mutation(() => Cart)
-   async updateProduct(@Args('args') args: UpdateProductArgs) {
-      // const { accessToken } = getAuthTokens(context.req);
+   async updateProduct(
+      @Args('args') args: UpdateProductArgs,
+      @Context() context: { req: Request },
+   ) {
+      const { accessToken } = getAuthTokens(context.req);
 
-      // const { userId } =
-      //    await this.authService.validateAccessToken(accessToken);
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
 
-      return this.cartService.updateProduct({ ...args, userId: 1 });
+      return this.cartService.updateProduct({ ...args, userId });
    }
 
    @Mutation(() => Cart)
-   async removeProduct(@Args('modelId', { type: () => Int }) modelId: number) {
-      // const { accessToken } = getAuthTokens(context.req);
+   async removeProduct(
+      @Args('modelId', { type: () => Int }) modelId: number,
+      @Context() context: { req: Request },
+   ) {
+      const { accessToken } = getAuthTokens(context.req);
 
-      // const { userId } =
-      //    await this.authService.validateAccessToken(accessToken);
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
 
-      return this.cartService.removeProduct(modelId, 1);
+      return this.cartService.removeProduct(modelId, userId);
    }
 }

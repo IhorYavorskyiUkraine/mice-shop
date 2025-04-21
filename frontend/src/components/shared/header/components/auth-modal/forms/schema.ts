@@ -12,7 +12,7 @@ export const loginSchema = z.object({
 export const registerSchema = loginSchema
    .merge(
       z.object({
-         userName: z.string().min(2, { message: 'Enter your full name' }),
+         displayName: z.string().min(2, { message: 'Enter your full name' }),
          confirmPassword: passwordSchema,
       }),
    )

@@ -15,7 +15,7 @@ export const ProductPickModel: React.FC<Props> = ({
    return (
       <div className="py-sm">
          <p className="mb-sm">Модель: {active}</p>
-         <div className="flex gap-[20px]">
+         <div className="flex gap-[20px] flex-wrap">
             {models?.map((model: Model, i) => (
                <Button
                   key={i}

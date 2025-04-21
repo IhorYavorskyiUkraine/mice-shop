@@ -6,15 +6,18 @@ import {
    DrawerContent,
    DrawerHeader,
    DrawerTitle,
+   ErrorMessage,
 } from '@/components/ui';
+import { TCartItem } from '@/types/cart.type';
+import { useQuery } from '@apollo/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import { Drawer } from '../drawer';
 import { CartItem } from './cart-item';
+import { GET_CART } from './cart.graphql';
 
 export const Cart: React.FC = () => {
-   const [cart, setCart] = useState([]);
+   const { data, loading, error } = useQuery(GET_CART);
 
    return (
       <Drawer
@@ -29,32 +32,43 @@ export const Cart: React.FC = () => {
             />
          }
       >
-         <DrawerContent className="bg-secondary py-sm px-sm text-primary">
+         <DrawerContent className="!w-[500px] bg-secondary py-sm px-sm text-primary">
             <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
                <DrawerTitle className="text-l">Кошик</DrawerTitle>
                <DrawerClose className="text-m2 uppercase">x</DrawerClose>
             </DrawerHeader>
-            <div className="flex flex-col h-full">
-               {cart.length === 0 ? (
-                  <div className="flex flex-col flex-1 justify-between">
-                     <div className="flex-1 flex items-center justify-center">
-                        <p className="text-xl text-center">Кошик порожній :(</p>
+            {(error?.message && <ErrorMessage message={error.message} />) || (
+               <div className="flex flex-col h-full">
+                  {data?.getCart.items?.length === 0 ? (
+                     <div className="flex flex-col flex-1 justify-between">
+                        <div className="flex-1 flex items-center justify-center">
+                           <p className="text-xl text-center">
+                              Кошик порожній :(
+                           </p>
+                        </div>
+                        <Button>
+                           <Link href="/shop">Перейти до магазину</Link>
+                        </Button>
                      </div>
-                     <Button>
-                        <Link href="/shop">Перейти до магазину</Link>
-                     </Button>
-                  </div>
-               ) : (
-                  <div className="flex flex-col flex-1 justify-between">
-                     <div className="space-y-4 overflow-y-auto">
-                        {cart.map(item => (
-                           <CartItem key={item.id} />
-                        ))}
+                  ) : (
+                     <div className="flex flex-col flex-1 max-h-[90vh]">
+                        <div className="flex-1 overflow-y-auto">
+                           <div className="space-y-4 pr-2">
+                              {data?.getCart.items?.map((item: TCartItem) => (
+                                 <CartItem key={item.id} item={item} />
+                              ))}
+                           </div>
+                        </div>
+                        <p className="text-right">
+                           Сумма: {data?.getCart.totalPrice}$
+                        </p>
+                        <Button className="mt-4 shrink-0">
+                           Перейти до оформлення
+                        </Button>
                      </div>
-                     <Button className="mt-4">Перейти до оформлення</Button>
-                  </div>
-               )}
-            </div>
+                  )}
+               </div>
+            )}
          </DrawerContent>
       </Drawer>
    );

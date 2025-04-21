@@ -11,8 +11,10 @@ export const GET_PRODUCT = gql`
             value
          }
          models {
+            id
             name
             colors {
+               id
                name
                stock
                image
@@ -32,6 +34,19 @@ export const GET_PRODUCT = gql`
             rating
             comment
          }
+      }
+   }
+`;
+
+export const ADD_PRODUCT = gql`
+   mutation addProduct($args: AddProductArgs!) {
+      addProduct(args: $args) {
+         items {
+            model {
+               name
+            }
+         }
+         totalPrice
       }
    }
 `;

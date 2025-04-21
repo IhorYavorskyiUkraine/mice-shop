@@ -2,7 +2,7 @@ import { Container, Logo } from '@/components/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Cart } from '../cart/cart';
-import { Modal } from './components/autentification-modal/modal';
+import { Modal } from './components/auth-modal/modal';
 import { Burger } from './components/burger';
 import { SearchTrigger } from './components/search-trigger';
 import { icons, links } from './header.data';
@@ -27,6 +27,7 @@ export const Header: React.FC = () => {
                      .filter(icon => !['search', 'burger'].includes(icon.name))
                      .map(icon => (
                         <Image
+                           key={icon.name}
                            width={24}
                            height={24}
                            src={icon.image}

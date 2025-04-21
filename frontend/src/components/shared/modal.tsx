@@ -12,11 +12,19 @@ interface Props {
    icon: React.ReactNode;
    title: string;
    children: React.ReactNode;
+   open: boolean;
+   setOpen: (open: boolean) => void;
 }
 
-export const Modal: React.FC<Props> = ({ icon, title, children }) => {
+export const Modal: React.FC<Props> = ({
+   open,
+   setOpen,
+   icon,
+   title,
+   children,
+}) => {
    return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
          <DialogTrigger className="cursor-pointer">{icon}</DialogTrigger>
          <DialogContent className="bg-secondary">
             <DialogHeader>

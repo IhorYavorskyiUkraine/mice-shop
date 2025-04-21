@@ -4,6 +4,7 @@ import {
    InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
 
 @Injectable()
@@ -21,7 +22,12 @@ export class CartService {
             include: {
                items: {
                   include: {
-                     model: true,
+                     model: {
+                        include: {
+                           colors: true,
+                        },
+                     },
+                     color: true,
                   },
                },
             },
@@ -62,8 +68,10 @@ export class CartService {
       }
    }
 
-   async addProduct(modelId: number, userId: number) {
+   async addProduct(args: AddProductArgs, userId: number) {
       try {
+         const { modelId, colorId } = args;
+
          this.validateIds(userId, modelId);
 
          const model = await this.prisma.model.findUnique({
@@ -79,7 +87,7 @@ export class CartService {
 
          let cart = await this.getCart(userId);
 
-         const cartItem = await this.findCartItem(cart.id, modelId);
+         const cartItem = await this.findCartItem(cart.id, modelId, colorId);
 
          if (cartItem) {
             await this.prisma.cartItem.update({
@@ -95,6 +103,7 @@ export class CartService {
                   modelId: Number(modelId),
                   quantity: 1,
                   price: model.price,
+                  colorId: Number(colorId),
                },
             });
          }
@@ -171,7 +180,7 @@ export class CartService {
          const product = await this.prisma.color.findFirst({
             where: {
                modelId,
-               name: color,
+               name: color.name,
             },
             select: {
                stock: true,
@@ -252,9 +261,13 @@ export class CartService {
       }
    }
 
-   private async findCartItem(cartId: number, modelId: number) {
+   private async findCartItem(
+      cartId: number,
+      modelId: number,
+      colorId: number,
+   ) {
       return this.prisma.cartItem.findFirst({
-         where: { cartId, modelId },
+         where: { cartId, modelId, colorId },
       });
    }
 

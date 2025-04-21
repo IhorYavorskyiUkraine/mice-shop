@@ -91,9 +91,7 @@ export const ProductsList: React.FC = () => {
          </div>
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {loading ? (
-               Array.from({ length: 8 }).map((_, index) => (
-                  <UniversalSkeleton productBlockItem key={index} />
-               ))
+               <UniversalSkeleton productBlockItem />
             ) : data?.getFilteredProducts?.products.length ? (
                data.getFilteredProducts.products.map(
                   (product: Product, i: number) => (

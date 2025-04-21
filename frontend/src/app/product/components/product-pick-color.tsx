@@ -5,7 +5,7 @@ import Image from 'next/image';
 interface Props {
    colors: Color[] | undefined;
    active: string | undefined;
-   setActive: (color: string) => void;
+   setActive: (color: Color) => void;
 }
 
 export const ProductPickColor: React.FC<Props> = ({
@@ -17,7 +17,7 @@ export const ProductPickColor: React.FC<Props> = ({
    return (
       <div>
          <p className="mb-sm">Колір: {active}</p>
-         <div className="flex gap-[20px]">
+         <div className="flex gap-[20px] flex-wrap">
             {flattenedColors?.map((color: Color, i) => (
                <button
                   key={i}
@@ -27,7 +27,7 @@ export const ProductPickColor: React.FC<Props> = ({
                      'cursor-pointer',
                   )}
                   disabled={color.stock === 0}
-                  onClick={() => setActive(color.name)}
+                  onClick={() => setActive(color)}
                >
                   <Image
                      key={i}

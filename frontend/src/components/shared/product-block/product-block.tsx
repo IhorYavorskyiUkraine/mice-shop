@@ -39,9 +39,7 @@ export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
             />
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                {loading ? (
-                  Array.from({ length: 4 }).map((_, index) => (
-                     <UniversalSkeleton productBlockItem key={index} />
-                  ))
+                  <UniversalSkeleton productBlockItem />
                ) : data?.getAllProducts?.length ? (
                   data.getAllProducts.map((product: Product) => (
                      <ProductBlockItem key={product.id} product={product} />

@@ -9,6 +9,7 @@ import { Register } from './forms/register';
 
 export const Modal: React.FC = () => {
    const [method, setMethod] = useState<'login' | 'register'>('login');
+   const [isOpen, setIsOpen] = useState(false);
 
    const handleMethodChange = (method: 'login' | 'register') => {
       setMethod(method);
@@ -16,6 +17,8 @@ export const Modal: React.FC = () => {
 
    return (
       <ModalComponent
+         open={isOpen}
+         setOpen={setIsOpen}
          icon={
             <Image
                width={24}
@@ -27,7 +30,13 @@ export const Modal: React.FC = () => {
          }
          title={method === 'login' ? 'Вхід' : 'Реєстрація'}
       >
-         <div>{method === 'login' ? <Login /> : <Register />}</div>
+         <div>
+            {method === 'login' ? (
+               <Login setIsOpen={() => setIsOpen(false)} />
+            ) : (
+               <Register setIsOpen={() => setIsOpen(false)} />
+            )}
+         </div>
          <div className="flex flex-col gap-3 text-center">
             <Separator className="my-[4px]!" />
             <Button

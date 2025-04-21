@@ -13,18 +13,18 @@ export const CategoriesTilesContent: React.FC = () => {
 
    return (
       <div className="grid md:grid-cols-2 grid-cols-1 pb-6 gap-6">
-         {loading
-            ? Array.from({ length: 2 }).map((_, index) => (
-                 <UniversalSkeleton key={index} categoryTiles />
-              ))
-            : data?.getAllProductCategories?.map((category: Category) => {
-                 return (
-                    <CategoryTilesItem
-                       key={category.id}
-                       category={category.name}
-                    />
-                 );
-              })}
+         {loading ? (
+            <UniversalSkeleton categoryTiles />
+         ) : (
+            data?.getAllProductCategories?.map((category: Category) => {
+               return (
+                  <CategoryTilesItem
+                     key={category.id}
+                     category={category.name}
+                  />
+               );
+            })
+         )}
       </div>
    );
 };

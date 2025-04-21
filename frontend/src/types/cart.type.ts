@@ -1,9 +1,10 @@
+import { Color } from './color.type';
 import { Model } from './model.type';
 import { User } from './user.type';
 
-export type Cart = {
+export type TCart = {
    id: number;
-   items: CartItem[];
+   items: TCartItem[];
    totalPrice: number;
    user: User;
    userId: number;
@@ -11,13 +12,15 @@ export type Cart = {
    updatedAt: Date;
 };
 
-export type CartItem = {
+export type TCartItem = {
    id: number;
    model: Model;
    modelId: number;
    quantity: number;
    price: number;
-   cart: Cart;
+   color: Color;
+   colorId: number;
+   cart: TCart;
    cartId: number;
    createdAt: Date;
    updatedAt: Date;

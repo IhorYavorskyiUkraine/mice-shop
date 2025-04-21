@@ -1,10 +1,19 @@
+'use client';
+
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { Button } from '@/components/ui';
+import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { LOGIN } from './auth.graphql';
 import { loginSchema, TLogin } from './schema';
 
-export const Login: React.FC = () => {
+interface Props {
+   setIsOpen: () => void;
+}
+
+export const Login: React.FC<Props> = ({ setIsOpen }) => {
    const form = useForm<TLogin>({
       resolver: zodResolver(loginSchema),
       defaultValues: {
@@ -13,21 +22,19 @@ export const Login: React.FC = () => {
       },
    });
 
+   const [login, { loading }] = useMutation(LOGIN);
+
    const onSubmit = async (data: TLogin) => {
       try {
-         // if (loading) {
-         //    return false;
-         // }
+         if (loading) {
+            return false;
+         }
 
-         // await createTask({
-         //    variables: {
-         //       args: data,
-         //    },
-         // });
+         await login({ variables: { args: data } });
 
-         // refetch();
-         // setIsDialogOpen(false);
          form.reset();
+         toast.success('Login successful');
+         setIsOpen();
       } catch (error) {
          console.error('Error [LOGIN]', error);
       }
@@ -40,21 +47,19 @@ export const Login: React.FC = () => {
             onSubmit={form.handleSubmit(onSubmit)}
          >
             <InputWithValidations
-               // disabled={loading}
+               disabled={loading}
                placeholder="Введіть ваш емейл"
                name="email"
                label="Емейл"
             />
             <InputWithValidations
-               // disabled={loading}
+               disabled={loading}
                placeholder="Введіть ваш пароль"
                name="password"
+               type="password"
                label="Пароль"
             />
-            <Button
-               // loading={loading}
-               className="w-full mt-[15px] uppercase"
-            >
+            <Button loading={loading} className="w-full mt-[15px] uppercase">
                Увійти
             </Button>
          </form>
