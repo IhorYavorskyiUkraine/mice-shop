@@ -20,7 +20,7 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
    const [activeModel, setActiveModel] = useState<Model | null>(null);
    const [activeColor, setActiveColor] = useState<Color | null>(null);
 
-   const { data, loading, error } = useQuery(GET_PRODUCT, {
+   const { data, loading } = useQuery(GET_PRODUCT, {
       variables: { id },
    });
 
@@ -30,6 +30,7 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
    const { refetch } = useQuery(GET_CART);
 
    const addToCart = async () => {
+      if (loading) return;
       await addProduct({
          variables: {
             args: {
@@ -81,15 +82,19 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
 
    return (
       <div className="grid lg:grid-cols-2 lg:grid-rows-1 grid-cols-1 gap-6">
-         <div className="relative w-full aspect-square max-w-[722px] bg-primary overflow-hidden mx-auto">
-            <Image
-               src={activeColor?.image || 'https://placehold.co/722x722/png'}
-               fill
-               className="object-contain"
-               alt="Product Image"
-               priority
-               sizes="(max-width: 768px) 100vw, 722px"
-            />
+         <div className="relative w-full aspect-square max-w-[722px] bg-secondary overflow-hidden mx-auto">
+            {loading ? (
+               <UniversalSkeleton productImage />
+            ) : (
+               <Image
+                  src={activeColor?.image || 'https://placehold.co/722x722/png'}
+                  fill
+                  className="object-contain"
+                  alt="Product Image"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 722px"
+               />
+            )}
          </div>
          <div>
             {loading ? (
@@ -109,35 +114,47 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
                <p>Rating: {data?.getProductById.rating}</p>
             )}
             <Separator />
-            <ul className="list-disc pl-5 space-y-2">
-               {activeModel?.specs?.map((spec: Specs, i: number) => (
-                  <li key={spec.key}>
-                     <p>
-                        {spec.key}: {spec.value}
-                     </p>
-                  </li>
-               ))}
-            </ul>
+            {loading ? (
+               <UniversalSkeleton productSpecs />
+            ) : (
+               <ul className="list-disc pl-5 space-y-2">
+                  {activeModel?.specs?.map((spec: Specs, i: number) => (
+                     <li key={spec.key}>
+                        <p>
+                           {spec.key}: {spec.value}
+                        </p>
+                     </li>
+                  ))}
+               </ul>
+            )}
             <Separator />
             <ProductPickColor
                colors={activeModel?.colors}
                active={activeColor?.name || ''}
                setActive={setActiveColor}
+               loading={loading}
             />
             <ProductPickModel
                models={data?.getProductById.models}
                active={activeModel?.name}
                setActive={setActiveModel}
+               loading={loading}
             />
             <p>
                {activeColor && activeModel ? 'В наявності' : 'Нема в наявності'}
             </p>
             <div className="flex flex-wrap gap-5 items-center">
-               <p className="text-xxl flex-shrink-0">{activeModel?.price}$</p>
+               {loading ? (
+                  <UniversalSkeleton productPrice />
+               ) : (
+                  <p className="text-xxl flex-shrink-0">
+                     {activeModel?.price}$
+                  </p>
+               )}
                <Button
                   onClick={addToCart}
                   loading={addProductLoading}
-                  className="flex-1 min-w-[200px] uppercase"
+                  className="flex-1 min-w-[200px]"
                >
                   Додати в кошик
                </Button>

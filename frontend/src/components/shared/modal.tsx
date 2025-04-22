@@ -9,7 +9,7 @@ import {
 } from '@/components/ui';
 
 interface Props {
-   icon: React.ReactNode;
+   icon?: React.ReactNode;
    title: string;
    children: React.ReactNode;
    open: boolean;

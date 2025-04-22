@@ -28,9 +28,7 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
 
    const onSubmit = async (data: TRegister) => {
       try {
-         if (loading) {
-            return false;
-         }
+         if (loading) return;
 
          await register({ variables: { args: data } });
 
@@ -73,7 +71,7 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
             <Button
                loading={loading}
                type="submit"
-               className="w-full mt-[15px] uppercase"
+               className="w-full mt-[15px]"
             >
                Створити аккаунт
             </Button>

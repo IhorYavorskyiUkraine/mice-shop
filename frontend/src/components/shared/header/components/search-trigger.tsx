@@ -15,11 +15,7 @@ import { useDebounce, useMedia } from 'react-use';
 import { GET_ALL_PRODUCTS } from '../header.graphql';
 import { SearchItem } from './search-item';
 
-interface Props {
-   data: { image: string; name: string };
-}
-
-export const SearchTrigger: React.FC<Props> = ({ data }) => {
+export const SearchTrigger: React.FC = () => {
    const [isOpen, setIsOpen] = useState(false);
    const [search, setSearch] = useState('');
    const [debouncedValue, setDebouncedValue] = useState('');
@@ -55,6 +51,8 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
       variables: {
          args: {
             name: debouncedValue.trim(),
+            limit: 10,
+            offset: 0,
          },
       },
       skip: !debouncedValue.trim(),
@@ -247,8 +245,8 @@ export const SearchTrigger: React.FC<Props> = ({ data }) => {
                   height={24}
                   onClick={() => setIsOpen(true)}
                   className="cursor-pointer h-6 w-6"
-                  src={data.image}
-                  alt={data.name}
+                  src="/images/header/search.svg"
+                  alt="search"
                />
             )}
          </div>

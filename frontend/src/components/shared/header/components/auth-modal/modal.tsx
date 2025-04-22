@@ -44,7 +44,6 @@ export const Modal: React.FC = () => {
                onClick={() =>
                   handleMethodChange(method === 'login' ? 'register' : 'login')
                }
-               className="uppercase"
             >
                {method === 'login' ? 'Реєстрація' : 'Вхід'}
             </Button>

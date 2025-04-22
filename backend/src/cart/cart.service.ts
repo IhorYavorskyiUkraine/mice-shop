@@ -29,6 +29,9 @@ export class CartService {
                      },
                      color: true,
                   },
+                  orderBy: {
+                     createdAt: 'desc',
+                  },
                },
             },
          });
@@ -152,7 +155,7 @@ export class CartService {
 
    async updateProduct(args: UpdateProductArgs & { userId: number }) {
       try {
-         const { modelId, userId, color, quantity } = args;
+         const { modelId, userId, colorId, quantity } = args;
 
          this.validateIds(userId, modelId);
 
@@ -170,6 +173,7 @@ export class CartService {
             where: {
                cartId: cart.id,
                modelId,
+               colorId,
             },
          });
 
@@ -180,15 +184,15 @@ export class CartService {
          const product = await this.prisma.color.findFirst({
             where: {
                modelId,
-               name: color.name,
+               id: colorId,
             },
             select: {
                stock: true,
             },
          });
 
-         if (!color) {
-            throw new BadRequestException('Color not found');
+         if (!product) {
+            throw new BadRequestException('Product not found');
          }
 
          if (quantity > product.stock) {

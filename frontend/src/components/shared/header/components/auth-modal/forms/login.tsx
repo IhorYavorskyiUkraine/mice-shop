@@ -26,9 +26,7 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
 
    const onSubmit = async (data: TLogin) => {
       try {
-         if (loading) {
-            return false;
-         }
+         if (loading) return;
 
          await login({ variables: { args: data } });
 
@@ -59,7 +57,7 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
                type="password"
                label="Пароль"
             />
-            <Button loading={loading} className="w-full mt-[15px] uppercase">
+            <Button loading={loading} className="w-full mt-[15px]">
                Увійти
             </Button>
          </form>

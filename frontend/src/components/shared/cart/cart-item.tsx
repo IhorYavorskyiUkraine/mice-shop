@@ -13,7 +13,7 @@ interface Props {
 export const CartItem: React.FC<Props> = ({ item }) => {
    const [updateQuantity] = useMutation(UPDATE_QUANTITY);
    const [deleteItem] = useMutation(REMOVE_PRODUCT);
-   const { refetch } = useQuery(GET_CART);
+   const { refetch, loading } = useQuery(GET_CART);
 
    const handleQuantity = async (option: 'plus' | 'minus') => {
       await updateQuantity({
@@ -22,13 +22,14 @@ export const CartItem: React.FC<Props> = ({ item }) => {
                modelId: item.model.id,
                quantity:
                   option === 'plus' ? item.quantity + 1 : item.quantity - 1,
-               color: item.color.name,
+               colorId: item.color.id,
             },
          },
       });
    };
 
    const handleDelete = async () => {
+      if (loading) return;
       await deleteItem({
          variables: {
             modelId: item.model.id,

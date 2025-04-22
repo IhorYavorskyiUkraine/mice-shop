@@ -9,6 +9,13 @@ interface Props {
    categoryTiles?: boolean;
    productTitle?: boolean;
    productRating?: boolean;
+   productSpecs?: boolean;
+   productPickColor?: boolean;
+   productPickModel?: boolean;
+   activeColorOrModelText?: boolean;
+   productPrice?: boolean;
+   cartItems?: boolean;
+   productImage?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -19,6 +26,12 @@ export const UniversalSkeleton: React.FC<Props> = ({
    categoryTiles,
    productTitle,
    productRating,
+   productSpecs,
+   productPickColor,
+   productPickModel,
+   activeColorOrModelText,
+   productPrice,
+   productImage,
 }) => {
    if (searchItems) {
       return (
@@ -79,6 +92,27 @@ export const UniversalSkeleton: React.FC<Props> = ({
       return <Skeleton className="h-[30px] w-[50%] lg:h-[50px]" />;
    } else if (productRating) {
       return <Skeleton className="h-[20px] w-[20%] lg:h-[30px]" />;
+   } else if (productSpecs) {
+      return Array.from({ length: 6 }).map((_, index) => (
+         <Skeleton
+            key={index}
+            className="h-[20px] w-[50%] lg:h-[30px] mb-2 last:mb-0"
+         />
+      ));
+   } else if (productPickColor) {
+      return Array.from({ length: 2 }).map((_, index) => (
+         <Skeleton key={index} className="size-[50px]" />
+      ));
+   } else if (productPickModel) {
+      return Array.from({ length: 3 }).map((_, index) => (
+         <Skeleton key={index} className="w-[150px] h-[42px]" />
+      ));
+   } else if (activeColorOrModelText) {
+      return <Skeleton className="w-[150px] h-[30px] mb-sm" />;
+   } else if (productPrice) {
+      return <Skeleton className="size-[70px]" />;
+   } else if (productImage) {
+      return <Skeleton className="w-full h-full" />;
    }
 
    return null;

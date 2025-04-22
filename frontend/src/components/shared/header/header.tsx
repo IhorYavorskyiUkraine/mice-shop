@@ -1,15 +1,12 @@
 import { Container, Logo } from '@/components/ui';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Cart } from '../cart/cart';
 import { Modal } from './components/auth-modal/modal';
 import { Burger } from './components/burger';
 import { SearchTrigger } from './components/search-trigger';
-import { icons, links } from './header.data';
+import { links } from './header.data';
 
 export const Header: React.FC = () => {
-   const searchIcon = icons.find(icon => icon.name === 'search');
-
    return (
       <header className="bg-primary text-secondary sticky top-0 z-50">
          <Container className="py-[10px] md:py-5">
@@ -17,24 +14,14 @@ export const Header: React.FC = () => {
             <div className="flex justify-between items-center md:hidden px-4 h-14">
                <div className="flex items-center gap-4">
                   <Burger />
-                  {searchIcon && <SearchTrigger data={searchIcon} />}
+                  <SearchTrigger />
                </div>
 
                <Logo />
 
                <div className="flex justify-end items-center gap-4">
-                  {icons
-                     .filter(icon => !['search', 'burger'].includes(icon.name))
-                     .map(icon => (
-                        <Image
-                           key={icon.name}
-                           width={24}
-                           height={24}
-                           src={icon.image}
-                           alt={icon.name}
-                           className="h-6 w-6"
-                        />
-                     ))}
+                  <Cart />
+                  <Modal />
                </div>
             </div>
 
@@ -61,19 +48,9 @@ export const Header: React.FC = () => {
                </nav>
 
                <div className="flex justify-end gap-6">
-                  {icons.map(icon => {
-                     if (icon.name === 'search') {
-                        return <SearchTrigger key={icon.name} data={icon} />;
-                     }
-
-                     if (icon.name === 'cart') {
-                        return <Cart key={icon.name} />;
-                     }
-
-                     if (icon.name === 'user') {
-                        return <Modal key={icon.name} />;
-                     }
-                  })}
+                  <SearchTrigger />
+                  <Cart />
+                  <Modal />
                </div>
             </div>
          </Container>

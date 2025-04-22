@@ -22,7 +22,7 @@ export const Title: React.FC<Props> = ({ text, size = 'lg', className }) => {
 
    return React.createElement(
       mapTagBySize[size],
-      { className: cn(mapClassNameBySize[size], className) },
+      { className: cn(mapClassNameBySize[size], className, 'uppercase') },
       text,
    );
 };

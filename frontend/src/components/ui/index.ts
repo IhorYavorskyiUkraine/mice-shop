@@ -15,3 +15,4 @@ export { Overlay } from './overlay';
 export { Separator } from './separator';
 export { Spinner } from './spinner';
 export { UniversalSkeleton } from './universal-skeleton';
+export { Textarea } from './textarea';

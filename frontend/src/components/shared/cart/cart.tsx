@@ -17,7 +17,7 @@ import { CartItem } from './cart-item';
 import { GET_CART } from './cart.graphql';
 
 export const Cart: React.FC = () => {
-   const { data, loading, error } = useQuery(GET_CART);
+   const { data, error } = useQuery(GET_CART);
 
    return (
       <Drawer
@@ -32,10 +32,12 @@ export const Cart: React.FC = () => {
             />
          }
       >
-         <DrawerContent className="!w-[500px] bg-secondary py-sm px-sm text-primary">
+         <DrawerContent className="lg:!w-[500px] w-full  bg-secondary py-sm px-sm text-primary">
             <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
                <DrawerTitle className="text-l">Кошик</DrawerTitle>
-               <DrawerClose className="text-m2 uppercase">x</DrawerClose>
+               <DrawerClose className="text-m2 uppercase cursor-pointer">
+                  x
+               </DrawerClose>
             </DrawerHeader>
             {(error?.message && <ErrorMessage message={error.message} />) || (
                <div className="flex flex-col h-full">
@@ -51,20 +53,20 @@ export const Cart: React.FC = () => {
                         </Button>
                      </div>
                   ) : (
-                     <div className="flex flex-col flex-1 max-h-[90vh]">
-                        <div className="flex-1 overflow-y-auto">
-                           <div className="space-y-4 pr-2">
-                              {data?.getCart.items?.map((item: TCartItem) => (
-                                 <CartItem key={item.id} item={item} />
-                              ))}
-                           </div>
+                     <div className="flex flex-col">
+                        <div className="space-y-4 flex-1 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+                           {data?.getCart.items?.map((item: TCartItem) => (
+                              <CartItem key={item.id} item={item} />
+                           ))}
                         </div>
-                        <p className="text-right">
-                           Сумма: {data?.getCart.totalPrice}$
-                        </p>
-                        <Button className="mt-4 shrink-0">
-                           Перейти до оформлення
-                        </Button>
+                        <div className="mt-sm">
+                           <p className="text-right mb-2">
+                              Сумма: {data?.getCart.totalPrice}$
+                           </p>
+                           <Button className="w-full">
+                              Перейти до оформлення
+                           </Button>
+                        </div>
                      </div>
                   )}
                </div>

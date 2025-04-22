@@ -28,6 +28,9 @@ export class ReviewService {
             where: {
                productId,
             },
+            include: {
+               user: true,
+            },
             orderBy: {
                createdAt: sortOrder,
             },
@@ -42,17 +45,31 @@ export class ReviewService {
       }
    }
 
-   async createReview(args: CreateReviewArgs) {
-      const { userId, productId, rating, comment } = args;
-      return [
-         {
-            id: 1,
-            userId,
-            productId,
-            rating,
-            comment,
-            createdAt: new Date(),
-         },
-      ];
+   async createReview(args: CreateReviewArgs, userId: number) {
+      try {
+         const { productId, rating, comment } = args;
+
+         if (!productId || productId <= 0) {
+            throw new BadRequestException(
+               'Product ID is required and must be a positive number.',
+            );
+         }
+
+         const review = await this.prisma.review.create({
+            data: {
+               userId,
+               productId,
+               rating,
+               comment,
+            },
+            include: {
+               user: true,
+            },
+         });
+
+         return review;
+      } catch (e) {
+         console.error(e);
+      }
    }
 }
