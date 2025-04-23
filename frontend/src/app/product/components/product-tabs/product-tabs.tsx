@@ -13,7 +13,7 @@ export const ProductTabs: React.FC<Props> = ({ id }) => {
    const [activeTab, setActiveTab] = useState(1);
 
    return (
-      <div className="py-md">
+      <div className="pt-md">
          <div className="grid grid-cols-2 border-b-[1px] border-primary">
             <ProductTabsButton
                activeTab={activeTab === 0}

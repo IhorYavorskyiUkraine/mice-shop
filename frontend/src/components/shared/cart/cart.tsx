@@ -53,13 +53,13 @@ export const Cart: React.FC = () => {
                         </Button>
                      </div>
                   ) : (
-                     <div className="flex flex-col">
-                        <div className="space-y-4 flex-1 max-h-[calc(100vh-200px)] overflow-y-auto pr-2">
+                     <div className="flex flex-col h-[calc(100vh-110px)]">
+                        <div className="flex-grow overflow-y-auto pr-2 space-y-4">
                            {data?.getCart.items?.map((item: TCartItem) => (
                               <CartItem key={item.id} item={item} />
                            ))}
                         </div>
-                        <div className="mt-sm">
+                        <div className="sticky bottom-0 bg-white pt-2 border-t">
                            <p className="text-right mb-2">
                               Сумма: {data?.getCart.totalPrice}$
                            </p>

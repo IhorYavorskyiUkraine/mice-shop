@@ -5,6 +5,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
 import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateReviewArgs, GetProductReviewsArgs } from './dto';
+import { PaginatedReviewsResponse } from './models/paginated-reviews.model';
 import { Review } from './review.model';
 import { ReviewService } from './review.service';
 
@@ -15,7 +16,7 @@ export class ReviewResolver {
       private readonly authService: AuthService,
    ) {}
 
-   @Query(() => [Review])
+   @Query(() => PaginatedReviewsResponse)
    async getProductReviews(@Args('args') args: GetProductReviewsArgs) {
       return this.reviewService.getProductReviews(args);
    }

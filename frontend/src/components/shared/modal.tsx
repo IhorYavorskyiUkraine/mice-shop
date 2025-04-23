@@ -10,7 +10,7 @@ import {
 
 interface Props {
    icon?: React.ReactNode;
-   title: string;
+   title?: string;
    children: React.ReactNode;
    open: boolean;
    setOpen: (open: boolean) => void;

@@ -2,11 +2,12 @@
 
 import { TextareaWithValidations } from '@/components/shared/textarea-with-validation';
 import { Button } from '@/components/ui';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { CREATE_REVIEW, GET_PRODUCT_REVIEWS } from './reviews.graphql';
+import { PixelRatingInputText } from './input-rating';
+import { CREATE_REVIEW } from './reviews.graphql';
 import { createReviewSchema, TCreateReview } from './schema';
 
 interface Props {
@@ -30,12 +31,16 @@ export const Form: React.FC<Props> = ({ setIsOpen, productId, refetch }) => {
       try {
          if (loading) return;
 
-         await createReview({ variables: { args: { ...data, productId } } });
+         await createReview({
+            variables: {
+               args: { ...data, productId, comment: data.comment.trim() },
+            },
+         });
 
-         form.reset();
-         toast.success('Ви успішно залишили відгук');
-         await refetch();
+         refetch();
          setIsOpen();
+         toast.success('Ви успішно залишили відгук');
+         form.reset();
       } catch (error) {
          console.error('Error [CreateReview]', error);
       }
@@ -47,6 +52,10 @@ export const Form: React.FC<Props> = ({ setIsOpen, productId, refetch }) => {
             className="flex flex-1 flex-col gap-2 "
             onSubmit={form.handleSubmit(onSubmit)}
          >
+            <PixelRatingInputText
+               value={form.watch('rating')}
+               onChange={v => form.setValue('rating', v)}
+            />
             <TextareaWithValidations
                disabled={loading}
                placeholder="Коментар"

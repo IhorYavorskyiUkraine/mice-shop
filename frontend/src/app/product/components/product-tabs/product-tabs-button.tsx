@@ -20,7 +20,7 @@ export const ProductTabsButton: React.FC<Props> = ({
          )}
          onClick={() => setActiveTab(1)}
       >
-         <Title className="pb-2" text={text} />
+         <Title className="text-md" text={text} />
       </button>
    );
 };

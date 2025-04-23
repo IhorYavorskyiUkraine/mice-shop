@@ -3,13 +3,18 @@ import { gql } from '@apollo/client';
 export const GET_PRODUCT_REVIEWS = gql`
    query GetProductReviews($args: GetProductReviewsArgs!) {
       getProductReviews(args: $args) {
-         id
-         comment
-         rating
-         user {
-            displayName
+         reviews {
+            id
+            comment
+            rating
+            user {
+               displayName
+            }
+            createdAt
          }
-         createdAt
+         totalPages
+         totalReviews
+         currentPage
       }
    }
 `;

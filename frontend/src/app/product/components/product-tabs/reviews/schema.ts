@@ -7,7 +7,7 @@ export const createReviewSchema = z.object({
       .max(5, { message: 'Rating cannot be more than 5' }),
    comment: z
       .string({ required_error: 'Comment is required' })
-      .min(1, { message: 'Comment cannot be empty' }),
+      .min(10, { message: 'Comment must be at least 10 characters long' }),
 });
 
 export type TCreateReview = z.infer<typeof createReviewSchema>;

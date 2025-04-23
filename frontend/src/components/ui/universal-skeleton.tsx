@@ -16,6 +16,7 @@ interface Props {
    productPrice?: boolean;
    cartItems?: boolean;
    productImage?: boolean;
+   productReviews?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -32,6 +33,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
    activeColorOrModelText,
    productPrice,
    productImage,
+   productReviews,
 }) => {
    if (searchItems) {
       return (
@@ -113,6 +115,24 @@ export const UniversalSkeleton: React.FC<Props> = ({
       return <Skeleton className="size-[70px]" />;
    } else if (productImage) {
       return <Skeleton className="w-full h-full" />;
+   } else if (productReviews) {
+      return Array.from({ length: 8 }).map((_, index) => (
+         <div key={index} className="border-primary border-2 p-4">
+            <div className="flex gap-4">
+               <div>
+                  <Skeleton className="size-[50px] rounded-full" />
+               </div>
+               <div className="flex-1">
+                  <div className="flex justify-between">
+                     <Skeleton className="h-[24px] w-[200px] mb-1" />
+                     <Skeleton className="h-[24px] w-[100px]" />
+                  </div>
+                  <Skeleton className="h-[24px] w-[90px] mb-1" />
+                  <Skeleton className="h-[24px] w-[50%]" />
+               </div>
+            </div>
+         </div>
+      ));
    }
 
    return null;

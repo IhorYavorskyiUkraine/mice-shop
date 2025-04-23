@@ -5,12 +5,12 @@ export class GetProductReviewsArgs {
    @Field(() => Int)
    productId: number;
 
-   @Field({ nullable: true })
-   orderBy: string;
+   @Field(() => [String])
+   orderBy: [string, 'asc' | 'desc'];
 
-   @Field(() => Int, { nullable: true })
+   @Field(() => Int)
    limit: number;
 
-   @Field(() => Int, { nullable: true })
+   @Field(() => Int)
    offset: number;
 }

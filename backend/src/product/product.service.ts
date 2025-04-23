@@ -106,6 +106,9 @@ export class ProductService {
             throw new NotFoundException('Product not found');
          }
 
+         const rating = this.calcRating(product.reviews);
+         await this.onVisit(id, rating);
+
          return product;
       } catch (e) {
          console.error('Error fetching product:', e);
@@ -134,5 +137,23 @@ export class ProductService {
             'Error fetching categories. Please try again later.',
          );
       }
+   }
+
+   async onVisit(productId: number, rating: number) {
+      return this.prisma.product.update({
+         where: { id: productId },
+         data: { rating, views: { increment: 1 } },
+      });
+   }
+
+   calcRating(reviews: { rating: number }[]) {
+      if (!reviews.length) return 0;
+
+      const totalRating = reviews.reduce(
+         (acc, review) => acc + review.rating,
+         0,
+      );
+
+      return Math.round((totalRating / reviews.length) * 10) / 10;
    }
 }

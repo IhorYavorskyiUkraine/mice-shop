@@ -120,6 +120,8 @@ export class AuthService {
       }
    }
 
+	
+
    private async findUserByEmailOrThrow(email: string) {
       const user = await this.userService.findUserByEmail(email);
       if (!user) {

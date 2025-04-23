@@ -58,4 +58,23 @@ export class AuthResolver {
 
       return response;
    }
+
+   @UseGuards(JwtGuard)
+   @Mutation(() => AuthResponse)
+   async isAuthenticated(@Context() context: { req: Request; res: Response }) {
+      const { accessToken, refreshToken } = getAuthTokens(context.req);
+
+      if (!accessToken || !refreshToken) {
+         throw new ForbiddenException('Authorization token is missing');
+      }
+
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
+
+      const response = await this.authService.logout(userId, refreshToken);
+
+      clearAuthCookies(context.res);
+
+      return response;
+   }
 }

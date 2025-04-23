@@ -8,9 +8,7 @@ export class ReviewService {
 
    async getProductReviews(args: GetProductReviewsArgs) {
       try {
-         const { productId, orderBy = 'desc', limit = 10, offset = 0 } = args;
-
-         const sortOrder = orderBy === 'asc' ? 'asc' : 'desc';
+         const { productId, orderBy, limit, offset } = args;
 
          if (!productId || productId <= 0) {
             throw new BadRequestException(
@@ -31,14 +29,18 @@ export class ReviewService {
             include: {
                user: true,
             },
-            orderBy: {
-               createdAt: sortOrder,
-            },
+            orderBy:
+               orderBy.length === 2
+                  ? [{ [orderBy[0]]: orderBy[1] as 'asc' | 'desc' }]
+                  : [{ createdAt: 'desc' }],
             take: limit,
             skip: offset,
          });
 
-         return reviews;
+         const { totalPages, totalReviews, currentPage } =
+            await this.getTotalPages(args);
+
+         return { reviews, totalPages, totalReviews, currentPage };
       } catch (e) {
          console.error(e);
          throw new BadRequestException('Error fetching product reviews');
@@ -68,6 +70,26 @@ export class ReviewService {
          });
 
          return review;
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
+   async getTotalPages(args: GetProductReviewsArgs) {
+      try {
+         const { productId, limit, offset } = args;
+
+         const totalReviews = await this.prisma.review.count({
+            where: {
+               productId,
+            },
+         });
+
+         const totalPages = Math.ceil(totalReviews / limit);
+
+         const currentPage = offset / limit + 1;
+
+         return { totalPages, totalReviews, currentPage };
       } catch (e) {
          console.error(e);
       }

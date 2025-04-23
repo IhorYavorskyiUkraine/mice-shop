@@ -5,12 +5,14 @@ interface Props {
    currentPage: number;
    totalPages: number;
    onPageChange: (page: number) => void;
+   noScroll?: boolean;
 }
 
 export const Pagination: React.FC<Props> = ({
    currentPage,
    totalPages,
    onPageChange,
+   noScroll,
 }) => {
    const isFirstPage = currentPage === 1;
    const isLastPage = currentPage === totalPages;
@@ -24,7 +26,7 @@ export const Pagination: React.FC<Props> = ({
 
    const handleClick = (page: number) => {
       onPageChange(page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      noScroll || window.scrollTo({ top: 0, behavior: 'smooth' });
    };
 
    const handleNext = () => {

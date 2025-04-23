@@ -4,5 +4,5 @@ interface Props {
 }
 
 export const ProductDetails: React.FC<Props> = ({ id, active }) => {
-   return active && <div>Details</div>;
+   return active && <div className="text-center py-xl">У розробці</div>;
 };

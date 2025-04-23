@@ -1,5 +1,6 @@
 'use client';
 
+import { PixelRating } from '@/components/shared';
 import { GET_CART } from '@/components/shared/cart/cart.graphql';
 import { Button, Separator, Title, UniversalSkeleton } from '@/components/ui';
 import { Color } from '@/types/color.type';
@@ -111,14 +112,14 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
             {loading ? (
                <UniversalSkeleton productRating />
             ) : (
-               <p>Rating: {data?.getProductById.rating}</p>
+               <PixelRating rating={data?.getProductById.rating} />
             )}
             <Separator />
             {loading ? (
                <UniversalSkeleton productSpecs />
             ) : (
                <ul className="list-disc pl-5 space-y-2">
-                  {activeModel?.specs?.map((spec: Specs, i: number) => (
+                  {activeModel?.specs?.map((spec: Specs) => (
                      <li key={spec.key}>
                         <p>
                            {spec.key}: {spec.value}

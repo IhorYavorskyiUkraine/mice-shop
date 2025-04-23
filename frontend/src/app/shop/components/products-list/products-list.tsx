@@ -1,14 +1,16 @@
 'use client';
 
+import { SortingMobile } from '@/components/shared';
 import { ProductBlockItem } from '@/components/shared/product-block/product-block-item';
+import { SortByDropdown } from '@/components/shared/sorting-component';
 import { ErrorMessage, Title, UniversalSkeleton } from '@/components/ui';
 import { Product } from '@/types/product.type';
 import { useLazyQuery } from '@apollo/client';
 import qs from 'qs';
 import { useEffect, useState } from 'react';
+import { Pagination } from '../../../../components/shared/pagination/pagination';
 import { useShopStore } from '../../store';
-import { Dropdown } from '../dropdown/dropdown';
-import { Pagination } from '../pagination/pagination';
+import { dropdownData } from '../dropdown.data';
 import { SidebarMobile } from '../sidebar/sidebar-mobile';
 import { GET_FILTERED_PRODUCTS } from './product-list.graphql';
 
@@ -83,7 +85,13 @@ export const ProductsList: React.FC = () => {
       <div>
          <div className="flex items-center justify-between">
             <Title text="Магазин" className="hidden lg:block" />
-            <Dropdown
+            <SortByDropdown
+               data={dropdownData}
+               activeSort={filters.sort}
+               setActive={newSort => setFilters({ ...filters, sort: newSort })}
+            />
+            <SortingMobile
+               data={dropdownData}
                activeSort={filters.sort}
                setActive={newSort => setFilters({ ...filters, sort: newSort })}
             />
