@@ -2,6 +2,7 @@
 
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { Button } from '@/components/ui';
+import { useAuthStore } from '@/lib/utils/useAuth/store';
 import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -23,13 +24,18 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
    });
 
    const [login, { loading }] = useMutation(LOGIN);
+   const { setAuth } = useAuthStore();
 
    const onSubmit = async (data: TLogin) => {
       try {
          if (loading) return;
 
-         await login({ variables: { args: data } });
+         const res = await login({ variables: { args: data } });
 
+         setAuth({
+            isAuthenticated: true,
+            userId: res.data.login.userId,
+         });
          form.reset();
          toast.success('Login successful');
          setIsOpen();

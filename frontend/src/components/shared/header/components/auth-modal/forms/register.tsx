@@ -32,9 +32,9 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
 
          await register({ variables: { args: data } });
 
-         setIsOpen();
          form.reset();
          toast.success('Register successful');
+         setIsOpen();
       } catch (error) {
          console.error('Error [REGISTER]', error);
       }

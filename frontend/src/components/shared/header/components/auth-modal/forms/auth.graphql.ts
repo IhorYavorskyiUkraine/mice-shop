@@ -12,6 +12,7 @@ export const LOGIN = gql`
    mutation Login($args: LoginArgs!) {
       login(args: $args) {
          message
+         userId
       }
    }
 `;

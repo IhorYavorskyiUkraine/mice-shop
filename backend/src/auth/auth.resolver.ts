@@ -1,5 +1,5 @@
 import { ForbiddenException, UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import {
    clearAuthCookies,
@@ -8,7 +8,7 @@ import {
 } from 'src/utils/cookie.utils';
 import { AuthService } from './auth.service';
 import { LoginArgs, RegisterArgs } from './dto';
-import { JwtGuard } from './guard';
+import { JwtGuard, RefreshTokenGuard } from './guard';
 import { AuthResponse } from './types/auth.type';
 
 @Resolver()
@@ -24,7 +24,10 @@ export class AuthResolver {
 
       setAuthCookies(context.res, accessToken, refreshToken);
 
-      return { message: 'Login successful' };
+      const { userId } =
+         await this.authService.validateAccessToken(accessToken);
+
+      return { message: 'Login successful', userId };
    }
 
    @Mutation(() => AuthResponse)
@@ -59,22 +62,38 @@ export class AuthResolver {
       return response;
    }
 
-   @UseGuards(JwtGuard)
+   @UseGuards(RefreshTokenGuard)
    @Mutation(() => AuthResponse)
-   async isAuthenticated(@Context() context: { req: Request; res: Response }) {
-      const { accessToken, refreshToken } = getAuthTokens(context.req);
+   async refresh(@Context() context: { req: Request; res: Response }) {
+      const { refreshToken } = getAuthTokens(context.req);
 
-      if (!accessToken || !refreshToken) {
+      if (!refreshToken) {
+         throw new ForbiddenException('Authorization token is missing');
+      }
+
+      const { userId } =
+         await this.authService.validateRefreshToken(refreshToken);
+
+      const { accessToken, refreshToken: newRefreshToken } =
+         await this.authService.refresh(userId, refreshToken);
+
+      setAuthCookies(context.res, accessToken, newRefreshToken);
+
+      return { message: 'Refresh successful' };
+   }
+
+   @UseGuards(JwtGuard)
+   @Query(() => AuthResponse)
+   async isAuthenticated(@Context() context: { req: Request; res: Response }) {
+      const { accessToken } = getAuthTokens(context.req);
+
+      if (!accessToken) {
          throw new ForbiddenException('Authorization token is missing');
       }
 
       const { userId } =
          await this.authService.validateAccessToken(accessToken);
 
-      const response = await this.authService.logout(userId, refreshToken);
-
-      clearAuthCookies(context.res);
-
-      return response;
+      return { message: 'Authenticated', userId };
    }
 }

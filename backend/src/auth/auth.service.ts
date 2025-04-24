@@ -42,11 +42,7 @@ export class AuthService {
          });
 
          if (refreshToken) {
-            await this.prisma.refreshToken.deleteMany({
-               where: {
-                  userId: user.id,
-               },
-            });
+            await this.deleteRefreshToken(user.id);
 
             await this.revokeToken(refreshToken.token);
          }
@@ -110,9 +106,7 @@ export class AuthService {
          }
 
          await this.revokeToken(refreshToken);
-         await this.prisma.refreshToken.deleteMany({
-            where: { userId },
-         });
+         await this.deleteRefreshToken(userId);
 
          return { message: 'Logged out successful' };
       } catch (e) {
@@ -120,7 +114,25 @@ export class AuthService {
       }
    }
 
-	
+   async refresh(userId: number, refreshToken: string) {
+      try {
+         const user = await this.userService.findUserById(userId);
+
+         if (!user) {
+            throw new ForbiddenException('User not found');
+         }
+
+         const isRevoked = await this.isTokenRevoked(refreshToken);
+
+         if (isRevoked) {
+            throw new ForbiddenException('Refresh token is revoked');
+         }
+
+         return this.generateTokens(user.id);
+      } catch (e) {
+         console.error(e);
+      }
+   }
 
    private async findUserByEmailOrThrow(email: string) {
       const user = await this.userService.findUserByEmail(email);
@@ -173,7 +185,7 @@ export class AuthService {
          )
             return null;
 
-         return user;
+         return { userId: user.id };
       } catch (error) {
          throw new UnauthorizedException('Invalid refresh token');
       }
@@ -189,7 +201,15 @@ export class AuthService {
       );
    }
 
+   async deleteRefreshToken(userId: number) {
+      await this.prisma.refreshToken.deleteMany({
+         where: { userId },
+      });
+   }
+
    async generateRefreshToken(userId: number) {
+      await this.deleteRefreshToken(userId);
+
       const refreshToken = this.jwtService.sign(
          { userId },
          {

@@ -23,7 +23,7 @@ export class RefreshTokenGuard implements CanActivate {
 
       if (!user) throw new UnauthorizedException('Invalid refresh token');
 
-      req.user = user.id;
+      req.user = user.userId;
 
       return true;
    }

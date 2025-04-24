@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
                      <Image
                         width={30}
                         height={30}
-                        src="/images/footer/instagram.svg"
+                        src="/images/footer/Instagram.svg"
                         alt="Instagram"
                      />
                   </Link>

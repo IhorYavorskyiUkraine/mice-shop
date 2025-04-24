@@ -7,7 +7,11 @@ import { Modal as ModalComponent } from '../../../modal';
 import { Login } from './forms/login';
 import { Register } from './forms/register';
 
-export const Modal: React.FC = () => {
+interface Props {
+   icon?: React.ReactNode;
+}
+
+export const Modal: React.FC<Props> = ({ icon }) => {
    const [method, setMethod] = useState<'login' | 'register'>('login');
    const [isOpen, setIsOpen] = useState(false);
 
@@ -20,13 +24,17 @@ export const Modal: React.FC = () => {
          open={isOpen}
          setOpen={setIsOpen}
          icon={
-            <Image
-               width={24}
-               height={24}
-               src="/images/header/user.svg"
-               alt="user"
-               className="h-6 w-6 hover:opacity-80 transition"
-            />
+            icon ? (
+               icon
+            ) : (
+               <Image
+                  width={24}
+                  height={24}
+                  src="/images/header/user.svg"
+                  alt="user"
+                  className="h-6 w-6 hover:opacity-80 transition"
+               />
+            )
          }
          title={method === 'login' ? 'Вхід' : 'Реєстрація'}
       >
