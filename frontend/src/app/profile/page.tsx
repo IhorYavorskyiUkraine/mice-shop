@@ -1,27 +1,8 @@
-'use client';
+import { verifyAndRefreshTokens } from '@/lib/utils/tokens';
+import { Main } from './components/main';
 
-export default function Profile() {
-   const res = fetch('http://localhost:8000/graphql', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-         query: `query IsAuthenticated {
-				isAuthenticated {
-					userId
-					message
-				}
-			}`,
-      }),
-   }).then(res => res.json());
-   console.log(res);
+export default async function Profile() {
+   const { accessToken } = await verifyAndRefreshTokens();
 
-   return (
-      <div>
-         <h1>Profile</h1>
-         <p>User ID: </p>
-      </div>
-   );
+   return <Main accessToken={accessToken} />;
 }

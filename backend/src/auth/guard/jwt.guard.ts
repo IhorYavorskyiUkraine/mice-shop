@@ -8,10 +8,6 @@ export class JwtGuard extends AuthGuard('jwt') {
       const ctx = GqlExecutionContext.create(context);
       const req = ctx.getContext().req;
 
-      if (req.cookies && req.cookies['accessToken']) {
-         req.headers['authorization'] = `Bearer ${req.cookies['accessToken']}`;
-      }
-
       return req;
    }
 }

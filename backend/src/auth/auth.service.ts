@@ -117,7 +117,7 @@ export class AuthService {
    async refresh(userId: number, refreshToken: string) {
       try {
          const user = await this.userService.findUserById(userId);
-
+         console.log(user);
          if (!user) {
             throw new ForbiddenException('User not found');
          }
@@ -163,6 +163,7 @@ export class AuthService {
 
          return decoded as { userId: number };
       } catch (error) {
+         console.error('Error validating access token:', error);
          throw new UnauthorizedException('Invalid or expired access token');
       }
    }
@@ -178,15 +179,11 @@ export class AuthService {
             include: { refreshToken: true },
          });
 
-         if (
-            !user ||
-            !user.refreshToken ||
-            user.refreshToken.token !== refreshToken
-         )
-            return null;
+         if (!user) return null;
 
          return { userId: user.id };
       } catch (error) {
+         console.error('Error validating refresh token:', error);
          throw new UnauthorizedException('Invalid refresh token');
       }
    }

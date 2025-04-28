@@ -19,7 +19,7 @@ import { UserModule } from './user/user.module';
          autoSchemaFile: true,
          playground: true,
          sortSchema: true,
-         context: ({ req, res }) => ({ req, res, headers: req.headers }),
+         context: ({ req, res }) => ({ req, res }),
       }),
       ConfigModule.forRoot(),
       UserModule,

@@ -1,4 +1,4 @@
-import { ForbiddenException, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import {
@@ -49,7 +49,7 @@ export class AuthResolver {
       const { accessToken, refreshToken } = getAuthTokens(context.req);
 
       if (!accessToken || !refreshToken) {
-         throw new ForbiddenException('Authorization token is missing');
+         throw new Error('Access token or refresh token not found');
       }
 
       const { userId } =
@@ -68,7 +68,7 @@ export class AuthResolver {
       const { refreshToken } = getAuthTokens(context.req);
 
       if (!refreshToken) {
-         throw new ForbiddenException('Authorization token is missing');
+         throw new Error('Refresh token not found');
       }
 
       const { userId } =
@@ -79,7 +79,7 @@ export class AuthResolver {
 
       setAuthCookies(context.res, accessToken, newRefreshToken);
 
-      return { message: 'Refresh successful' };
+      return { message: 'Refresh successful', accessToken, refreshToken };
    }
 
    @UseGuards(JwtGuard)
@@ -88,7 +88,7 @@ export class AuthResolver {
       const { accessToken } = getAuthTokens(context.req);
 
       if (!accessToken) {
-         throw new ForbiddenException('Authorization token is missing');
+         throw new Error('Access token not found');
       }
 
       const { userId } =

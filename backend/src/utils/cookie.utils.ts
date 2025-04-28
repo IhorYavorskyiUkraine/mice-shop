@@ -1,4 +1,3 @@
-import { ForbiddenException } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 export function setAuthCookies(
@@ -8,7 +7,7 @@ export function setAuthCookies(
 ) {
    res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 15,
+      maxAge: 1000 * 15,
       secure: false,
       sameSite: 'lax',
    });
@@ -27,10 +26,6 @@ export function getAuthTokens(req: Request): {
 } {
    const accessToken = req.cookies['accessToken'];
    const refreshToken = req.cookies['refreshToken'];
-
-   if (!accessToken || !refreshToken) {
-      throw new ForbiddenException('Authorization token is missing');
-   }
 
    return { accessToken, refreshToken };
 }

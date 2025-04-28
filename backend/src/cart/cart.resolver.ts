@@ -19,6 +19,10 @@ export class CartResolver {
    async getCart(@Context() context: { req: Request }) {
       const { accessToken } = getAuthTokens(context.req);
 
+      if (!accessToken) {
+         throw new Error('Access token not found');
+      }
+
       const { userId } =
          await this.authService.validateAccessToken(accessToken);
 
@@ -31,6 +35,10 @@ export class CartResolver {
       @Context() context: { req: Request },
    ) {
       const { accessToken } = getAuthTokens(context.req);
+
+      if (!accessToken) {
+         throw new Error('Access token not found');
+      }
 
       const { userId } =
          await this.authService.validateAccessToken(accessToken);
