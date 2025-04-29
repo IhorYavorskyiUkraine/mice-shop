@@ -17,6 +17,7 @@ model User {
    orders       Order[]
    reviews      Review[]
    cart         Cart?
+   phone        String?
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

@@ -29,7 +29,6 @@ export interface ButtonProps
       VariantProps<typeof buttonVariants> {
    asChild?: boolean;
    loading?: boolean;
-   icon?: React.ReactNode;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -39,7 +38,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
          variant,
          children,
          size,
-         icon,
          loading = false,
          asChild = false,
          ...props

@@ -1,12 +1,11 @@
 import {
    BadRequestException,
-   ForbiddenException,
    Injectable,
    NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { verify } from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 
 @Injectable()
@@ -83,16 +82,31 @@ export class UserService {
 
    async updateUser(args: UpdateUserArgs, userId: number) {
       try {
-         const user = await this.prisma.user.update({
+         const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+         });
+
+         if (!user) {
+            throw new NotFoundException('User not found');
+         }
+
+         const isValid = await verify(user.password, args.password);
+
+         if (!isValid) {
+            throw new BadRequestException('Invalid password');
+         }
+
+         const updatedUser = await this.prisma.user.update({
             where: {
                id: userId,
             },
             data: {
                ...args,
+               password: args.password,
             },
          });
 
-         if (!user) {
+         if (!updatedUser) {
             throw new BadRequestException('Failed to update user');
          }
 
@@ -101,17 +115,5 @@ export class UserService {
          console.error(e);
          throw e;
       }
-   }
-
-   async getUserIdFromRequest(context: any): Promise<number> {
-      const { accessToken } = getAuthTokens(context.req);
-
-      if (!accessToken) {
-         throw new ForbiddenException('Authorization token is missing');
-      }
-
-      // const { userId } =
-      //    await this.authService.validateAccessToken(accessToken);
-      return 1;
    }
 }

@@ -1,63 +1,74 @@
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
-export async function verifyAndRefreshTokens() {
+const cookieOptions = {
+   httpOnly: true,
+   secure: process.env.NODE_ENV === 'production',
+   sameSite: 'lax' as const,
+   path: '/',
+};
+
+const checkTokens = async () => {
    const cookieStore = await cookies();
-   let accessToken = cookieStore.get('accessToken')?.value;
-   const refreshToken = cookieStore.get('refreshToken')?.value;
+   return {
+      accessToken: cookieStore.get('accessToken')?.value,
+      refreshToken: cookieStore.get('refreshToken')?.value,
+   };
+};
+
+const refreshTokens = async (refreshToken: string) => {
+   try {
+      const response = await fetch('http://localhost:8000/graphql', {
+         method: 'POST',
+         credentials: 'include',
+         headers: {
+            'Content-Type': 'application/json',
+            Cookies: `refreshToken=${refreshToken}`,
+         },
+         body: JSON.stringify({
+            query: `mutation Refresh { refresh { message accessToken refreshToken } }`,
+         }),
+      });
+      return await response.json();
+   } catch (error) {
+      console.error('Refresh failed:', error);
+      return null;
+   }
+};
+
+const clearTokens = async () => {
+   await fetch('http://localhost:8000/api/', {
+      method: 'DELETE',
+   });
+};
+
+export const verifyTokens = async () => {
+   const { accessToken, refreshToken } = await checkTokens();
 
    if (!accessToken && !refreshToken) {
-      redirect('/');
+      return { needsRedirect: true, redirectPath: '/' };
    }
 
    if (!accessToken && refreshToken) {
       try {
-         const refreshResponse = await fetch('http://localhost:8000/graphql', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-               query: `mutation Refresh {
-            refresh {
-              message
-              accessToken
-              refreshToken
-            }
-          }`,
-            }),
-         });
-
-         const { data, errors } = await refreshResponse.json();
-
-         if (errors?.[0]?.message === 'Unauthorized') {
-            cookieStore.delete('accessToken');
-            cookieStore.delete('refreshToken');
-            redirect('/');
+         const result = await refreshTokens(refreshToken);
+         if (result?.errors) {
+            await clearTokens();
+            return { needsRedirect: true, redirectPath: '/' };
          }
-
-         if (data?.refresh?.accessToken && data?.refresh?.refreshToken) {
-            cookieStore.set('accessToken', data.refresh.accessToken, {
-               httpOnly: true,
-               secure: process.env.NODE_ENV === 'production',
-               sameSite: 'strict',
-            });
-            accessToken = data.refresh.accessToken;
-
-            cookieStore.set('refreshToken', data.refresh.refreshToken, {
-               httpOnly: true,
-               secure: process.env.NODE_ENV === 'production',
-               sameSite: 'strict',
-            });
-
-            redirect('/profile');
+         if (result?.data?.refresh) {
+            const { accessToken: newAccess, refreshToken: newRefresh } =
+               result.data.refresh;
+            const store = await cookies();
+            store.set('accessToken', newAccess, cookieOptions);
+            store.set('refreshToken', newRefresh, cookieOptions);
+            return { accessToken: newAccess };
          }
       } catch (error) {
-         console.error('Token refresh failed:', error);
-         redirect('/');
+         console.error('Error during token refresh:', error);
+         await clearTokens();
+         return { needsRedirect: true, redirectPath: '/' };
       }
    }
 
    return { accessToken };
-}
+};

@@ -19,3 +19,12 @@ export async function POST(request: NextRequest) {
 
    return response;
 }
+
+export async function DELETE() {
+   const response = NextResponse.json({ message: 'Tokens deleted' });
+
+   response.cookies.delete('accessToken');
+   response.cookies.delete('refreshToken');
+
+   return response;
+}

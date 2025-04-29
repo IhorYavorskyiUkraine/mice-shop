@@ -21,6 +21,9 @@ export class User {
    @Field()
    password: string;
 
+   @Field(() => String, { nullable: true })
+   phone: string;
+
    @Field(() => UserRole, { defaultValue: UserRole.USER })
    role: UserRole;
 

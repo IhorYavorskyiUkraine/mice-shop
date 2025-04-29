@@ -3,6 +3,6 @@ interface Props {
    active: boolean;
 }
 
-export const ProductDetails: React.FC<Props> = ({ id, active }) => {
+export const ProductDetails: React.FC<Props> = ({ active }) => {
    return active && <div className="text-center py-xl">У розробці</div>;
 };

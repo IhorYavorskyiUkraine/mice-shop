@@ -26,7 +26,9 @@ export const Pagination: React.FC<Props> = ({
 
    const handleClick = (page: number) => {
       onPageChange(page);
-      noScroll || window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (!noScroll) {
+         window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
    };
 
    const handleNext = () => {

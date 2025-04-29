@@ -1,4 +1,4 @@
-import { Cart } from './cart.type';
+import { TCart } from './cart.type';
 import { UserRole } from './enums.type';
 import { Order } from './order.type';
 import { Review } from './review.type';
@@ -13,7 +13,7 @@ export type User = {
    refreshToken?: RefreshToken | null;
    orders: Order[];
    reviews: Review[];
-   cart?: Cart | null;
+   cart?: TCart | null;
    createdAt: Date;
    updatedAt: Date;
 };

@@ -7,7 +7,7 @@ export function setAuthCookies(
 ) {
    res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 15,
+      maxAge: 1000 * 60 * 60 * 24,
       secure: false,
       sameSite: 'lax',
    });
@@ -25,6 +25,7 @@ export function getAuthTokens(req: Request): {
    refreshToken: string;
 } {
    const accessToken = req.cookies['accessToken'];
+   console.log(req.cookies);
    const refreshToken = req.cookies['refreshToken'];
 
    return { accessToken, refreshToken };

@@ -117,7 +117,6 @@ export class AuthService {
    async refresh(userId: number, refreshToken: string) {
       try {
          const user = await this.userService.findUserById(userId);
-         console.log(user);
          if (!user) {
             throw new ForbiddenException('User not found');
          }

@@ -3,18 +3,13 @@ import { BreadcrumbWithName } from '../components/breadcrumb/breadcrumb-with-nam
 import { ProductInfo } from '../components/product-info';
 import { ProductTabs } from '../components/product-tabs/product-tabs';
 
-export default async function ProductPage({
-   params,
-}: {
-   params: { id: string };
-}) {
-   const { id } = await params;
-
+export default function ProductPage({ params }: { params: any }) {
+   const id = Number(params?.id);
    return (
       <Container>
-         <BreadcrumbWithName id={Number(id)} />
-         <ProductInfo id={Number(id)} />
-         <ProductTabs id={Number(id)} />
+         <BreadcrumbWithName id={id} />
+         <ProductInfo id={id} />
+         <ProductTabs id={id} />
       </Container>
    );
 }

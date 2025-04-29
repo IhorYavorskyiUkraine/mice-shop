@@ -1,4 +1,4 @@
-import { CartItem } from './cart.type';
+import { TCartItem } from './cart.type';
 import { Color } from './color.type';
 import { OrderItem } from './order.type';
 import { Product } from './product.type';
@@ -12,7 +12,7 @@ export type Model = {
    price: number;
    colors: Color[];
    specs: Specs[];
-   cartItem: CartItem[];
+   cartItem: TCartItem[];
    image: string;
    orderItem: OrderItem[];
    createdAt: Date;
