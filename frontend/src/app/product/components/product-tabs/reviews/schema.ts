@@ -2,12 +2,12 @@ import { z } from 'zod';
 
 export const createReviewSchema = z.object({
    rating: z
-      .number({ required_error: 'Rating is required' })
-      .min(1, { message: 'Rating must be at least 1' })
-      .max(5, { message: 'Rating cannot be more than 5' }),
+      .number({ required_error: 'Рейтинг повинен бути числом' })
+      .min(1, { message: 'Рейтинг повинен бути хочаб 1' })
+      .max(5, { message: 'Максимальний рейтинг - 5' }),
    comment: z
-      .string({ required_error: 'Comment is required' })
-      .min(10, { message: 'Comment must be at least 10 characters long' }),
+      .string({ required_error: 'Напишіть відгук' })
+      .min(10, { message: 'Відгук повинен бути від 10 символів' }),
 });
 
 export type TCreateReview = z.infer<typeof createReviewSchema>;

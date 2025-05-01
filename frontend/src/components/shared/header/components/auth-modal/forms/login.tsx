@@ -39,8 +39,15 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
          form.reset();
          toast.success('Login successful');
          setIsOpen();
-      } catch (error) {
-         console.error('Error [LOGIN]', error);
+      } catch (error: any) {
+         const gqlError = error.graphQLErrors?.[0];
+
+         if (gqlError?.message) {
+            form.setError('password', {
+               type: 'server',
+               message: gqlError.message,
+            });
+         }
       }
    };
 

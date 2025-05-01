@@ -5,7 +5,9 @@ import { useQuery } from '@apollo/client';
 import { useState } from 'react';
 import { GET_USER } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
+import { Liked } from './tabs-content/liked/liked';
 import { UserInfo } from './tabs-content/user-info/user-info';
+import { ProfileMobileTabs } from './tabs-mobile';
 
 export const Main: React.FC = () => {
    const [activeTab, setActiveTab] = useState(1);
@@ -16,7 +18,7 @@ export const Main: React.FC = () => {
    return (
       <div className="grid lg:grid-cols-[auto_1fr] pb-sm">
          <aside>
-            <div className="border-b-[1px] border-primary py-[10px] pt-md pb-md pr-[30px] ">
+            <div className="border-b-[1px] hidden lg:block border-primary py-[10px] pt-md pb-md pr-[30px] ">
                {loading ? (
                   <p>Loading...</p>
                ) : (
@@ -28,13 +30,14 @@ export const Main: React.FC = () => {
                   <p className="text-m1">{user?.findUserById?.email}</p>
                )}
             </div>
-            <ProfileTabs setActiveTab={setActiveTab} />
+            <ProfileTabs setActive={setActiveTab} active={activeTab} />
          </aside>
-         <div className="border-l-[1px] border-primary">
+         <div className="border-l-[1px] border-primary lg:block hidden">
             {activeTab === 1 && <UserInfo />}
-            {activeTab === 2 && <div>Зміна паролю</div>}
-            {activeTab === 3 && <div>Зміна електронної пошти</div>}
+            {activeTab === 2 && <div>2</div>}
+            {activeTab === 3 && <Liked />}
          </div>
+         <ProfileMobileTabs />
       </div>
    );
 };

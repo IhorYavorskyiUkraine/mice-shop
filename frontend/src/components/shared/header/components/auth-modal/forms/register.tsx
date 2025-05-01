@@ -35,8 +35,17 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
          form.reset();
          toast.success('Register successful');
          setIsOpen();
-      } catch (error) {
-         console.error('Error [REGISTER]', error);
+      } catch (e: any) {
+         const gqlError = e.graphQLErrors?.[0];
+
+         if (gqlError?.message) {
+            form.setError('email', {
+               type: 'server',
+               message: gqlError.message,
+            });
+         }
+
+         toast.error('Register failed');
       }
    };
 
@@ -50,22 +59,26 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
                disabled={loading}
                name="email"
                label="Емейл"
+               placeholder="Введіть ваш емейл"
             />
             <InputWithValidations
                disabled={loading}
                name="displayName"
-               label="Юзернейм"
+               label="Ім'я"
+               placeholder="Введіть ваше ім'я"
             />
             <InputWithValidations
                disabled={loading}
                name="password"
                label="Пароль"
                type="password"
+               placeholder="Придумайте пароль"
             />
             <InputWithValidations
                disabled={loading}
                name="confirmPassword"
-               label="Повторіть пароль"
+               label="Повторіть цей пароль"
+               placeholder="Введіть повторно пароль"
                type="password"
             />
             <Button

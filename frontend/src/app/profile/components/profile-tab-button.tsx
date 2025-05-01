@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
 interface Props {
@@ -5,6 +6,8 @@ interface Props {
    icon: string;
    name: string;
    setActiveTab: (tab: number) => void;
+   arrow?: boolean;
+   active: boolean; // Активность таба
 }
 
 export const ProfileTabButton: React.FC<Props> = ({
@@ -12,15 +15,20 @@ export const ProfileTabButton: React.FC<Props> = ({
    name,
    icon,
    setActiveTab,
+   arrow,
+   active,
 }) => {
    return (
       <button
          onClick={() => setActiveTab(id)}
-         className=" uppercase cursor-pointer"
+         className="uppercase cursor-pointer w-full lg:w-auto"
       >
-         <div className="flex items-center gap-2">
-            <Image width={24} height={24} src={icon} alt={name} />
-            <span className="text-m1">{name}</span>
+         <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+               <Image width={24} height={24} src={icon} alt={name} />
+               <span className="text-m1">{name}</span>
+            </div>
+            {arrow && <ChevronDown className={active ? 'rotate-180' : ''} />}
          </div>
       </button>
    );

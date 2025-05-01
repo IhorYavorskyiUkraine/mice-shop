@@ -12,5 +12,8 @@ export class UpdateUserArgs {
    phone?: string;
 
    @Field({ nullable: true })
-   password?: string;
+   newPassword?: string;
+
+   @Field({ nullable: true })
+   oldPassword?: string;
 }

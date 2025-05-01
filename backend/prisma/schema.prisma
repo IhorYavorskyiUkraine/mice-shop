@@ -18,6 +18,21 @@ model User {
    reviews      Review[]
    cart         Cart?
    phone        String?
+   likedModels  Code[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Code {
+   id Int @id @default(autoincrement())
+
+   code       String
+   model      Model  @relation(fields: [modelId], references: [id])
+   modelId    Int
+   color      Color  @relation(fields: [colorId], references: [id])
+   colorId    Int
+   likedUsers User[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -58,6 +73,7 @@ model Color {
    model    Model      @relation(fields: [modelId], references: [id], onDelete: Cascade)
    modelId  Int
    cartItem CartItem[]
+   code     Code[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -74,6 +90,7 @@ model Model {
    cartItem  CartItem[]
    image     String
    orderItem OrderItem[]
+   code      Code[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -171,7 +188,7 @@ model Order {
    total      Float
    address    String
    phone      String
-   email      String      @unique
+   email      String     
    name       String
    orderItems OrderItem[]
 

@@ -4,7 +4,8 @@ import {
    NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { verify } from 'argon2';
+import { argon2id, hash, verify } from 'argon2';
+import { GraphQLError } from 'graphql';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 
@@ -75,45 +76,47 @@ export class UserService {
             throw new BadRequestException('Email already exists');
          }
 
-         console.error(e);
          throw e;
       }
    }
 
    async updateUser(args: UpdateUserArgs, userId: number) {
-      try {
-         const user = await this.prisma.user.findUnique({
-            where: { id: userId },
-         });
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new NotFoundException('Користувача не знайдено');
 
-         if (!user) {
-            throw new NotFoundException('User not found');
+      const updateData: any = { ...args };
+
+      if (args.newPassword) {
+         if (!args.oldPassword) {
+            throw new BadRequestException('Потрібно вказати старий пароль');
          }
 
-         const isValid = await verify(user.password, args.password);
-
+         const isValid = await verify(user.password, args.oldPassword);
          if (!isValid) {
-            throw new BadRequestException('Invalid password');
+            throw new GraphQLError('Неправильний пароль', {
+               extensions: {
+                  code: 'BAD_USER_INPUT',
+                  argumentName: 'oldPassword',
+               },
+            });
          }
 
-         const updatedUser = await this.prisma.user.update({
-            where: {
-               id: userId,
-            },
-            data: {
-               ...args,
-               password: args.password,
-            },
+         const hashedNewPassword = await hash(args.newPassword, {
+            type: argon2id,
+            timeCost: 3,
+            memoryCost: 65536,
+            parallelism: 1,
          });
 
-         if (!updatedUser) {
-            throw new BadRequestException('Failed to update user');
-         }
-
-         return user;
-      } catch (e) {
-         console.error(e);
-         throw e;
+         updateData.password = hashedNewPassword;
       }
+
+      delete updateData.newPassword;
+      delete updateData.oldPassword;
+
+      return this.prisma.user.update({
+         where: { id: userId },
+         data: updateData,
+      });
    }
 }

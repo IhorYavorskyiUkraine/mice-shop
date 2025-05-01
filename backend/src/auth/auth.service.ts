@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@prisma/client';
 import { argon2id, hash, verify } from 'argon2';
+import { GraphQLError } from 'graphql';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { LoginArgs, RegisterArgs } from './dto';
@@ -50,7 +51,7 @@ export class AuthService {
          return this.generateTokens(user.id);
       } catch (e) {
          console.error('AuthService Error:', e);
-         throw new ForbiddenException('Authentication failed');
+         throw new ForbiddenException(e.message || 'Authentication failed');
       }
    }
 
@@ -93,7 +94,14 @@ export class AuthService {
          return this.generateTokens(newUser.id);
       } catch (e) {
          console.error('AuthService Error:', e);
-         throw new ForbiddenException('Authentication failed');
+         if (e instanceof ConflictException) {
+            throw new GraphQLError('Перевірте емейл', {
+               extensions: {
+                  code: 'BAD_USER_INPUT',
+                  argumentName: 'email',
+               },
+            });
+         }
       }
    }
 
@@ -136,7 +144,12 @@ export class AuthService {
    private async findUserByEmailOrThrow(email: string) {
       const user = await this.userService.findUserByEmail(email);
       if (!user) {
-         throw new ForbiddenException('Credentials are not correct');
+         throw new GraphQLError('Неправильний пароль або емейл', {
+            extensions: {
+               code: 'BAD_USER_INPUT',
+               argumentName: 'password',
+            },
+         });
       }
       return user;
    }
@@ -144,7 +157,12 @@ export class AuthService {
    private async validatePassword(password: string, hashedPassword: string) {
       const isPasswordCorrect = await verify(hashedPassword, password);
       if (!isPasswordCorrect) {
-         throw new ForbiddenException('Credentials are not correct');
+         throw new GraphQLError('Неправильний емейл або пароль', {
+            extensions: {
+               code: 'BAD_USER_INPUT',
+               argumentName: 'Credentials are not correct',
+            },
+         });
       }
 
       return true;

@@ -7,9 +7,15 @@ import { Color } from '@/types/color.type';
 import { Model } from '@/types/model.type';
 import { Specs } from '@/types/specs.type';
 import { useMutation, useQuery } from '@apollo/client';
+import { Heart } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { ADD_PRODUCT, GET_PRODUCT } from '../product.graphql';
+import {
+   ADD_PRODUCT,
+   ADD_TO_LIKED,
+   GET_LIKED,
+   GET_PRODUCT,
+} from '../product.graphql';
 import { ProductPickColor } from './product-pick-color';
 import { ProductPickModel } from './product-pick-model';
 
@@ -24,9 +30,16 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
    const { data, loading } = useQuery(GET_PRODUCT, {
       variables: { id },
    });
+   const { data: likedData } = useQuery(GET_LIKED, {
+      variables: { productCode: activeColor?.code?.[0]?.code },
+      skip: !activeColor?.code?.[0]?.code,
+   });
+
+   console.log(activeColor);
 
    const [addProduct, { loading: addProductLoading }] =
       useMutation(ADD_PRODUCT);
+   const [addToLiked, { loading: addLikedLoading }] = useMutation(ADD_TO_LIKED);
 
    const { refetch } = useQuery(GET_CART);
 
@@ -41,6 +54,16 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
          },
       });
       await refetch();
+   };
+
+   const handleAddToLiked = async () => {
+      if (loading || addLikedLoading || addProductLoading) return;
+      if (!activeColor?.code?.[0]?.code) return;
+      await addToLiked({
+         variables: {
+            productCode: activeColor?.code[0].code,
+         },
+      });
    };
 
    useEffect(() => {
@@ -103,11 +126,20 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
                   <UniversalSkeleton productTitle />
                </div>
             ) : (
-               <Title
-                  text={data?.getProductById.name}
-                  size="xl"
-                  className="mb-sm"
-               />
+               <div className="flex items-center justify-between mb-sm">
+                  <Title text={data?.getProductById.name} size="xl" />
+                  <Heart
+                     size="36"
+                     onClick={handleAddToLiked}
+                     className="cursor-pointer"
+                     fill={
+                        activeColor?.code?.[0]?.code ===
+                        likedData?.getLikedProducts.code
+                           ? 'red'
+                           : 'none'
+                     }
+                  />
+               </div>
             )}
             {loading ? (
                <UniversalSkeleton productRating />
@@ -141,9 +173,16 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
                setActive={setActiveModel}
                loading={loading}
             />
-            <p>
-               {activeColor && activeModel ? 'В наявності' : 'Нема в наявності'}
-            </p>
+            <div className="flex justify-between">
+               <p>
+                  {activeColor && activeModel
+                     ? 'В наявності'
+                     : 'Нема в наявності'}
+               </p>
+               <p className="text-s">
+                  Код: {activeColor?.code?.[0]?.code || ''}
+               </p>
+            </div>
             <div className="flex flex-wrap gap-5 items-center">
                {loading ? (
                   <UniversalSkeleton productPrice />

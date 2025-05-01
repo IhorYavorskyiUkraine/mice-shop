@@ -1,3 +1,4 @@
+import { Code } from './code';
 import { Model } from './model.type';
 
 export type Color = {
@@ -7,6 +8,7 @@ export type Color = {
    image: string;
    stock: number;
    model: Model;
+   code: Code[];
    modelId: number;
    createdAt: Date;
    updatedAt: Date;

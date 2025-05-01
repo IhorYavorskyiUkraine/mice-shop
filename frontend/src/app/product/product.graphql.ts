@@ -18,6 +18,9 @@ export const GET_PRODUCT = gql`
                name
                stock
                image
+               code {
+                  code
+               }
             }
             specs {
                key
@@ -47,6 +50,22 @@ export const ADD_PRODUCT = gql`
             }
          }
          totalPrice
+      }
+   }
+`;
+
+export const GET_LIKED = gql`
+   query GetLikedProducts($productCode: String!) {
+      getLikedProducts(productCode: $productCode) {
+         code
+      }
+   }
+`;
+
+export const ADD_TO_LIKED = gql`
+   mutation addToLiked($productCode: String!) {
+      addToLiked(productCode: $productCode) {
+         name
       }
    }
 `;

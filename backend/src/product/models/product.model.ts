@@ -1,5 +1,6 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { Review } from 'src/review/review.model';
+import { Code } from './product-code';
 import { Brand } from './productBrand.model';
 import { Category } from './productCategory.model';
 import { Model } from './productModel.model';
@@ -47,10 +48,12 @@ export class Product {
    @Field(() => [ProductTag])
    tags: ProductTag[];
 
+   @Field(() => [Code])
+   code: Code[];
+
    @Field(() => Int)
    views: number;
 
-   @Field(() => Int)
    @Field()
    createdAt: Date;
 

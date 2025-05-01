@@ -2,6 +2,9 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const generateCode = () =>
+   String(Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000);
+
 async function up() {
    await prisma.brand.create({
       data: {
@@ -1361,6 +1364,26 @@ async function up() {
             ],
          },
       },
+   });
+
+   const modelsWithColors = await prisma.model.findMany({
+      include: {
+         colors: true,
+      },
+   });
+
+   const codeData = modelsWithColors.flatMap(model =>
+      model.colors.map(color => ({
+         code: generateCode(),
+         modelId: model.id,
+         colorId: color.id,
+         createdAt: new Date(),
+         updatedAt: new Date(),
+      })),
+   );
+
+   await prisma.code.createMany({
+      data: codeData,
    });
 }
 

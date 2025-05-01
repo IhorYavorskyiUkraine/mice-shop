@@ -2,6 +2,7 @@ import { Field, Int, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Review, UserRole } from '@prisma/client';
 import { Cart } from 'src/cart/models/cart.model';
 import { Order } from 'src/order/models/order.model';
+import { Code } from 'src/product/models/product-code';
 
 registerEnumType(UserRole, {
    name: 'UserRole',
@@ -41,6 +42,9 @@ export class User {
 
    @Field(() => Cart, { nullable: true })
    cart?: Cart;
+
+   @Field(() => [Code])
+   likedModels: Code[];
 
    @Field()
    createdAt: Date;

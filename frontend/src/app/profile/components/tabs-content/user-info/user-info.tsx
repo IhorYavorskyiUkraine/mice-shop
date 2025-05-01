@@ -11,8 +11,9 @@ import { toast } from 'sonner';
 import { TUpdateUser, updateUserSchema } from './schema';
 
 export const UserInfo: React.FC = () => {
-   const [editing, setEditing] = useState(false);
+   const [profileEditing, setProfileEditing] = useState(false);
    const [passwordEditing, setPasswordEditing] = useState(false);
+
    const { data: user, loading: isLoadingUser } = useQuery(GET_USER);
    const [updateUser, { loading: isUpdating }] = useMutation(UPDATE_USER, {
       refetchQueries: [GET_USER],
@@ -26,7 +27,8 @@ export const UserInfo: React.FC = () => {
          middleName: '',
          email: '',
          phone: '',
-         password: '',
+         newPassword: '',
+         oldPassword: '',
       },
    });
 
@@ -42,7 +44,6 @@ export const UserInfo: React.FC = () => {
             middleName,
             email,
             phone: phone || '',
-            password: '',
          });
       }
    }, [user, form]);
@@ -51,29 +52,47 @@ export const UserInfo: React.FC = () => {
       try {
          if (isLoadingUser || isUpdating) return;
 
+         const { email, phone } = data;
+
          await updateUser({
             variables: {
                args: {
-                  ...data,
-                  displayName:
-                     `${data.firstName} ${data.lastName} ${data.middleName}`.trim(),
+                  email,
+                  phone,
+                  displayName: [data.firstName, data.lastName, data.middleName]
+                     .filter(name => !!name && name.trim().length > 0)
+                     .join(' '),
+                  oldPassword: data.oldPassword ? data.oldPassword : undefined,
+                  newPassword: data.newPassword ? data.newPassword : undefined,
                },
             },
          });
 
-         setEditing(false);
+         setProfileEditing(false);
+         setPasswordEditing(false);
          toast.success('Дані користувача успішно оновлено');
-      } catch (error) {
-         console.error('Error updating user:', error);
+      } catch (error: any) {
+         const gqlError = error.graphQLErrors?.[0];
+
+         console.log('gqlError', gqlError);
+
+         if (gqlError?.message) {
+            form.setError('oldPassword', {
+               type: 'server',
+               message: gqlError.message,
+            });
+         }
+
          toast.error('Не вдалося оновити дані');
       }
    };
 
    const handleEditOrSubmit = () => {
-      if (editing) {
+      if (profileEditing) {
          form.handleSubmit(onSubmit)();
+         setProfileEditing(false);
       } else {
-         setEditing(true);
+         setProfileEditing(true);
       }
    };
 
@@ -85,7 +104,7 @@ export const UserInfo: React.FC = () => {
    ) => (
       <div className="mb-md">
          <p className="mb-2">{label}</p>
-         {editing ? (
+         {profileEditing ? (
             <InputWithValidations
                disabled={isLoadingUser}
                placeholder={placeholder}
@@ -139,53 +158,68 @@ export const UserInfo: React.FC = () => {
                phone,
                'Введіть ваш номер телефону',
             )}
+
             {passwordEditing && (
-               <div>
+               <>
                   <InputWithValidations
                      disabled={isLoadingUser}
-                     placeholder="Введіть старий пароль"
+                     placeholder="Cтарий пароль"
                      name="oldPassword"
                      className="max-w-[400px] mb-md"
                      label="Старий пароль"
                      type="password"
                   />
+
                   <InputWithValidations
                      disabled={isLoadingUser}
-                     placeholder="Введіть новий пароль"
+                     placeholder="Новий пароль"
                      name="newPassword"
-                     className="max-w-[400px] mb-md"
+                     className="max-w-[400px] "
                      label="Новий пароль"
                      type="password"
                   />
-               </div>
+               </>
             )}
-            {passwordEditing ? (
+            {!passwordEditing ? (
                <button
-                  type="submit"
-                  onClick={() => setPasswordEditing(false)}
-                  className="uppercase cursor-pointer"
+                  type={passwordEditing ? 'submit' : 'button'}
+                  onClick={() => setPasswordEditing(true)}
+                  className="uppercase cursor-pointer text-s"
                >
-                  Ок
+                  Редагувати пароль
                </button>
             ) : (
-               <button
-                  type="submit"
-                  onClick={() => setPasswordEditing(true)}
-                  className="uppercase cursor-pointer"
-               >
-                  Змінити пароль
-               </button>
+               <div className="mt-md">
+                  <Button
+                     type="button"
+                     onClick={handleEditOrSubmit}
+                     disabled={isUpdating}
+                     className="min-w-[120px] mr-md"
+                  >
+                     Зберегти
+                  </Button>
+                  <Button
+                     type="button"
+                     onClick={() => setPasswordEditing(false)}
+                     disabled={isUpdating}
+                     className="min-w-[120px]"
+                  >
+                     Скасувати
+                  </Button>
+               </div>
             )}
-            <div className="mt-[10px]">
-               <Button
-                  type="button"
-                  onClick={handleEditOrSubmit}
-                  disabled={isUpdating}
-                  className="min-w-[120px]"
-               >
-                  {editing ? 'Зберегти' : 'Редагувати профіль'}
-               </Button>
-            </div>
+            {!passwordEditing && (
+               <div className="mt-[10px]">
+                  <Button
+                     type="button"
+                     onClick={handleEditOrSubmit}
+                     disabled={isUpdating}
+                     className="min-w-[120px]"
+                  >
+                     {profileEditing ? 'Зберегти' : 'Редагувати профіль'}
+                  </Button>
+               </div>
+            )}
          </form>
       </FormProvider>
    );

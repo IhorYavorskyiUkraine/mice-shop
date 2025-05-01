@@ -25,7 +25,6 @@ export function getAuthTokens(req: Request): {
    refreshToken: string;
 } {
    const accessToken = req.cookies['accessToken'];
-   console.log(req.cookies);
    const refreshToken = req.cookies['refreshToken'];
 
    return { accessToken, refreshToken };

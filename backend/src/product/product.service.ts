@@ -85,7 +85,11 @@ export class ProductService {
                generalSpecs: true,
                models: {
                   include: {
-                     colors: true,
+                     colors: {
+                        include: {
+                           code: true,
+                        },
+                     },
                      specs: true,
                   },
                },
@@ -115,6 +119,49 @@ export class ProductService {
          throw new InternalServerErrorException(
             'Error fetching product. Please try again later.',
          );
+      }
+   }
+
+   async getLikedModels(productCode: string, userId: number) {
+      try {
+         const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            include: { likedModels: true },
+         });
+
+         if (!user) {
+            throw new NotFoundException('User not found');
+         }
+
+         const products = user?.likedModels;
+
+         return products;
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
+   async addToLiked(productCode: string, userId: number) {
+      try {
+         // const color = await this.prisma.color.findUnique({
+         //    where: { code: productCode },
+         //    include: { model: true },
+         // });
+         // if (!color) {
+         //    throw new NotFoundException('Color not found');
+         // }
+         // await this.prisma.user.update({
+         //    where: { id: userId },
+         //    data: {
+         //       likedModels: {
+         //          connect: { id: color.model.id },
+         //       },
+         //    },
+         // });
+         // return color.model;
+      } catch (e) {
+         console.error(e);
+         throw new InternalServerErrorException('Could not like model');
       }
    }
 

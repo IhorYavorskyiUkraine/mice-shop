@@ -1,32 +1,29 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Code } from './product-code';
+import { User } from 'src/user/user.model';
+import { Color } from './productColor.model';
 import { Model } from './productModel.model';
 
 @ObjectType()
-export class Color {
+export class Code {
    @Field(() => Int)
    id: number;
 
-   @Field()
-   name: string;
-
-   @Field()
-   hex: string;
+   @Field(() => String)
+   code: string;
 
    @Field(() => Model)
    model: Model;
 
-   @Field(() => [Code])
-   code: Code[];
-
    @Field(() => Int)
    modelId: number;
 
+   @Field(() => Color)
+   color: Color;
    @Field(() => Int)
-   stock: number;
+   colorId: number;
 
-   @Field()
-   image: string;
+   @Field(() => [User])
+   likedUsers: User[];
 
    @Field()
    createdAt: Date;
