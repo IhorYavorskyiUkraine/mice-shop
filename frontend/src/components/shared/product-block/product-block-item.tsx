@@ -22,7 +22,8 @@ export const ProductBlockItem: React.FC<Props> = ({ product }) => {
                <Image
                   src={product.models[0].image}
                   alt={product.name}
-                  fill
+                  width={382}
+                  height={382}
                   loading="lazy"
                   className="object-cover"
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"

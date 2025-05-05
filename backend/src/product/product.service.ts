@@ -98,7 +98,6 @@ export class ProductService {
                      user: {
                         select: {
                            displayName: true,
-                           // image: true (uncomment when ready)
                         },
                      },
                   },
@@ -122,7 +121,7 @@ export class ProductService {
       }
    }
 
-   async getLikedModels(productCode: string, userId: number) {
+   async getLikedProducts(userId: number) {
       try {
          const user = await this.prisma.user.findUnique({
             where: { id: userId },
@@ -141,24 +140,54 @@ export class ProductService {
       }
    }
 
+   async getProductInfoByCode(code: string) {
+      try {
+         if (!code) {
+            throw new BadRequestException('Invalid product code');
+         }
+
+         const product = await this.prisma.code.findUnique({
+            where: { code },
+            include: {
+               color: {
+                  include: {
+                     model: true,
+                  },
+               },
+            },
+         });
+
+         if (!product) {
+            throw new NotFoundException('Product not found');
+         }
+
+         return product;
+      } catch (e) {
+         console.error(e);
+      }
+   }
+
    async addToLiked(productCode: string, userId: number) {
       try {
-         // const color = await this.prisma.color.findUnique({
-         //    where: { code: productCode },
-         //    include: { model: true },
-         // });
-         // if (!color) {
-         //    throw new NotFoundException('Color not found');
-         // }
-         // await this.prisma.user.update({
-         //    where: { id: userId },
-         //    data: {
-         //       likedModels: {
-         //          connect: { id: color.model.id },
-         //       },
-         //    },
-         // });
-         // return color.model;
+         const product = await this.prisma.code.findUnique({
+            where: { code: productCode },
+            include: { model: true },
+         });
+
+         if (!product) {
+            throw new NotFoundException('Product not found');
+         }
+
+         await this.prisma.user.update({
+            where: { id: userId },
+            data: {
+               likedModels: {
+                  connect: { id: product.model.id },
+               },
+            },
+         });
+
+         return product.model;
       } catch (e) {
          console.error(e);
          throw new InternalServerErrorException('Could not like model');

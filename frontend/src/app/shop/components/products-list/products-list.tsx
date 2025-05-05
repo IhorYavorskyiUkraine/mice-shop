@@ -5,7 +5,7 @@ import { ProductBlockItem } from '@/components/shared/product-block/product-bloc
 import { SortByDropdown } from '@/components/shared/sorting-component';
 import { ErrorMessage, Title, UniversalSkeleton } from '@/components/ui';
 import { Product } from '@/types/product.type';
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { Pagination } from '../../../../components/shared/pagination/pagination';
@@ -17,12 +17,13 @@ import { GET_FILTERED_PRODUCTS } from './product-list.graphql';
 export const ProductsList: React.FC = () => {
    const filters = useShopStore(state => state.filters);
    const setFilters = useShopStore(state => state.setFilters);
-
-   const [fetchProducts, { data, loading, error }] = useLazyQuery(
-      GET_FILTERED_PRODUCTS,
-   );
-
    const [initialized, setInitialized] = useState(false);
+
+   const { data, loading, error } = useQuery(GET_FILTERED_PRODUCTS, {
+      variables: {
+         args: filters,
+      },
+   });
 
    const parseStringArray = (value: any): string[] => {
       if (!value) return [];
@@ -60,18 +61,10 @@ export const ProductsList: React.FC = () => {
 
    useEffect(() => {
       if (!initialized) return;
-
-      fetchProducts({
-         variables: {
-            args: filters,
-         },
-      });
-
       const queryString = qs.stringify(filters, {
          addQueryPrefix: true,
          arrayFormat: 'comma',
       });
-
       window.history.replaceState(null, '', queryString);
    }, [filters, initialized]);
 
@@ -83,7 +76,7 @@ export const ProductsList: React.FC = () => {
 
    return (
       <div>
-         <div className="flex items-center justify-between">
+         <div className="flex items-center justify-between mb-md">
             <Title text="Магазин" className="hidden lg:block" />
             <SortByDropdown
                data={dropdownData}
@@ -99,7 +92,7 @@ export const ProductsList: React.FC = () => {
          </div>
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {loading ? (
-               <UniversalSkeleton productBlockItem />
+               <UniversalSkeleton productBlockItem length={8} />
             ) : data?.getFilteredProducts?.products.length ? (
                data.getFilteredProducts.products.map(
                   (product: Product, i: number) => (

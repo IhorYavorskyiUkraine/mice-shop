@@ -4,8 +4,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-   title: 'PIXELMOUSE',
-   description: 'PIXELMOUSE',
+   title: 'PixelMouse | Home',
+   description:
+      'Інтернет-магазин комп’ютерних мишок PIXELMOUSE — обирай ідеальну мишку для ігор, роботи та щоденного користування. Широкий вибір, надійні бренди, швидке оформлення замовлення.',
 };
 
 export default function RootLayout({
@@ -15,6 +16,9 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="en">
+         <head>
+            <meta name="color-scheme" content="only light" />
+         </head>
          <body>
             <MainProvider>
                <Header />

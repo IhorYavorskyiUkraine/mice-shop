@@ -1,7 +1,12 @@
 import { Breadcrumb } from '@/components/shared';
 import { Container } from '@/components/ui';
+import { Metadata } from 'next';
 import { Sidebar } from './components';
 import { ProductsList } from './components/products-list/products-list';
+
+export const metadata: Metadata = {
+   title: 'PixelMouse | Shop',
+};
 
 export default function Shop() {
    return (

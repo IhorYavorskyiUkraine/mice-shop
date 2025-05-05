@@ -112,7 +112,8 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
             ) : (
                <Image
                   src={activeColor?.image || 'https://placehold.co/722x722/png'}
-                  fill
+                  width={722}
+                  height={722}
                   className="object-contain"
                   alt="Product Image"
                   priority

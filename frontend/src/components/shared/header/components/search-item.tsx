@@ -19,7 +19,8 @@ export const SearchItem: React.FC<Props> = ({ product, className }) => {
                <Image
                   src={product.models[0].image}
                   alt={product.name}
-                  fill
+                  width={199}
+                  height={199}
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 200px"
                />

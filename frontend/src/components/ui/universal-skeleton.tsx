@@ -17,6 +17,7 @@ interface Props {
    cartItems?: boolean;
    productImage?: boolean;
    productReviews?: boolean;
+   length?: number;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -34,6 +35,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
    productPrice,
    productImage,
    productReviews,
+   length,
 }) => {
    if (searchItems) {
       return (
@@ -50,7 +52,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
          </div>
       );
    } else if (productBlockItem) {
-      return Array.from({ length: 8 }).map((_, index) => (
+      return Array.from({ length: length || 4 }).map((_, index) => (
          <div key={index} className="w-full h-full  flex flex-col">
             <div className="relative w-full pt-[100%] mb-3">
                <div className="absolute inset-0 block">
@@ -87,8 +89,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
          </Skeleton>
       );
    } else if (categoryTiles) {
-      return Array.from({ length: 8 }).map((_, index) => (
-         <Skeleton key={index} className="h-[300px] md:h-[400px]" />
+      return Array.from({ length: 2 }).map((_, index) => (
+         <Skeleton key={index} className="h-[300px] w-full md:h-[400px]" />
       ));
    } else if (productTitle) {
       return <Skeleton className="h-[30px] w-[50%] lg:h-[50px]" />;

@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { getAuthTokens } from 'src/utils/cookie.utils';
 import { GetAllProductsArgs } from './dto';
+import { Code } from './models/product-code';
 import { Product } from './models/product.model';
 import { Category } from './models/productCategory.model';
 import { Color } from './models/productColor.model';
@@ -25,11 +26,13 @@ export class ProductResolver {
       return this.productService.getProductById(id);
    }
 
+   @Query(() => Code)
+   async getProductByCode(@Args('code') code: string) {
+      return this.productService.getProductInfoByCode(code);
+   }
+
    @Query(() => [Color])
-   async getLikedProducts(
-      @Args('productCode') productCode: string,
-      @Context() context: { req: Request },
-   ) {
+   async getLikedProducts(@Context() context: { req: Request }) {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
          throw new Error('Access token not found');
@@ -38,7 +41,7 @@ export class ProductResolver {
       const { userId } =
          await this.authService.validateAccessToken(accessToken);
 
-      return this.productService.getLikedModels(productCode, userId);
+      return this.productService.getLikedProducts(userId);
    }
 
    @Mutation(() => Product)

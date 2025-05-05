@@ -27,7 +27,7 @@ model User {
 model Code {
    id Int @id @default(autoincrement())
 
-   code       String
+   code       String @unique
    model      Model  @relation(fields: [modelId], references: [id])
    modelId    Int
    color      Color  @relation(fields: [colorId], references: [id])
@@ -188,7 +188,7 @@ model Order {
    total      Float
    address    String
    phone      String
-   email      String     
+   email      String
    name       String
    orderItems OrderItem[]
 
