@@ -55,17 +55,15 @@ export const ADD_PRODUCT = gql`
 `;
 
 export const GET_LIKED = gql`
-   query GetLikedProducts($productCode: String!) {
-      getLikedProducts(productCode: $productCode) {
-         code
-      }
+   query IsProductLiked($productCode: String!) {
+      isProductLiked(productCode: $productCode)
    }
 `;
 
 export const ADD_TO_LIKED = gql`
    mutation addToLiked($productCode: String!) {
       addToLiked(productCode: $productCode) {
-         name
+         message
       }
    }
 `;

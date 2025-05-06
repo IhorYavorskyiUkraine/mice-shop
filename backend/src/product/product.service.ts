@@ -125,18 +125,66 @@ export class ProductService {
       try {
          const user = await this.prisma.user.findUnique({
             where: { id: userId },
-            include: { likedModels: true },
+            include: {
+               likedModels: {
+                  include: {
+                     color: {
+                        include: {
+                           model: {
+                              include: {
+                                 product: true,
+                              },
+                           },
+                        },
+                     },
+                  },
+               },
+            },
          });
 
          if (!user) {
             throw new NotFoundException('User not found');
          }
 
-         const products = user?.likedModels;
+         const productsInfo = user.likedModels.map(model => ({
+            code: model.code,
+            color: model.color,
+            model: model.color.model,
+         }));
 
-         return products;
+         return productsInfo;
       } catch (e) {
          console.error(e);
+         throw new InternalServerErrorException(
+            'Failed to fetch liked products',
+         );
+      }
+   }
+
+   async isProductLiked(userId: number, productCode: string) {
+      try {
+         const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+               likedModels: {
+                  where: {
+                     code: productCode,
+                  },
+                  select: {
+                     id: true,
+                  },
+               },
+            },
+         });
+
+         if (!user) {
+            throw new NotFoundException('User not found');
+         }
+
+         return user.likedModels.length > 0;
+      } catch (e) {
+         console.error(e);
+         throw new InternalServerErrorException('Failed to check like status');
       }
    }
 
@@ -178,16 +226,42 @@ export class ProductService {
             throw new NotFoundException('Product not found');
          }
 
-         await this.prisma.user.update({
+         const user = await this.prisma.user.findUnique({
             where: { id: userId },
-            data: {
-               likedModels: {
-                  connect: { id: product.model.id },
-               },
+            include: {
+               likedModels: true,
             },
          });
 
-         return product.model;
+         const likedItem = user.likedModels.find(
+            item => item.code === productCode,
+         );
+
+         if (likedItem) {
+            await this.prisma.user.update({
+               where: { id: userId },
+               data: {
+                  likedModels: {
+                     disconnect: { id: product.id },
+                  },
+               },
+            });
+
+            return {
+               message: `${product.model.name} видалено зі списку бажань`,
+            };
+         } else {
+            await this.prisma.user.update({
+               where: { id: userId },
+               data: {
+                  likedModels: {
+                     connect: { id: product.id },
+                  },
+               },
+            });
+
+            return { message: `${product.model.name} додана у список бажань` };
+         }
       } catch (e) {
          console.error(e);
          throw new InternalServerErrorException('Could not like model');

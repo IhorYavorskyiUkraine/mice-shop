@@ -10,6 +10,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import {
    ADD_PRODUCT,
    ADD_TO_LIKED,
@@ -30,16 +31,26 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
    const { data, loading } = useQuery(GET_PRODUCT, {
       variables: { id },
    });
-   const { data: likedData } = useQuery(GET_LIKED, {
+   const { data: likedData, refetch: refetchLiked } = useQuery(GET_LIKED, {
       variables: { productCode: activeColor?.code?.[0]?.code },
       skip: !activeColor?.code?.[0]?.code,
    });
 
-   console.log(activeColor);
-
    const [addProduct, { loading: addProductLoading }] =
       useMutation(ADD_PRODUCT);
-   const [addToLiked, { loading: addLikedLoading }] = useMutation(ADD_TO_LIKED);
+   const [addToLiked, { loading: addLikedLoading }] = useMutation(
+      ADD_TO_LIKED,
+      {
+         onCompleted: data => {
+            if (data?.addToLiked?.message) {
+               toast.success(data.addToLiked.message);
+            }
+         },
+         onError: error => {
+            toast.error(error.message || 'Failed to add to liked');
+         },
+      },
+   );
 
    const { refetch } = useQuery(GET_CART);
 
@@ -61,9 +72,10 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
       if (!activeColor?.code?.[0]?.code) return;
       await addToLiked({
          variables: {
-            productCode: activeColor?.code[0].code,
+            productCode: activeColor?.code?.[0]?.code,
          },
       });
+      await refetchLiked();
    };
 
    useEffect(() => {
@@ -133,12 +145,7 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
                      size="36"
                      onClick={handleAddToLiked}
                      className="cursor-pointer"
-                     fill={
-                        activeColor?.code?.[0]?.code ===
-                        likedData?.getLikedProducts.code
-                           ? 'red'
-                           : 'none'
-                     }
+                     fill={likedData?.isProductLiked ? 'black' : 'none'}
                   />
                </div>
             )}
