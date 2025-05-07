@@ -1,5 +1,20 @@
 export const profileTabs = [
-   { id: 1, name: 'Особиста інформація', icon: '/images/profile/profile.svg' },
-   { id: 2, name: 'Замовлення', icon: '/images/profile/box.svg' },
-   { id: 3, name: 'Списки бажань', icon: '/images/profile/heart.svg' },
+   {
+      id: 1,
+      name: 'Особиста інформація',
+      href: '/profile/info',
+      icon: '/images/profile/profile.svg',
+   },
+   {
+      id: 2,
+      name: 'Замовлення',
+      href: '/profile/2',
+      icon: '/images/profile/box.svg',
+   },
+   {
+      id: 3,
+      name: 'Списки бажань',
+      href: '/profile/liked',
+      icon: '/images/profile/heart.svg',
+   },
 ];

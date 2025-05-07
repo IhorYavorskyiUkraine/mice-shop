@@ -4,25 +4,28 @@ import { BreadcrumbWithName } from '../components/breadcrumb/breadcrumb-with-nam
 import { ProductInfo } from '../components/product-info';
 import { ProductTabs } from '../components/product-tabs/product-tabs';
 
+interface GenerateMetadataProps {
+   params: { id: string };
+   searchParams?: { [key: string]: string | string[] | undefined };
+}
+
 export async function generateMetadata({
    params,
-}: {
-   params: { id: string };
-}): Promise<Metadata> {
-   const { id } = params;
+}: GenerateMetadataProps): Promise<Metadata> {
+   const { id } = await params;
 
    try {
-      const response = await fetch(`http://localhost:8000/graphql`, {
+      const response = await fetch('http://localhost:8000/graphql', {
          method: 'POST',
          headers: {
             'Content-Type': 'application/json',
          },
          body: JSON.stringify({
             query: `query GetProductById($id: Int!) {
-               getProductById(id: $id) {
-                  name
-               }
-            }`,
+          getProductById(id: $id) {
+            name
+          }
+        }`,
             variables: { id: Number(id) },
          }),
       });
@@ -44,13 +47,18 @@ export async function generateMetadata({
    }
 }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-   const id = Number(params?.id);
+interface PageProps {
+   params: { id: string };
+   searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default async function ProductPage({ params }: PageProps) {
+   const { id } = await params;
    return (
       <Container>
-         <BreadcrumbWithName id={id} />
-         <ProductInfo id={id} />
-         <ProductTabs id={id} />
+         <BreadcrumbWithName id={Number(id)} />
+         <ProductInfo id={Number(id)} />
+         <ProductTabs id={Number(id)} />
       </Container>
    );
 }

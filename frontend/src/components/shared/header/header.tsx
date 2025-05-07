@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
       }
 
       return (
-         <Link href="/profile">
+         <Link href="/profile/info">
             <Image
                width={24}
                height={24}

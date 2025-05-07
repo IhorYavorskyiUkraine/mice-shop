@@ -10,7 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { TUpdateUser, updateUserSchema } from './schema';
 
-export const UserInfo: React.FC = () => {
+const UserInfo: React.FC = () => {
    const [profileEditing, setProfileEditing] = useState(false);
    const [passwordEditing, setPasswordEditing] = useState(false);
 
@@ -132,7 +132,10 @@ export const UserInfo: React.FC = () => {
 
    return (
       <FormProvider {...form}>
-         <form className="px-md py-md" onSubmit={form.handleSubmit(onSubmit)}>
+         <form
+            className="px-[10px] py-[10px] lg:px-md lg:py-md"
+            onSubmit={form.handleSubmit(onSubmit)}
+         >
             {renderField("Ім'я", 'firstName', firstName, "Введіть ваше ім'я")}
             {renderField(
                'Прізвище',
@@ -224,3 +227,5 @@ export const UserInfo: React.FC = () => {
       </FormProvider>
    );
 };
+
+export default UserInfo;

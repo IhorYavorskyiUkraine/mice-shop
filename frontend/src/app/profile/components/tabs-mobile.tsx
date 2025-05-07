@@ -3,7 +3,8 @@
 import { useSet } from 'react-use';
 import { ProfileTabButton } from './profile-tab-button';
 import { profileTabs } from './profile-tabs.data';
-import { UserInfo } from './tabs-content/user-info/user-info';
+import Liked from './tabs-content/liked/liked';
+import UserInfo from './tabs-content/user-info/user-info';
 
 export const ProfileMobileTabs: React.FC = () => {
    const [_, { has, toggle }] = useSet(new Set([1]));
@@ -18,10 +19,10 @@ export const ProfileMobileTabs: React.FC = () => {
                   arrow
                />
                {has(tab.id) && (
-                  <div className="border-l-[1px] border-primary">
+                  <div>
                      {tab.id === 1 && <UserInfo />}
                      {tab.id === 2 && <div>Зміна паролю</div>}
-                     {tab.id === 3 && <div>Зміна електронної пошти</div>}
+                     {tab.id === 3 && <Liked />}
                   </div>
                )}
             </div>

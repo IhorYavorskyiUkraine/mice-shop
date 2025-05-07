@@ -1,13 +1,18 @@
+'use client';
+
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useMedia } from 'react-use';
 
 interface Props {
    id: number;
    icon: string;
    name: string;
-   setActiveTab: (tab: number) => void;
+   setActiveTab?: (tab: number) => void;
    arrow?: boolean;
-   active: boolean; // Активность таба
+   active?: boolean;
+   href?: string | undefined;
 }
 
 export const ProfileTabButton: React.FC<Props> = ({
@@ -17,10 +22,22 @@ export const ProfileTabButton: React.FC<Props> = ({
    setActiveTab,
    arrow,
    active,
+   href,
 }) => {
+   const router = useRouter();
+   const isMobile = useMedia('(max-width: 1024px)', false);
+
+   const handleClick = () => {
+      if (isMobile) {
+         setActiveTab?.(id);
+      } else {
+         router.push(href || '');
+      }
+   };
+
    return (
       <button
-         onClick={() => setActiveTab(id)}
+         onClick={handleClick}
          className="uppercase cursor-pointer w-full lg:w-auto"
       >
          <div className="flex items-center justify-between">

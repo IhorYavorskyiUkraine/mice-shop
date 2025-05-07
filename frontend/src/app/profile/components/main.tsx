@@ -2,15 +2,26 @@
 
 import { ErrorMessage } from '@/components/ui';
 import { useQuery } from '@apollo/client';
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { GET_USER } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
-import { Liked } from './tabs-content/liked/liked';
-import { UserInfo } from './tabs-content/user-info/user-info';
 import { ProfileMobileTabs } from './tabs-mobile';
 
-export const Main: React.FC = () => {
-   const [activeTab, setActiveTab] = useState(1);
+interface Props {
+   tab: string;
+}
+
+const UserInfo = dynamic(() => import('./tabs-content/user-info/user-info'), {
+   loading: () => <p>Загрузка...</p>,
+   ssr: false,
+});
+
+const Liked = dynamic(() => import('./tabs-content/liked/liked'), {
+   loading: () => <p>Загрузка...</p>,
+   ssr: false,
+});
+
+export const Main: React.FC<Props> = ({ tab }) => {
    const { data: user, loading, error } = useQuery(GET_USER);
 
    if (error) return <ErrorMessage message={error.message} />;
@@ -30,12 +41,12 @@ export const Main: React.FC = () => {
                   <p className="text-m1">{user?.findUserById?.email}</p>
                )}
             </div>
-            <ProfileTabs setActive={setActiveTab} active={activeTab} />
+            <ProfileTabs />
          </aside>
          <div className="border-l-[1px] border-primary lg:block hidden">
-            {activeTab === 1 && <UserInfo />}
-            {activeTab === 2 && <div>2</div>}
-            {activeTab === 3 && <Liked />}
+            {tab === 'info' && <UserInfo />}
+            {tab === '2' && <div>2</div>}
+            {tab === 'liked' && <Liked />}
          </div>
          <ProfileMobileTabs />
       </div>

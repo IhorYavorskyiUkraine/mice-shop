@@ -1,17 +1,20 @@
+'use client';
+
 import { LikedModel } from '@/types/product-liked';
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
    model: LikedModel;
+   onDelete: () => void;
 }
 
-export const LikedItem: React.FC<Props> = ({ model }) => {
+export const LikedItem: React.FC<Props> = ({ model, onDelete }) => {
    return (
       <div className="w-full h-full bg-secondary flex flex-col">
          <div className="relative w-full pt-[100%] mb-3">
             <Link
-               href={`/product/${model.color.model.productId}?color=${model.color.id}&model=${model.color.model.id}`}
+               href={`/product/${model.color.model.productId}?colorId=${model.color.id}&modelId=${model.color.model.id}`}
                className="absolute inset-0 block"
             >
                <Image
@@ -27,12 +30,20 @@ export const LikedItem: React.FC<Props> = ({ model }) => {
          </div>
          <div className="px-2 pb-3 flex flex-col text-s md:text-[18px]! lg:text-[24px]!">
             <Link
-               href={`/product/${model.color.model.productId}`}
+               href={`/product/${model.color.model.productId}?colorId=${model.color.id}&modelId=${model.color.model.id}`}
                className="line-clamp-2 mb-1"
             >
                {model.color.model.name}
             </Link>
-            <p>{`${model.color.model.price}$`}</p>
+            <div className="flex justify-between">
+               <p>{`${model.color.model.price}$`}</p>
+               <button
+                  className="cursor-pointer lg:text-m1 text-s "
+                  onClick={onDelete}
+               >
+                  Видалити
+               </button>
+            </div>
          </div>
       </div>
    );

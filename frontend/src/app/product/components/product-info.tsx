@@ -9,6 +9,7 @@ import { Specs } from '@/types/specs.type';
 import { useMutation, useQuery } from '@apollo/client';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
+import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import {
@@ -27,6 +28,8 @@ interface Props {
 export const ProductInfo: React.FC<Props> = ({ id }) => {
    const [activeModel, setActiveModel] = useState<Model | null>(null);
    const [activeColor, setActiveColor] = useState<Color | null>(null);
+
+   const [initialized, setInitialized] = useState(false);
 
    const { data, loading } = useQuery(GET_PRODUCT, {
       variables: { id },
@@ -82,38 +85,92 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
       if (!data?.getProductById?.models?.length) {
          setActiveModel(null);
          setActiveColor(null);
+         setInitialized(true);
          return;
       }
 
-      const availableModel = data.getProductById.models.find((model: Model) =>
-         model.colors.some((color: Color) => color.stock),
-      );
+      const parsed = qs.parse(window.location.search, {
+         ignoreQueryPrefix: true,
+         comma: true,
+      });
 
-      if (availableModel) {
-         setActiveModel(availableModel);
+      const modelIdFromQuery = parsed.modelId ? Number(parsed.modelId) : null;
+      const colorIdFromQuery = parsed.colorId ? Number(parsed.colorId) : null;
 
-         const availableColor = availableModel.colors?.find(
-            (color: Color) => color.stock,
+      let foundModel: Model | null = null;
+      let foundColor: Color | null = null;
+
+      if (modelIdFromQuery) {
+         foundModel =
+            data.getProductById.models.find(
+               (model: Model) => model.id === modelIdFromQuery,
+            ) || null;
+
+         if (foundModel && colorIdFromQuery) {
+            foundColor =
+               foundModel.colors.find(
+                  (color: Color) =>
+                     color.id === colorIdFromQuery && color.stock,
+               ) || null;
+         }
+      }
+
+      if (!foundModel || !foundColor) {
+         const availableModel = data.getProductById.models.find(
+            (model: Model) => model.colors.some((color: Color) => color.stock),
          );
 
-         setActiveColor(availableColor.name || null);
-      } else {
-         setActiveModel(null);
-         setActiveColor(null);
+         if (availableModel) {
+            foundModel = availableModel;
+            foundColor =
+               availableModel.colors.find((color: Color) => color.stock) ||
+               null;
+         }
       }
+
+      setActiveModel(foundModel);
+      setActiveColor(foundColor);
+      setInitialized(true);
    }, [data]);
 
    useEffect(() => {
+      if (!initialized || !activeModel) return;
+
+      const queryString = qs.stringify(
+         {
+            modelId: activeModel?.id,
+            colorId: activeColor?.id,
+         },
+         {
+            addQueryPrefix: true,
+            arrayFormat: 'comma',
+         },
+      );
+
+      window.history.replaceState(null, '', queryString);
+   }, [activeModel, activeColor, initialized]);
+
+   useEffect(() => {
+      if (!initialized) return;
       if (!activeModel) {
          setActiveColor(null);
          return;
       }
 
-      const availableColor = activeModel.colors.find(
-         (color: Color) => color.stock,
+      const { colorId } = qs.parse(window.location.search, {
+         ignoreQueryPrefix: true,
+         comma: true,
+      });
+
+      const colorFromQuery = activeModel.colors.find(
+         (color: Color) => color.id === Number(colorId) && color.stock,
       );
 
-      setActiveColor(availableColor || null);
+      if (!colorFromQuery) {
+         setActiveColor(
+            activeModel.colors.find((color: Color) => color.stock) || null,
+         );
+      }
    }, [activeModel]);
 
    return (

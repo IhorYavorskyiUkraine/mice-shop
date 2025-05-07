@@ -41,7 +41,9 @@ export const CartItem: React.FC<Props> = ({ item }) => {
    return (
       <article className="text-primary flex gap-4">
          <div>
-            <Link href={`/product/${item.model.productId}`}>
+            <Link
+               href={`/product/${item.model.productId}?modelId=${item.model.id}&colorId=${item.color.id}`}
+            >
                <Image
                   src={item.color.image}
                   alt={item.model.name}
@@ -52,7 +54,9 @@ export const CartItem: React.FC<Props> = ({ item }) => {
          </div>
          <div className="flex-1 flex flex-col">
             <div className="flex justify-between items-center">
-               <Link href={`/product/${item.model.productId}`}>
+               <Link
+                  href={`/product/${item.model.productId}?modelId=${item.model.id}&colorId=${item.color.id}`}
+               >
                   <h3>{item.model.name}</h3>
                </Link>
                <button className="cursor-pointer" onClick={handleDelete}>
