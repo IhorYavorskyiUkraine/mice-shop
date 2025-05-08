@@ -74,8 +74,6 @@ const UserInfo: React.FC = () => {
       } catch (error: any) {
          const gqlError = error.graphQLErrors?.[0];
 
-         console.log('gqlError', gqlError);
-
          if (gqlError?.message) {
             form.setError('oldPassword', {
                type: 'server',
@@ -133,7 +131,7 @@ const UserInfo: React.FC = () => {
    return (
       <FormProvider {...form}>
          <form
-            className="px-[10px] py-[10px] lg:px-md lg:py-md"
+            className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]"
             onSubmit={form.handleSubmit(onSubmit)}
          >
             {renderField("Ім'я", 'firstName', firstName, "Введіть ваше ім'я")}

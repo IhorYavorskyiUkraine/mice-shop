@@ -31,7 +31,7 @@ const Liked: React.FC = () => {
    if (error) return <ErrorMessage message={error.message} />;
 
    return (
-      <div className="px-[10px] px-[10px] lg:px-md lg:py-md">
+      <div className="px-[10px] py-[10px] lg:px-md lg:py-md">
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             {data?.getLikedProducts.map((model: LikedModel) => (
                <LikedItem

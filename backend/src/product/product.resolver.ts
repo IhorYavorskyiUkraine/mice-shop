@@ -1,6 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request } from 'express';
+import { GraphQLError } from 'graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
 import { getAuthTokens } from 'src/utils/cookie.utils';
@@ -55,7 +56,7 @@ export class ProductResolver {
    ) {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
-         throw new Error('Access token not found');
+         return false;
       }
 
       const { userId } =
@@ -64,7 +65,6 @@ export class ProductResolver {
       return this.productService.isProductLiked(userId, productCode);
    }
 
-   @UseGuards(JwtGuard)
    @Mutation(() => AddToLikedRes)
    async addToLiked(
       @Args('productCode') productCode: string,
@@ -72,7 +72,11 @@ export class ProductResolver {
    ) {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
-         throw new Error('Access token not found');
+         throw new GraphQLError('Залогіньтесь', {
+            extensions: {
+               code: 'UNAUTHENTICATED',
+            },
+         });
       }
 
       const { userId } =

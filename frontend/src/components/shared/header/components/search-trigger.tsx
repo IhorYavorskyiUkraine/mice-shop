@@ -154,7 +154,11 @@ export const SearchTrigger: React.FC = () => {
                   >
                      <CarouselContent>
                         {products.getAllProducts.map((product: Product) => (
-                           <CarouselItem key={product.id} className="basis-1/2">
+                           <CarouselItem
+                              onClick={onClose}
+                              key={product.id}
+                              className="basis-1/2"
+                           >
                               <SearchItem
                                  className="!text-primary"
                                  product={product}
@@ -166,7 +170,9 @@ export const SearchTrigger: React.FC = () => {
                ) : (
                   <div className="flex gap-[25px] flex-wrap">
                      {products.getAllProducts.map((product: Product) => (
-                        <SearchItem key={product.id} product={product} />
+                        <button key={product.id} onClick={onClose}>
+                           <SearchItem product={product} />
+                        </button>
                      ))}
                   </div>
                )}

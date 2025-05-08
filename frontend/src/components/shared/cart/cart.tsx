@@ -12,16 +12,20 @@ import { TCartItem } from '@/types/cart.type';
 import { useQuery } from '@apollo/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import { Drawer } from '../drawer';
 import { CartItem } from './cart-item';
 import { GET_CART } from './cart.graphql';
 
 export const Cart: React.FC = () => {
    const { data, error } = useQuery(GET_CART);
+   const [open, setOpen] = useState(false);
 
    return (
       <Drawer
          direction="right"
+         open={open}
+         setOpen={setOpen}
          icon={
             <Image
                width={24}
@@ -63,9 +67,14 @@ export const Cart: React.FC = () => {
                            <p className="text-right mb-2">
                               Сумма: {data?.getCart.totalPrice}$
                            </p>
-                           <Button className="w-full">
-                              Перейти до оформлення
-                           </Button>
+                           <Link href="/checkout">
+                              <Button
+                                 className="w-full"
+                                 onClick={() => setOpen(false)}
+                              >
+                                 Перейти до оформлення
+                              </Button>
+                           </Link>
                         </div>
                      </div>
                   )}

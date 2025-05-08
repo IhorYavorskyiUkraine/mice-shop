@@ -11,7 +11,11 @@ export function MainProvider({ children }: { children: React.ReactNode }) {
       <ApolloProvider client={client}>
          <InitAuth />
          {children}
-         <Toaster />
+         <Toaster
+            toastOptions={{
+               className: 'font-["Pixelify"]',
+            }}
+         />
          <ScrollToTopButton />
       </ApolloProvider>
    );

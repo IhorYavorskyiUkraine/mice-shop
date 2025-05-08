@@ -3,22 +3,34 @@ import {
    Injectable,
    InternalServerErrorException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
 
 @Injectable()
 export class CartService {
-   constructor(private prisma: PrismaService) {}
+   constructor(
+      private prisma: PrismaService,
+      private jwtService: JwtService,
+      private config: ConfigService,
+   ) {}
 
-   async getCart(userId: number) {
+   async getCart(userId?: number, res?: Response) {
       try {
-         this.validateIds(userId);
+         if (!userId && (!res || !this.getCartTokenFromRequest(res))) {
+            return this.createCart(userId, res);
+         }
+
+         const whereCondition = userId
+            ? { userId }
+            : { token: this.getCartTokenFromRequest(res) };
 
          let cart = await this.prisma.cart.findUnique({
-            where: {
-               userId,
-            },
+            where: whereCondition,
             include: {
                items: {
                   include: {
@@ -36,46 +48,75 @@ export class CartService {
             },
          });
 
-         return cart || this.createCart(userId);
+         return cart || this.createCart(userId, res);
       } catch (e) {
-         console.error(e);
+         console.error('Error fetching cart', e);
          throw new InternalServerErrorException(
             'Error fetching cart. Please try again later.',
          );
       }
    }
 
-   async createCart(userId: number) {
+   async createCart(userId?: number, res?: Response) {
       try {
+         if (!userId) {
+            if (!res) {
+               throw new BadRequestException(
+                  'Response object is required for guest carts',
+               );
+            }
+
+            const cartToken = this.generateCartToken();
+            this.setCartCookie(res, cartToken);
+
+            return await this.prisma.cart.create({
+               data: {
+                  token: cartToken,
+                  totalPrice: 0,
+                  items: { create: [] },
+               },
+               include: {
+                  items: {
+                     include: {
+                        model: true,
+                        color: true,
+                     },
+                  },
+               },
+            });
+         }
+
          this.validateIds(userId);
 
          return await this.prisma.cart.create({
             data: {
                userId,
                totalPrice: 0,
-               items: {
-                  create: [],
-               },
+               items: { create: [] },
             },
             include: {
                items: {
                   include: {
                      model: true,
+                     color: true,
                   },
                },
             },
          });
       } catch (e) {
-         console.error(e);
+         console.error('Failed to create cart', e);
          throw new InternalServerErrorException('Failed to create cart');
       }
    }
 
-   async addProduct(args: AddProductArgs, userId: number) {
+   async addProduct(
+      args: AddProductArgs & { userId?: number },
+      res?: Response,
+   ) {
       try {
-         const { modelId, colorId } = args;
+         const { modelId, colorId, userId } = args;
 
-         this.validateIds(userId, modelId);
+         this.validateIds([modelId, colorId]);
 
          const model = await this.prisma.model.findUnique({
             where: {
@@ -88,7 +129,7 @@ export class CartService {
             throw new BadRequestException('Model not found');
          }
 
-         let cart = await this.getCart(userId);
+         let cart = await this.getCart(userId, res);
 
          const cartItem = await this.findCartItem(cart.id, modelId, colorId);
 
@@ -113,7 +154,7 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId);
+         return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
          if (e instanceof BadRequestException) throw e;
@@ -153,17 +194,20 @@ export class CartService {
       }
    }
 
-   async updateProduct(args: UpdateProductArgs & { userId: number }) {
+   async updateProduct(
+      args: UpdateProductArgs & { userId: number },
+      res?: Response,
+   ) {
       try {
          const { modelId, userId, colorId, quantity } = args;
 
-         this.validateIds(userId, modelId);
+         this.validateIds([modelId, colorId, quantity]);
 
          if (quantity < 0) {
             throw new BadRequestException('Quantity cannot be negative');
          }
 
-         const cart = await this.getCart(userId);
+         const cart = await this.getCart(userId, res);
 
          if (!cart) {
             throw new BadRequestException('Cart not found');
@@ -217,7 +261,7 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId);
+         return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
          if (e instanceof BadRequestException) throw e;
@@ -227,11 +271,11 @@ export class CartService {
       }
    }
 
-   async removeProduct(modelId: number, userId: number) {
+   async removeProduct(modelId: number, userId?: number, res?: Response) {
       try {
-         this.validateIds(userId, modelId);
+         this.validateIds(modelId);
 
-         const cart = await this.getCart(userId);
+         const cart = await this.getCart(userId, res);
          if (!cart) {
             throw new BadRequestException('Cart not found');
          }
@@ -255,7 +299,7 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId);
+         return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
          if (e instanceof BadRequestException) throw e;
@@ -275,10 +319,47 @@ export class CartService {
       });
    }
 
-   private validateIds(userId: number, modelId?: number) {
-      if (!userId) throw new BadRequestException('User ID is required');
-      if (modelId && modelId <= 0) {
-         throw new BadRequestException('Invalid product ID');
+   private validateIds(value: string | number | (string | number)[]): void {
+      if (Array.isArray(value)) {
+         if (value.length === 0) {
+            throw new BadRequestException(`IDs array is empty`);
+         }
+
+         for (const v of value) {
+            if (!v && v !== 0) {
+               throw new BadRequestException(
+                  `Each ID is required and cannot be ${v}`,
+               );
+            }
+         }
+      } else {
+         if (!value && value !== 0) {
+            throw new BadRequestException(`${value} is required`);
+         }
       }
+   }
+
+   private generateCartToken(): string {
+      return this.jwtService.sign(
+         { cartId: uuidv4() },
+         {
+            secret: this.config.get('JWT_SECRET'),
+            expiresIn: this.config.get('JWT_SECRET_EXPIRES_IN'),
+         },
+      );
+   }
+
+   private setCartCookie(res: Response, token: string): void {
+      res.cookie('cartToken', token, {
+         httpOnly: true,
+         secure: this.config.get('NODE_ENV') === 'production',
+         sameSite: 'lax',
+         maxAge: this.config.get('CART_TOKEN_MAX_AGE'),
+      });
+   }
+
+   private getCartTokenFromRequest(res: Response): string | undefined {
+      if (!res?.req?.cookies) return undefined;
+      return res.req.cookies.cartToken;
    }
 }

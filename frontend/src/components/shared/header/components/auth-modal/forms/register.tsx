@@ -33,7 +33,7 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
          await register({ variables: { args: data } });
 
          form.reset();
-         toast.success('Register successful');
+         toast.success('Ви успішно зареєструвались');
          setIsOpen();
       } catch (e: any) {
          const gqlError = e.graphQLErrors?.[0];

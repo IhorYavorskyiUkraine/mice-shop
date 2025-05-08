@@ -37,7 +37,7 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
             userId: res.data.login.userId,
          });
          form.reset();
-         toast.success('Login successful');
+         toast.success('Ви успішно увійшли');
          setIsOpen();
       } catch (error: any) {
          const gqlError = error.graphQLErrors?.[0];
