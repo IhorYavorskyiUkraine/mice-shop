@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_CITIES = gql`
-   query GetCity($query: String!) {
-      getCity(query: $query) {
+   query GetCities($query: String!) {
+      getCities(query: $query) {
          name
          ref
       }
@@ -10,8 +10,8 @@ export const GET_CITIES = gql`
 `;
 
 export const GET_WAREHOUSES = gql`
-   query GetWarehouses($cityRef: String!) {
-      getWarehouses(cityRef: $cityRef) {
+   query GetWarehouses($args: getWarehousesArgs!) {
+      getWarehouses(args: $args) {
          number
          description
          ref

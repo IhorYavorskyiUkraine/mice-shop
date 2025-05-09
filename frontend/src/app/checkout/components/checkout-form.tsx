@@ -2,39 +2,77 @@
 
 import { CheckboxWithText } from '@/components/shared';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
-import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { City } from '@/types/city.type';
+import { Warehouse } from '@/types/warehouse.type';
+import { useQuery } from '@apollo/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useClickAway, useDebounce } from 'react-use';
 import { toast } from 'sonner';
-import { GET_CITIES } from '../checkout.graphql';
+import { GET_CITIES, GET_WAREHOUSES } from '../checkout.graphql';
+import { createOrderSchema, TCreateOrder } from '../create-order.schema';
+import { DropItem } from './drop-item';
 import { FormBlock } from './form-block';
 
 export const CheckoutForm: React.FC = () => {
    const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
-   //////
-   const [query, setQuery] = useState<string | null>(null);
+   const [query, setQuery] = useState<string>('');
+   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
    const [cityRef, setCityRef] = useState<string | null>(null);
    const [warehouseRef, setWarehouseRef] = useState<string | null>(null);
-   //////
+   const [warehouseSearch, setWarehouseSearch] = useState('');
+   const [warehouseDebouncedSearch, setWarehouseDebouncedSearch] =
+      useState<string>('');
 
-   const form = useForm(
-      // <TUpdateUser>
+   const [cityName, setCityName] = useState<string>('');
+   const [warehouseName, setWarehouseName] = useState<string>('');
+   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+   const [isWarehouseDropdownOpen, setIsWarehouseDropdownOpen] =
+      useState(false);
+
+   const cityRefElement = useRef<HTMLDivElement>(null);
+   const warehouseRefElement = useRef<HTMLDivElement>(null);
+
+   useClickAway(cityRefElement, () => {
+      setIsCityDropdownOpen(false);
+   });
+
+   useClickAway(warehouseRefElement, () => {
+      setIsWarehouseDropdownOpen(false);
+   });
+
+   const form = useForm<TCreateOrder>({
+      resolver: zodResolver(createOrderSchema),
+      defaultValues: {
+         firstName: '',
+         lastName: '',
+         middleName: '',
+         phone: '',
+      },
+   });
+
+   useDebounce(() => setDebouncedQuery(query), 500, [query]);
+   useDebounce(() => setWarehouseDebouncedSearch(warehouseSearch), 500, [
+      warehouseSearch,
+   ]);
+
+   const { data: cities, loading: isLoadingCities } = useQuery(GET_CITIES, {
+      skip: !query || !debouncedQuery,
+      variables: { query: debouncedQuery },
+   });
+
+   const { data: warehouses, loading: isLoadingWarehouses } = useQuery(
+      GET_WAREHOUSES,
       {
-         // resolver: zodResolver(updateUserSchema),
-         defaultValues: {
-            firstName: '',
-            lastName: '',
-            middleName: '',
-            phone: '',
-         },
+         skip: !cityRef,
+         variables: { args: { cityRef, search: warehouseDebouncedSearch } },
       },
    );
 
-   const [getCities, { data }] = useMutation(GET_CITIES);
-
-   const onSubmit = async (data: any) => {
+   const onSubmit = async (data: TCreateOrder) => {
       try {
-         // if (isLoadingUser || isUpdating) return;
+         if (isLoadingCities || isLoadingWarehouses) return;
 
          const {} = data;
 
@@ -48,7 +86,52 @@ export const CheckoutForm: React.FC = () => {
          //       message: gqlError.message,
          //    });
          // }
-         toast.error('Не зробити замовлення');
+         toast.error('Не вдалося зробити замовлення');
+      }
+   };
+
+   const handleCityChange = (ref: string, name: string) => {
+      setCityRef(ref);
+      setCityName(name);
+      setIsCityDropdownOpen(false);
+      setWarehouseSearch('');
+      setWarehouseName('');
+      setWarehouseRef(null);
+   };
+
+   const handleWarehouseChange = (ref: string, name: string) => {
+      setWarehouseRef(ref);
+      setWarehouseName(name);
+      setIsWarehouseDropdownOpen(false);
+   };
+
+   const handleCityInputFocus = () => {
+      if (cities?.getCities?.length > 0) {
+         setIsCityDropdownOpen(true);
+      }
+   };
+
+   const handleWarehouseInputFocus = () => {
+      if (warehouses?.getWarehouses?.length > 0 && cityRef) {
+         setIsWarehouseDropdownOpen(true);
+      }
+   };
+
+   const handleCityInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value);
+      setCityName('');
+      setCityRef(null);
+      setIsCityDropdownOpen(true);
+   };
+
+   const handleWarehouseInputChange = (
+      e: React.ChangeEvent<HTMLInputElement>,
+   ) => {
+      setWarehouseSearch(e.target.value);
+      setWarehouseName('');
+      setWarehouseRef(null);
+      if (cityRef) {
+         setIsWarehouseDropdownOpen(true);
       }
    };
 
@@ -106,17 +189,59 @@ export const CheckoutForm: React.FC = () => {
                   placeholder="Емаіл"
                   name="email"
                />
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Місто"
-                  onChange={e => setQuery(e.target.value)}
-                  name="city"
-               />
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Відділення нової пошти"
-                  name="addressNP"
-               />
+               <div ref={cityRefElement}>
+                  <InputWithValidations
+                     placeholder="Місто"
+                     onChange={handleCityInputChange}
+                     onFocus={handleCityInputFocus}
+                     name="city"
+                     value={cityName || query}
+                  />
+                  {isCityDropdownOpen && cities?.getCities?.length > 0 && (
+                     <div className="space-y-[10px]flex flex-col">
+                        {cities.getCities.map((city: City) => (
+                           <DropItem
+                              key={city.ref}
+                              text={city.name}
+                              onClick={() =>
+                                 handleCityChange(city.ref, city.name)
+                              }
+                              active={city.ref === cityRef}
+                           />
+                        ))}
+                     </div>
+                  )}
+               </div>
+               <div ref={warehouseRefElement}>
+                  <InputWithValidations
+                     placeholder="Відділення нової пошти"
+                     name="warehouse"
+                     value={warehouseName || warehouseSearch}
+                     onChange={handleWarehouseInputChange}
+                     onFocus={handleWarehouseInputFocus}
+                     disabled={!cityRef}
+                  />
+                  {isWarehouseDropdownOpen &&
+                     warehouses?.getWarehouses?.length > 0 && (
+                        <div className="space-y-[10px] pt-[10px] px-[10px] flex flex-col">
+                           {warehouses.getWarehouses.map(
+                              (warehouse: Warehouse) => (
+                                 <DropItem
+                                    key={warehouse.ref}
+                                    text={warehouse.description}
+                                    onClick={() =>
+                                       handleWarehouseChange(
+                                          warehouse.ref,
+                                          warehouse.description,
+                                       )
+                                    }
+                                    active={warehouse.ref === warehouseRef}
+                                 />
+                              ),
+                           )}
+                        </div>
+                     )}
+               </div>
             </FormBlock>
          </form>
       </FormProvider>
