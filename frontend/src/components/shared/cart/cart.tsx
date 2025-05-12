@@ -27,13 +27,16 @@ export const Cart: React.FC = () => {
          open={open}
          setOpen={setOpen}
          icon={
-            <Image
-               width={24}
-               height={24}
-               src={'/images/header/cart.svg'}
-               alt="cart"
-               className="h-6 w-6 hover:opacity-80 transition"
-            />
+            <div className="flex gap-1">
+               <Image
+                  width={24}
+                  height={24}
+                  src={'/images/header/cart.svg'}
+                  alt="cart"
+                  className="h-6 w-6 hover:opacity-80 transition"
+               />
+               <span className="text-s">{data?.getCart.items?.length}</span>
+            </div>
          }
       >
          <DrawerContent className="lg:!w-[500px] w-full  bg-secondary py-sm px-sm text-primary">

@@ -1,22 +1,25 @@
 'use client';
 
 import { CheckboxWithText } from '@/components/shared';
+import { GET_CART } from '@/components/shared/cart/cart.graphql';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
+import { TCartItem } from '@/types/cart.type';
 import { City } from '@/types/city.type';
 import { Warehouse } from '@/types/warehouse.type';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useClickAway, useDebounce } from 'react-use';
 import { toast } from 'sonner';
-import { GET_CITIES, GET_WAREHOUSES } from '../checkout.graphql';
+import { CREATE_ORDER, GET_CITIES, GET_WAREHOUSES } from '../checkout.graphql';
 import { createOrderSchema, TCreateOrder } from '../create-order.schema';
 import { DropItem } from './drop-item';
 import { FormBlock } from './form-block';
+import { ItemsBlock } from './items-block';
 
 export const CheckoutForm: React.FC = () => {
-   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+   const [paymentMethod, setPaymentMethod] = useState<string | null>('online');
    const [query, setQuery] = useState<string>('');
    const [debouncedQuery, setDebouncedQuery] = useState<string>('');
    const [cityRef, setCityRef] = useState<string | null>(null);
@@ -49,6 +52,9 @@ export const CheckoutForm: React.FC = () => {
          lastName: '',
          middleName: '',
          phone: '',
+         city: '',
+         warehouse: '',
+         paymentMethod: 'online',
       },
    });
 
@@ -70,11 +76,36 @@ export const CheckoutForm: React.FC = () => {
       },
    );
 
+   const [createOrder, { loading, error: createOrderError }] =
+      useMutation(CREATE_ORDER);
+
+   const { data: cartData, error } = useQuery(GET_CART);
+
+   console.log(cartData?.getItems?.totalPrice);
+
    const onSubmit = async (data: TCreateOrder) => {
       try {
          if (isLoadingCities || isLoadingWarehouses) return;
 
-         const {} = data;
+         await createOrder({
+            variables: {
+               args: {
+                  total: cartData?.getCart?.totalPrice,
+                  address: `${cityName}, ${warehouseName}`,
+                  phone: data.phone,
+                  email: data.email,
+                  name: `${data.firstName} ${data.lastName} ${data.middleName}`,
+                  orderItem: cartData?.getCart?.items.map(
+                     (item: TCartItem) => ({
+                        code: item.color.code,
+                        quantity: item.quantity,
+                        price: item.price,
+                     }),
+                  ),
+                  paymentMethod: paymentMethod,
+               },
+            },
+         });
 
          toast.success('Замовлення успішно оформлено');
       } catch (error: any) {
@@ -92,6 +123,7 @@ export const CheckoutForm: React.FC = () => {
 
    const handleCityChange = (ref: string, name: string) => {
       setCityRef(ref);
+      form.setValue('city', name);
       setCityName(name);
       setIsCityDropdownOpen(false);
       setWarehouseSearch('');
@@ -101,6 +133,7 @@ export const CheckoutForm: React.FC = () => {
 
    const handleWarehouseChange = (ref: string, name: string) => {
       setWarehouseRef(ref);
+      form.setValue('warehouse', name);
       setWarehouseName(name);
       setIsWarehouseDropdownOpen(false);
    };
@@ -137,113 +170,130 @@ export const CheckoutForm: React.FC = () => {
 
    return (
       <FormProvider {...form}>
-         <form
-            className="px-[10px] border-[2px] border-primary py-[10px] lg:px-[30px] lg:py-[30px]"
-            onSubmit={form.handleSubmit(onSubmit)}
-         >
-            <FormBlock
-               title="Контактна інформація"
-               className="grid lg:grid-cols-2 gap-[30px]"
+         <div className="grid lg:grid-cols-2 gap-[30px] py-md">
+            <form
+               className="px-[10px] self-start border-[2px] border-primary py-[10px] lg:px-[30px] lg:py-[30px]"
+               onSubmit={form.handleSubmit(onSubmit)}
             >
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Прізвище"
-                  name="lastName"
-                  className="max-w-[400px]"
-               />
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Ім'я"
-                  name="firstName"
-                  className="max-w-[400px]"
-               />
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="По батькові"
-                  name="middleName"
-                  className="max-w-[400px]"
-               />
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Телефон"
-                  name="lastName"
-                  className="max-w-[400px]"
-                  mask="+38 (000) 000-00-00"
-               />
-            </FormBlock>
-            <FormBlock title="Спосіб оплати" className="space-y-[20px]">
-               <CheckboxWithText
-                  text="Оплата при отриманні"
-                  checked={paymentMethod === 'cash'}
-                  onCheckedChange={() => setPaymentMethod('cash')}
-               />
-               <CheckboxWithText
-                  text="Оплата онлайн"
-                  checked={paymentMethod === 'online'}
-                  onCheckedChange={() => setPaymentMethod('online')}
-               />
-            </FormBlock>
-            <FormBlock title="Адреса доставки" className="space-y-[30px]">
-               <InputWithValidations
-                  // disabled={isLoadingUser}
-                  placeholder="Емаіл"
-                  name="email"
-               />
-               <div ref={cityRefElement}>
+               <FormBlock
+                  title="Контактна інформація"
+                  className="grid lg:grid-cols-2 gap-[30px]"
+               >
                   <InputWithValidations
-                     placeholder="Місто"
-                     onChange={handleCityInputChange}
-                     onFocus={handleCityInputFocus}
-                     name="city"
-                     value={cityName || query}
+                     // disabled={isLoadingUser}
+                     placeholder="Прізвище"
+                     name="lastName"
+                     className="max-w-[400px]"
                   />
-                  {isCityDropdownOpen && cities?.getCities?.length > 0 && (
-                     <div className="space-y-[10px]flex flex-col">
-                        {cities.getCities.map((city: City) => (
-                           <DropItem
-                              key={city.ref}
-                              text={city.name}
-                              onClick={() =>
-                                 handleCityChange(city.ref, city.name)
-                              }
-                              active={city.ref === cityRef}
+                  <InputWithValidations
+                     // disabled={isLoadingUser}
+                     placeholder="Ім'я"
+                     name="firstName"
+                     className="max-w-[400px]"
+                  />
+                  <InputWithValidations
+                     // disabled={isLoadingUser}
+                     placeholder="По батькові"
+                     name="middleName"
+                     className="max-w-[400px]"
+                  />
+                  <InputWithValidations
+                     // disabled={isLoadingUser}
+                     placeholder="Телефон"
+                     name="phone"
+                     className="max-w-[400px]"
+                     mask="+38 (000) 000-00-00"
+                  />
+               </FormBlock>
+               <FormBlock title="Спосіб оплати" className="space-y-[20px]">
+                  <Controller
+                     control={form.control}
+                     name="paymentMethod"
+                     defaultValue="online"
+                     render={({ field }) => (
+                        <>
+                           <CheckboxWithText
+                              text="Оплата онлайн"
+                              checked={field.value === 'online'}
+                              onCheckedChange={() => field.onChange('online')}
                            />
-                        ))}
-                     </div>
-                  )}
-               </div>
-               <div ref={warehouseRefElement}>
-                  <InputWithValidations
-                     placeholder="Відділення нової пошти"
-                     name="warehouse"
-                     value={warehouseName || warehouseSearch}
-                     onChange={handleWarehouseInputChange}
-                     onFocus={handleWarehouseInputFocus}
-                     disabled={!cityRef}
+                           <CheckboxWithText
+                              text="Оплата при отриманні"
+                              checked={field.value === 'cash'}
+                              onCheckedChange={() => field.onChange('cash')}
+                           />
+                        </>
+                     )}
                   />
-                  {isWarehouseDropdownOpen &&
-                     warehouses?.getWarehouses?.length > 0 && (
-                        <div className="space-y-[10px] pt-[10px] px-[10px] flex flex-col">
-                           {warehouses.getWarehouses.map(
-                              (warehouse: Warehouse) => (
-                                 <DropItem
-                                    key={warehouse.ref}
-                                    text={warehouse.description}
-                                    onClick={() =>
-                                       handleWarehouseChange(
-                                          warehouse.ref,
-                                          warehouse.description,
-                                       )
-                                    }
-                                    active={warehouse.ref === warehouseRef}
-                                 />
-                              ),
-                           )}
+               </FormBlock>
+
+               <FormBlock title="Адреса доставки" className="space-y-[30px]">
+                  <InputWithValidations
+                     // disabled={isLoadingUser}
+                     placeholder="Емаіл"
+                     name="email"
+                  />
+                  <div ref={cityRefElement}>
+                     <InputWithValidations
+                        placeholder="Місто"
+                        onChange={handleCityInputChange}
+                        onFocus={handleCityInputFocus}
+                        name="city"
+                        value={cityName || query}
+                     />
+                     {isCityDropdownOpen && cities?.getCities?.length > 0 && (
+                        <div className="space-y-[10px]flex flex-col">
+                           {cities.getCities.map((city: City) => (
+                              <DropItem
+                                 key={city.ref}
+                                 text={city.name}
+                                 onClick={() =>
+                                    handleCityChange(city.ref, city.name)
+                                 }
+                                 active={city.ref === cityRef}
+                              />
+                           ))}
                         </div>
                      )}
-               </div>
-            </FormBlock>
-         </form>
+                  </div>
+                  <div ref={warehouseRefElement}>
+                     <InputWithValidations
+                        placeholder="Відділення нової пошти"
+                        name="warehouse"
+                        value={warehouseName || warehouseSearch}
+                        onChange={handleWarehouseInputChange}
+                        onFocus={handleWarehouseInputFocus}
+                        disabled={!cityRef}
+                     />
+                     {isWarehouseDropdownOpen &&
+                        warehouses?.getWarehouses?.length > 0 && (
+                           <div className="space-y-[10px] pt-[10px] px-[10px] flex flex-col">
+                              {warehouses.getWarehouses.map(
+                                 (warehouse: Warehouse) => (
+                                    <DropItem
+                                       key={warehouse.ref}
+                                       text={warehouse.description}
+                                       onClick={() =>
+                                          handleWarehouseChange(
+                                             warehouse.ref,
+                                             warehouse.description,
+                                          )
+                                       }
+                                       active={warehouse.ref === warehouseRef}
+                                    />
+                                 ),
+                              )}
+                           </div>
+                        )}
+                  </div>
+               </FormBlock>
+            </form>
+            <ItemsBlock
+               items={cartData?.getCart.items || []}
+               totalPrice={cartData?.getCart?.totalPrice}
+               onSubmit={form.handleSubmit(onSubmit)}
+            />
+         </div>
       </FormProvider>
    );
 };

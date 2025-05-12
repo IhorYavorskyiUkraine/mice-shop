@@ -7,7 +7,7 @@ import {
 } from '@nestjs/graphql';
 import { OrderStatus } from '@prisma/client';
 import { User } from 'src/user/user.model';
-import { OrderItem } from './orderItem.model';
+import { OrderItem } from './order-item.model';
 
 registerEnumType(OrderStatus, {
    name: 'OrderStatus',
@@ -43,7 +43,7 @@ export class Order {
    name: string;
 
    @Field(() => [OrderItem])
-   orderItem: OrderItem[];
+   orderItems: OrderItem[];
 
    @Field()
    createdAt: Date;

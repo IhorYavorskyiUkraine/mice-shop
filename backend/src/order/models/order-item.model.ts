@@ -1,6 +1,5 @@
-import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
+import { Field, Float, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Order } from 'src/order/models/order.model';
-import { Model } from 'src/product/models/productModel.model';
 
 @ObjectType()
 export class OrderItem {
@@ -13,11 +12,8 @@ export class OrderItem {
    @Field(() => Int)
    orderId: number;
 
-   @Field(() => Model)
-   model: Model;
-
-   @Field(() => Int)
-   modelId: number;
+   @Field(() => String)
+   code: string;
 
    @Field(() => Int)
    quantity: number;
@@ -30,4 +26,19 @@ export class OrderItem {
 
    @Field()
    updatedAt: Date;
+}
+
+@InputType()
+export class OrderItemInput {
+   // @Field(() => Int)
+   // orderId: number;
+
+   @Field(() => String)
+   code: string;
+
+   @Field(() => Int)
+   quantity: number;
+
+   @Field(() => Float)
+   price: number;
 }

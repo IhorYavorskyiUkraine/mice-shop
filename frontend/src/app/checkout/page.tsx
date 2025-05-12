@@ -7,9 +7,7 @@ export default function CheckoutPage() {
       <Container>
          <Breadcrumb links={[{ name: 'Замовлення', path: '/checkout' }]} />
          <Title text="Оформлення замовлення" />
-         <div className="grid lg:grid-cols-2 gap-[30px] py-md">
-            <CheckoutForm />
-         </div>
+         <CheckoutForm />
       </Container>
    );
 }

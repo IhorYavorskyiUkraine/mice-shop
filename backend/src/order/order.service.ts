@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CreateTTHArgs } from './dto/create-tth.args';
-import { getWarehousesArgs } from './dto/get-warehouses.args';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateOrderArgs, CreateTTHArgs, getWarehousesArgs } from './dto';
 
 @Injectable()
 export class OrderService {
-   constructor(private config: ConfigService) {}
+   constructor(
+      private config: ConfigService,
+      private prisma: PrismaService,
+   ) {}
 
    async getCities(query: string) {
       const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
@@ -116,5 +119,14 @@ export class OrderService {
       }
 
       return data.data?.[0] || null;
+   }
+
+   async createOrder(args: CreateOrderArgs) {
+      try {
+         await this.prisma.order.create({ data: { ...args } });
+         return 'ok';
+      } catch (e) {
+         console.error(e);
+      }
    }
 }

@@ -1,6 +1,6 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import { CartItem } from 'src/cart/models/cartItem.model';
-import { OrderItem } from 'src/order/models/orderItem.model';
+import { OrderItem } from 'src/order/models/order-item.model';
 import { Product } from './product.model';
 import { Color } from './productColor.model';
 import { Specs } from './productSpecs.model';

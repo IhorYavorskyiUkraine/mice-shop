@@ -18,3 +18,9 @@ export const GET_WAREHOUSES = gql`
       }
    }
 `;
+
+export const CREATE_ORDER = gql`
+   mutation CreateORder($args: CreateOrderArgs!) {
+      createOrder(args: $args)
+   }
+`;

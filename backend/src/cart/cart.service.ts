@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { validateValues } from 'src/utils/validateValues.utils';
 import { v4 as uuidv4 } from 'uuid';
 import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
@@ -86,7 +87,7 @@ export class CartService {
             });
          }
 
-         this.validateIds(userId);
+         validateValues(userId);
 
          return await this.prisma.cart.create({
             data: {
@@ -116,7 +117,7 @@ export class CartService {
       try {
          const { modelId, colorId, userId } = args;
 
-         this.validateIds([modelId, colorId]);
+         validateValues([modelId, colorId]);
 
          const model = await this.prisma.model.findUnique({
             where: {
@@ -166,7 +167,7 @@ export class CartService {
 
    async updateTotalPrice(cartId: number) {
       try {
-         this.validateIds(cartId);
+         validateValues(cartId);
 
          const cart = await this.prisma.cart.findUnique({
             where: { id: cartId },
@@ -201,7 +202,7 @@ export class CartService {
       try {
          const { modelId, userId, colorId, quantity } = args;
 
-         this.validateIds([modelId, colorId, quantity]);
+         validateValues([modelId, colorId, quantity]);
 
          if (quantity < 0) {
             throw new BadRequestException('Quantity cannot be negative');
@@ -273,7 +274,7 @@ export class CartService {
 
    async removeProduct(modelId: number, userId?: number, res?: Response) {
       try {
-         this.validateIds(modelId);
+         validateValues(modelId);
 
          const cart = await this.getCart(userId, res);
          if (!cart) {
@@ -317,26 +318,6 @@ export class CartService {
       return this.prisma.cartItem.findFirst({
          where: { cartId, modelId, colorId },
       });
-   }
-
-   private validateIds(value: string | number | (string | number)[]): void {
-      if (Array.isArray(value)) {
-         if (value.length === 0) {
-            throw new BadRequestException(`IDs array is empty`);
-         }
-
-         for (const v of value) {
-            if (!v && v !== 0) {
-               throw new BadRequestException(
-                  `Each ID is required and cannot be ${v}`,
-               );
-            }
-         }
-      } else {
-         if (!value && value !== 0) {
-            throw new BadRequestException(`${value} is required`);
-         }
-      }
    }
 
    private generateCartToken(): string {
