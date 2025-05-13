@@ -12,8 +12,8 @@ export class OrderItem {
    @Field(() => Int)
    orderId: number;
 
-   @Field(() => String)
-   code: string;
+   @Field(() => Int)
+   codeId: number;
 
    @Field(() => Int)
    quantity: number;
@@ -30,11 +30,8 @@ export class OrderItem {
 
 @InputType()
 export class OrderItemInput {
-   // @Field(() => Int)
-   // orderId: number;
-
-   @Field(() => String)
-   code: string;
+   @Field(() => Int)
+   codeId: number;
 
    @Field(() => Int)
    quantity: number;

@@ -22,13 +22,13 @@ export class CartService {
 
    async getCart(userId?: number, res?: Response) {
       try {
-         if (!userId && (!res || !this.getCartTokenFromRequest(res))) {
+         if (!userId && (!res || !this.getGuestTokenFromRequest(res))) {
             return this.createCart(userId, res);
          }
 
          const whereCondition = userId
             ? { userId }
-            : { token: this.getCartTokenFromRequest(res) };
+            : { token: this.getGuestTokenFromRequest(res) };
 
          let cart = await this.prisma.cart.findUnique({
             where: whereCondition,
@@ -40,7 +40,11 @@ export class CartService {
                            colors: true,
                         },
                      },
-                     color: true,
+                     color: {
+                        include: {
+                           code: true,
+                        },
+                     },
                   },
                   orderBy: {
                      createdAt: 'desc',
@@ -67,12 +71,12 @@ export class CartService {
                );
             }
 
-            const cartToken = this.generateCartToken();
-            this.setCartCookie(res, cartToken);
+            const guestToken = this.generateGuestToken();
+            this.setGuestToken(res, guestToken);
 
             return await this.prisma.cart.create({
                data: {
-                  token: cartToken,
+                  token: guestToken,
                   totalPrice: 0,
                   items: { create: [] },
                },
@@ -320,9 +324,9 @@ export class CartService {
       });
    }
 
-   private generateCartToken(): string {
+   private generateGuestToken(): string {
       return this.jwtService.sign(
-         { cartId: uuidv4() },
+         { userId: uuidv4() },
          {
             secret: this.config.get('JWT_SECRET'),
             expiresIn: this.config.get('JWT_SECRET_EXPIRES_IN'),
@@ -330,8 +334,8 @@ export class CartService {
       );
    }
 
-   private setCartCookie(res: Response, token: string): void {
-      res.cookie('cartToken', token, {
+   private setGuestToken(res: Response, token: string): void {
+      res.cookie('guestToken', token, {
          httpOnly: true,
          secure: this.config.get('NODE_ENV') === 'production',
          sameSite: 'lax',
@@ -339,8 +343,8 @@ export class CartService {
       });
    }
 
-   private getCartTokenFromRequest(res: Response): string | undefined {
+   private getGuestTokenFromRequest(res: Response): string | undefined {
       if (!res?.req?.cookies) return undefined;
-      return res.req.cookies.cartToken;
+      return res.req.cookies.guestToken;
    }
 }

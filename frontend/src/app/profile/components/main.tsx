@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 import dynamic from 'next/dynamic';
 import { GET_USER } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
+import { Orders } from './tabs-content/orders/orders';
 import { ProfileMobileTabs } from './tabs-mobile';
 
 interface Props {
@@ -45,7 +46,7 @@ export const Main: React.FC<Props> = ({ tab }) => {
          </aside>
          <div className="border-l-[1px] border-primary lg:block hidden">
             {tab === 'info' && <UserInfo />}
-            {tab === '2' && <div>2</div>}
+            {tab === 'orders' && <Orders />}
             {tab === 'liked' && <Liked />}
          </div>
          <ProfileMobileTabs />

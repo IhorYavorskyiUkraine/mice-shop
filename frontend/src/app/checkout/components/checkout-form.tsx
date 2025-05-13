@@ -8,6 +8,7 @@ import { City } from '@/types/city.type';
 import { Warehouse } from '@/types/warehouse.type';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useClickAway, useDebounce } from 'react-use';
@@ -19,6 +20,8 @@ import { FormBlock } from './form-block';
 import { ItemsBlock } from './items-block';
 
 export const CheckoutForm: React.FC = () => {
+   const router = useRouter();
+
    const [paymentMethod, setPaymentMethod] = useState<string | null>('online');
    const [query, setQuery] = useState<string>('');
    const [debouncedQuery, setDebouncedQuery] = useState<string>('');
@@ -76,12 +79,22 @@ export const CheckoutForm: React.FC = () => {
       },
    );
 
-   const [createOrder, { loading, error: createOrderError }] =
-      useMutation(CREATE_ORDER);
+   const [createOrder, { loading: createOrderLoading }] = useMutation(
+      CREATE_ORDER,
+      {
+         onCompleted: data => {
+            if (data.createOrder.success) {
+               toast.success('Заказ успішно оформлено');
+               // router.push('/order-success');
+            }
+         },
+         onError: error => {
+            toast.error(error.message);
+         },
+      },
+   );
 
-   const { data: cartData, error } = useQuery(GET_CART);
-
-   console.log(cartData?.getItems?.totalPrice);
+   const { data: cartData, loading: isLoadingCart } = useQuery(GET_CART);
 
    const onSubmit = async (data: TCreateOrder) => {
       try {
@@ -91,32 +104,23 @@ export const CheckoutForm: React.FC = () => {
             variables: {
                args: {
                   total: cartData?.getCart?.totalPrice,
-                  address: `${cityName}, ${warehouseName}`,
+                  address: `${data.city}, ${data.warehouse}`,
                   phone: data.phone,
                   email: data.email,
                   name: `${data.firstName} ${data.lastName} ${data.middleName}`,
-                  orderItem: cartData?.getCart?.items.map(
+                  orderItems: cartData?.getCart?.items.map(
                      (item: TCartItem) => ({
-                        code: item.color.code,
+                        codeId: item.color.code[0].id,
                         quantity: item.quantity,
-                        price: item.price,
+                        price: item.model.price,
                      }),
                   ),
                   paymentMethod: paymentMethod,
                },
             },
          });
-
-         toast.success('Замовлення успішно оформлено');
       } catch (error: any) {
-         const gqlError = error.graphQLErrors?.[0];
-
-         // if (gqlError?.message) {
-         //    form.setError('oldPassword', {
-         //       type: 'server',
-         //       message: gqlError.message,
-         //    });
-         // }
+         console.error('Error [CreateOrder]', error);
          toast.error('Не вдалося зробити замовлення');
       }
    };
@@ -180,25 +184,25 @@ export const CheckoutForm: React.FC = () => {
                   className="grid lg:grid-cols-2 gap-[30px]"
                >
                   <InputWithValidations
-                     // disabled={isLoadingUser}
+                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="Прізвище"
                      name="lastName"
                      className="max-w-[400px]"
                   />
                   <InputWithValidations
-                     // disabled={isLoadingUser}
+                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="Ім'я"
                      name="firstName"
                      className="max-w-[400px]"
                   />
                   <InputWithValidations
-                     // disabled={isLoadingUser}
+                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="По батькові"
                      name="middleName"
                      className="max-w-[400px]"
                   />
                   <InputWithValidations
-                     // disabled={isLoadingUser}
+                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="Телефон"
                      name="phone"
                      className="max-w-[400px]"
@@ -229,13 +233,14 @@ export const CheckoutForm: React.FC = () => {
 
                <FormBlock title="Адреса доставки" className="space-y-[30px]">
                   <InputWithValidations
-                     // disabled={isLoadingUser}
+                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="Емаіл"
                      name="email"
                   />
                   <div ref={cityRefElement}>
                      <InputWithValidations
                         placeholder="Місто"
+                        disabled={createOrderLoading || isLoadingCart}
                         onChange={handleCityInputChange}
                         onFocus={handleCityInputFocus}
                         name="city"
@@ -263,7 +268,9 @@ export const CheckoutForm: React.FC = () => {
                         value={warehouseName || warehouseSearch}
                         onChange={handleWarehouseInputChange}
                         onFocus={handleWarehouseInputFocus}
-                        disabled={!cityRef}
+                        disabled={
+                           !cityRef || createOrderLoading || isLoadingCart
+                        }
                      />
                      {isWarehouseDropdownOpen &&
                         warehouses?.getWarehouses?.length > 0 && (
@@ -289,6 +296,7 @@ export const CheckoutForm: React.FC = () => {
                </FormBlock>
             </form>
             <ItemsBlock
+               loading={createOrderLoading}
                items={cartData?.getCart.items || []}
                totalPrice={cartData?.getCart?.totalPrice}
                onSubmit={form.handleSubmit(onSubmit)}

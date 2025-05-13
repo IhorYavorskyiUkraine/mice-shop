@@ -18,6 +18,9 @@ export const GET_CART = gql`
                name
                image
                stock
+               code {
+                  id
+               }
             }
          }
          totalPrice

@@ -10,12 +10,14 @@ interface Props {
    items: TCartItem[];
    totalPrice: number;
    onSubmit: () => void;
+   loading: boolean;
 }
 
 export const ItemsBlock: React.FC<Props> = ({
    onSubmit,
    items,
    totalPrice,
+   loading,
 }) => {
    const router = useRouter();
 
@@ -42,7 +44,7 @@ export const ItemsBlock: React.FC<Props> = ({
             <p>{`${items.length} ${getItemWord(items.length)} на суму`}</p>
             <p>{totalPrice}$</p>
          </div>
-         <Button onClick={onSubmit} className="w-full">
+         <Button onClick={onSubmit} disabled={loading} className="w-full">
             До оплати
          </Button>
       </div>

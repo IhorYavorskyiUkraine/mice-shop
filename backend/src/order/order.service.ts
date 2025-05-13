@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
+import { CartService } from 'src/cart/cart.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
+import { validateValues } from 'src/utils/validateValues.utils';
 import { CreateOrderArgs, CreateTTHArgs, getWarehousesArgs } from './dto';
 
 @Injectable()
@@ -8,70 +12,64 @@ export class OrderService {
    constructor(
       private config: ConfigService,
       private prisma: PrismaService,
+      private cartService: CartService,
+      private userService: UserService,
    ) {}
 
-   async getCities(query: string) {
-      const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
+   private async fetchNovaPost<T>(payload: any): Promise<T> {
+      const response = await fetch(this.config.get('NOVA_POST_URL'), {
          method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-            apiKey: this.config.get('NOVA_POST_API_KEY'),
-            modelName: 'Address',
-            calledMethod: 'searchSettlements',
-            methodProperties: {
-               CityName: query,
-               Limit: 10,
-            },
-         }),
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(payload),
       });
+      return response.json();
+   }
 
-      const data = await response.json();
+   async getCities(query: string) {
+      const payload = {
+         apiKey: this.config.get('NOVA_POST_API_KEY'),
+         modelName: 'Address',
+         calledMethod: 'searchSettlements',
+         methodProperties: {
+            CityName: query,
+            Limit: 10,
+         },
+      };
 
-      if (
-         !data?.data?.[0]?.Addresses ||
-         !Array.isArray(data.data[0].Addresses)
-      ) {
-         return [];
-      }
+      const data = await this.fetchNovaPost<any>(payload);
+      const cities = data?.data?.[0]?.Addresses;
 
-      return data.data[0].Addresses.filter(
-         (city: any) => city?.Present && city?.Ref,
-      ).map((city: any) => ({
-         name: city.Present,
-         ref: city.DeliveryCity,
-      }));
+      if (!Array.isArray(cities)) return [];
+
+      return cities
+         .filter(city => city?.Present && city?.Ref)
+         .map(city => ({
+            name: city.Present,
+            ref: city.DeliveryCity,
+         }));
    }
 
    async getWarehouses(args: getWarehousesArgs) {
       const { cityRef, search } = args;
-      const response = await fetch('https://api.novaposhta.ua/v2.0/json/', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
+      const payload = {
+         apiKey: this.config.get('NOVA_POST_API_KEY'),
+         modelName: 'AddressGeneral',
+         calledMethod: 'getWarehouses',
+         methodProperties: {
+            CityRef: cityRef,
+            ...(search ? { FindByString: search } : {}),
+            Limit: 10,
+            Offset: 0,
          },
-         body: JSON.stringify({
-            apiKey: this.config.get('NOVA_POST_API_KEY'),
-            modelName: 'AddressGeneral',
-            calledMethod: 'getWarehouses',
-            methodProperties: {
-               CityRef: cityRef,
-               ...(search ? { FindByString: search } : {}),
-               Limit: 10,
-               Offset: 0,
-            },
-         }),
-      });
+      };
 
-      const data = await response.json();
+      const data = await this.fetchNovaPost<any>(payload);
+      if (!Array.isArray(data?.data)) return [];
 
-      if (!data?.data || !Array.isArray(data.data)) return [];
-
-      return data.data.map((w: any) => ({
-         number: w.Number,
-         description: w.Description,
-         ref: w.Ref,
+      return data.data.map(wh => ({
+         number: wh.Number,
+         description: wh.Description,
+         ref: wh.Ref,
       }));
    }
 
@@ -121,12 +119,67 @@ export class OrderService {
       return data.data?.[0] || null;
    }
 
-   async createOrder(args: CreateOrderArgs) {
+   async createOrder(args: CreateOrderArgs, res?: Response) {
+      validateValues([args.email, args.phone, args.address]);
+      if (!args.orderItems?.length || args.total === 0)
+         throw new Error('Пустий список товарів');
+
+      const order = await this.prisma.order.create({
+         data: {
+            ...args,
+            orderItems: {
+               create: args.orderItems.map(item => ({
+                  quantity: item.quantity,
+                  price: item.price,
+                  code: { connect: { id: item.codeId } },
+               })),
+            },
+         },
+      });
+
+      const cart = await this.cartService.getCart(args.userId, res);
+      await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+      await this.cartService.updateTotalPrice(cart.id);
+
+      return order;
+   }
+
+   async getOrders(userId: number, res: Response) {
       try {
-         await this.prisma.order.create({ data: { ...args } });
-         return 'ok';
+         const guestToken = res.req.cookies?.guestToken;
+
+         if (guestToken) {
+            await this.prisma.order.updateMany({
+               where: {
+                  token: guestToken,
+                  userId: null,
+               },
+               data: {
+                  userId,
+                  token: null,
+               },
+            });
+
+            res.clearCookie('guestToken');
+         }
+
+         const orders = await this.prisma.order.findMany({
+            where: {
+               userId,
+            },
+            include: {
+               orderItems: {
+                  include: {
+                     code: true,
+                  },
+               },
+            },
+         });
+
+         return orders;
       } catch (e) {
-         console.error(e);
+         console.error('Error getting orders', e);
+         throw new InternalServerErrorException('Cannot get orders');
       }
    }
 }

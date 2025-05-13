@@ -177,8 +177,6 @@ export class ProductService {
             },
          });
 
-         console.log(user);
-
          if (!user) {
             throw new NotFoundException('User not found');
          }

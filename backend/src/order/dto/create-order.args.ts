@@ -35,7 +35,7 @@ export class CreateOrderArgs {
    name: string;
 
    @Field(() => [OrderItemInput])
-   orderItem: OrderItemInput[];
+   orderItems: OrderItemInput[];
 
    @Field({ nullable: true })
    userId?: number;

@@ -27,12 +27,13 @@ model User {
 model Code {
    id Int @id @default(autoincrement())
 
-   code       String @unique
-   model      Model  @relation(fields: [modelId], references: [id])
+   code       String      @unique
+   model      Model       @relation(fields: [modelId], references: [id])
    modelId    Int
-   color      Color  @relation(fields: [colorId], references: [id])
+   color      Color       @relation(fields: [colorId], references: [id])
    colorId    Int
    likedUsers User[]
+   orderItems OrderItem[]
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -81,16 +82,15 @@ model Color {
 }
 
 model Model {
-   id        Int         @id @default(autoincrement())
+   id        Int        @id @default(autoincrement())
    name      String
-   product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+   product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
    productId Int
    price     Float
    colors    Color[]
    specs     Specs[]
    cartItem  CartItem[]
    image     String
-   orderItem OrderItem[]
    code      Code[]
 
    createdAt DateTime @default(now())
@@ -182,16 +182,18 @@ model Specs {
 }
 
 model Order {
-   id         Int         @id @default(autoincrement())
-   user       User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
-   userId     Int?
-   status     OrderStatus @default(PENDING)
-   total      Float
-   address    String
-   phone      String
-   email      String
-   name       String
-   orderItems OrderItem[]
+   id            Int         @id @default(autoincrement())
+   user          User?       @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId        Int?
+   status        OrderStatus @default(PENDING)
+   total         Float
+   address       String
+   phone         String
+   email         String
+   name          String
+   orderItems    OrderItem[]
+   paymentMethod String
+   token         String?
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt
@@ -201,8 +203,8 @@ model OrderItem {
    id       Int   @id @default(autoincrement())
    order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
    orderId  Int
-   model    Model @relation(fields: [modelId], references: [id], onDelete: Cascade)
-   modelId  Int
+   code     Code  @relation(fields: [codeId], references: [id], onDelete: Cascade)
+   codeId   Int
    quantity Int
    price    Float
 

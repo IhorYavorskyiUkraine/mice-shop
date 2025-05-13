@@ -8,7 +8,7 @@ export const profileTabs = [
    {
       id: 2,
       name: 'Замовлення',
-      href: '/profile/2',
+      href: '/profile/orders',
       icon: '/images/profile/box.svg',
    },
    {
