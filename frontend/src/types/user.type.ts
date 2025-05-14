@@ -10,6 +10,7 @@ export type User = {
    displayName: string;
    email: string;
    password: string;
+   phone: string;
    role: UserRole;
    refreshToken?: RefreshToken | null;
    orders: Order[];

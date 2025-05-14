@@ -1,5 +1,6 @@
 import { Field, Float, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { Order } from 'src/order/models/order.model';
+import { Code } from 'src/product/models/product-code';
 
 @ObjectType()
 export class OrderItem {
@@ -11,6 +12,9 @@ export class OrderItem {
 
    @Field(() => Int)
    orderId: number;
+
+   @Field(() => Code)
+   code: Code;
 
    @Field(() => Int)
    codeId: number;

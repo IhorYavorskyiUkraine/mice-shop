@@ -1,5 +1,5 @@
+import { Code } from './code';
 import { OrderStatus } from './enums.type';
-import { Model } from './model.type';
 import { User } from './user.type';
 
 export type Order = {
@@ -19,10 +19,8 @@ export type Order = {
 
 export type OrderItem = {
    id: number;
-   order: Order;
-   orderId: number;
-   model: Model;
-   modelId: number;
+   code: Code;
+   codeId: number;
    quantity: number;
    price: number;
    createdAt: Date;

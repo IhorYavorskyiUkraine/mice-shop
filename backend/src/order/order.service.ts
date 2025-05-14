@@ -124,6 +124,8 @@ export class OrderService {
       if (!args.orderItems?.length || args.total === 0)
          throw new Error('Пустий список товарів');
 
+      const guestToken = res.req.cookies?.guestToken;
+
       const order = await this.prisma.order.create({
          data: {
             ...args,
@@ -134,6 +136,7 @@ export class OrderService {
                   code: { connect: { id: item.codeId } },
                })),
             },
+            ...(guestToken && { token: guestToken }),
          },
       });
 
@@ -168,11 +171,23 @@ export class OrderService {
                userId,
             },
             include: {
+               user: true,
                orderItems: {
                   include: {
-                     code: true,
+                     code: {
+                        include: {
+                           color: {
+                              include: {
+                                 model: true,
+                              },
+                           },
+                        },
+                     },
                   },
                },
+            },
+            orderBy: {
+               createdAt: 'desc',
             },
          });
 
