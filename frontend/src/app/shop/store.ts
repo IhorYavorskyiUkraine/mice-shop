@@ -12,7 +12,7 @@ export const useShopStore = create<TShop>(set => ({
    filters: {
       tags: [],
       brands: [],
-      price: { min: 0, max: 0 },
+      price: { min: 0, max: 200 },
       colors: [],
       specs: [],
       limit: 8,

@@ -22,6 +22,8 @@ export const useSidebarFilters = () => {
       0, 0,
    ]);
    const [changed, setChanged] = useState(false);
+   const [minInput, setMinInput] = useState(0);
+   const [maxInput, setMaxInput] = useState(0);
 
    const [, { has: isSectionExpanded, toggle: toggleSection }] = useSet(
       new Set(['price', 'brand', 'color']),
@@ -121,30 +123,82 @@ export const useSidebarFilters = () => {
          ...filters,
          brands: Array.from(selectedBrands),
          colors: Array.from(selectedColors),
-         price: {
-            min: debouncedPrice[0],
-            max: debouncedPrice[1],
-         },
          offset: 0,
       });
 
       isChanged();
-   }, [selectedBrands, selectedColors, debouncedPrice]);
+   }, [selectedBrands, selectedColors]);
+
+   const applyPriceFilter = () => {
+      const { min: serverMin, max: serverMax } = getPriceRange();
+
+      let finalMin = minInput;
+      let finalMax = maxInput;
+
+      finalMin = Math.max(finalMin, serverMin);
+      finalMax = Math.min(finalMax, serverMax);
+
+      if (finalMin > finalMax) {
+         finalMin = finalMax = Math.min(finalMin, serverMax);
+      }
+
+      setMinInput(finalMin);
+      setMaxInput(finalMax);
+      setPriceValues([finalMin, finalMax]);
+
+      setFilters({
+         ...filters,
+         price: {
+            min: finalMin,
+            max: finalMax,
+         },
+         offset: 0,
+      });
+   };
+
+   const handlePriceChange = (value: [number, number]) => {
+      let [min, max] = value;
+      const { min: serverMin, max: serverMax } = getPriceRange();
+
+      if (min > max) [min, max] = [max, min];
+
+      const clampedMin = Math.max(min, serverMin);
+      const clampedMax = Math.min(max, serverMax);
+
+      setPriceValues([clampedMin, clampedMax]);
+      setMinInput(clampedMin);
+      setMaxInput(clampedMax);
+   };
+
+   const changePriceInput = (
+      e: React.ChangeEvent<HTMLInputElement>,
+      type: 'min' | 'max',
+   ) => {
+      const value = +e.target.value;
+      if (value < 0 || isNaN(value)) return;
+      if (type === 'min') {
+         setMinInput(value);
+      } else if (type === 'max') {
+         setMaxInput(value);
+      }
+   };
 
    useEffect(() => {
       if (data?.getAllProductFilters?.price) {
          const { min: serverMin, max: serverMax } = getPriceRange();
-
-         if (priceValues[0] === 0 && priceValues[1] === 0) {
-            setPriceValues([serverMin, serverMax]);
-            setDebouncedPrice([serverMin, serverMax]);
-         }
+         setPriceValues([serverMin, serverMax]);
+         setMinInput(serverMin);
+         setMaxInput(serverMax);
       }
    }, [data]);
 
    return {
+      changePriceInput,
       priceValues,
-      setPriceValues,
+      handlePriceChange,
+      applyPriceFilter,
+      minInput,
+      maxInput,
       hasBrand,
       toggleBrand,
       hasColor,

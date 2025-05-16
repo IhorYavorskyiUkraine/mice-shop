@@ -85,6 +85,7 @@ export const CheckoutForm: React.FC = () => {
          onCompleted: data => {
             if (data.createOrder.success) {
                toast.success('Заказ успішно оформлено');
+               refetch();
                // router.push('/order-success');
             }
          },
@@ -94,7 +95,11 @@ export const CheckoutForm: React.FC = () => {
       },
    );
 
-   const { data: cartData, loading: isLoadingCart } = useQuery(GET_CART);
+   const {
+      data: cartData,
+      loading: isLoadingCart,
+      refetch,
+   } = useQuery(GET_CART);
 
    const onSubmit = async (data: TCreateOrder) => {
       try {

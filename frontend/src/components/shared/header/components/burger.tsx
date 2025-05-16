@@ -17,7 +17,7 @@ export const Burger: React.FC = () => {
 
    return (
       <Drawer icon={<Menu />} open={open} setOpen={setOpen}>
-         <DrawerContent className="bg-secondary py-sm px-sm text-primary">
+         <DrawerContent className="bg-secondary w-full py-sm px-sm text-primary">
             <DrawerHeader className="flex  mb-sm flex-row justify-between items-center">
                <DrawerTitle className="text-l">Меню</DrawerTitle>
                <DrawerClose className="text-m2 uppercase">x</DrawerClose>

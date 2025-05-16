@@ -13,8 +13,12 @@ import { useSidebarFilters } from './use-sidebar-filters';
 
 export const SidebarMobile: React.FC = () => {
    const {
+      changePriceInput,
       priceValues,
-      setPriceValues,
+      minInput,
+      maxInput,
+      applyPriceFilter,
+      handlePriceChange,
       hasBrand,
       toggleBrand,
       hasColor,
@@ -32,7 +36,11 @@ export const SidebarMobile: React.FC = () => {
          name,
          data,
          priceValues,
-         setPriceValues,
+         minInput,
+         maxInput,
+         changePriceInput,
+         applyPriceFilter,
+         handlePriceChange,
          hasBrand,
          toggleBrand,
          hasColor,

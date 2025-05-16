@@ -6,7 +6,12 @@ import {
    CarouselContent,
    CarouselItem,
 } from '@/components/ui/carousel';
-import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import {
+   Drawer,
+   DrawerClose,
+   DrawerContent,
+   DrawerTitle,
+} from '@/components/ui/drawer';
 import { Product } from '@/types/product.type';
 import { useQuery } from '@apollo/client';
 import Image from 'next/image';
@@ -215,6 +220,11 @@ export const SearchTrigger: React.FC = () => {
                               <div className="flex-1 overflow-y-auto">
                                  {renderContent()}
                               </div>
+                           </div>
+                           <div className="py-md flex justify-center">
+                              <DrawerClose>
+                                 <span className="text-2xl">X</span>
+                              </DrawerClose>
                            </div>
                         </DrawerContent>
                      </Drawer>

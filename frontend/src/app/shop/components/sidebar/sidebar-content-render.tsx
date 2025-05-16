@@ -1,10 +1,17 @@
 import { CheckboxWithText } from '@/components/shared';
-import { DualRangeSlider } from '@/components/ui';
+import { DualRangeSlider, Input } from '@/components/ui';
 
 export const renderSectionContent = (
    name: string,
    data: any,
    priceValues: [number, number],
+   minInput: number,
+   maxInput: number,
+   changePriceInput: (
+      e: React.ChangeEvent<HTMLInputElement>,
+      type: 'min' | 'max',
+   ) => void,
+   applyPriceFilter: () => void,
    onPriceChange: (value: [number, number]) => void,
    hasBrand: (val: string) => boolean,
    toggleBrand: (val: string) => void,
@@ -13,16 +20,33 @@ export const renderSectionContent = (
 ) => {
    switch (name) {
       case 'price':
+         const minPrice = data?.getAllProductFilters?.price.min || 0;
+         const maxPrice = data?.getAllProductFilters?.price.max || 1000;
          return (
-            <DualRangeSlider
-               label={value => <span>${value}</span>}
-               labelPosition="top"
-               min={data?.getAllProductFilters?.price.min || 0}
-               max={data?.getAllProductFilters?.price.max || 1000}
-               value={priceValues}
-               onValueChange={onPriceChange}
-               step={1}
-            />
+            <div>
+               <div className="flex gap-[15px] mb-sm items-center">
+                  <Input
+                     value={minInput}
+                     onChange={e => changePriceInput(e, 'min')}
+                  />
+                  <div className="w-[60px] h-[2px] bg-primary"></div>
+                  <Input
+                     value={maxInput}
+                     onChange={e => changePriceInput(e, 'max')}
+                  />
+                  <button onClick={applyPriceFilter}>Ok</button>
+               </div>
+               <DualRangeSlider
+                  onPointerDown={e => e.stopPropagation()}
+                  label={value => <span>${value}</span>}
+                  labelPosition="top"
+                  min={minPrice}
+                  max={maxPrice}
+                  value={priceValues}
+                  onValueChange={onPriceChange}
+                  step={1}
+               />
+            </div>
          );
       case 'brand':
          return (

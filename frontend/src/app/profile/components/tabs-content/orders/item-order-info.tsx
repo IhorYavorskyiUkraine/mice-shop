@@ -9,7 +9,7 @@ interface Props {
 export const ItemOrderInfo: React.FC<Props> = ({ orderItem }) => {
    return (
       <div>
-         <div className="flex gap-2">
+         <div className="flex gap-2 ">
             <Link
                href={`/product/${orderItem.code.color.model.productId}?modelId=${orderItem.code.color.model.id}&colorId=${orderItem.code.color.id}`}
             >
@@ -22,7 +22,7 @@ export const ItemOrderInfo: React.FC<Props> = ({ orderItem }) => {
                   className="rounded object-cover"
                />
             </Link>
-            <div className="text-s grid grid-cols-[auto_auto_auto] flex-1 justify-between">
+            <div className="text-s gap-1 lg:gap-0 grid grid-cols-[auto_auto_auto] flex-1 justify-between">
                <Link
                   href={`/product/${orderItem.code.color.model.productId}?modelId=${orderItem.code.color.model.id}&colorId=${orderItem.code.color.id}`}
                >

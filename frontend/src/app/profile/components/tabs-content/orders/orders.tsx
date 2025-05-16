@@ -9,7 +9,10 @@ import { GET_ORDERS } from './orders.graphql';
 export const Orders: React.FC = () => {
    const [_, { has, toggle }] = useSet(new Set());
 
-   const { data } = useQuery(GET_ORDERS);
+   const { data } = useQuery(GET_ORDERS, {
+      fetchPolicy: 'network-only',
+   });
+
    return (
       <div className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]">
          <div className="flex flex-col gap-[30px]">

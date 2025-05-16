@@ -8,9 +8,12 @@ import { useSidebarFilters } from './use-sidebar-filters';
 
 export const Sidebar: React.FC = () => {
    const {
+      changePriceInput,
       priceValues,
-      setPriceValues,
+      minInput,
+      maxInput,
       hasBrand,
+      handlePriceChange,
       toggleBrand,
       hasColor,
       toggleColor,
@@ -18,6 +21,7 @@ export const Sidebar: React.FC = () => {
       isSectionExpanded,
       toggleSection,
       resetAll,
+      applyPriceFilter,
       changed,
       error,
    } = useSidebarFilters();
@@ -27,7 +31,11 @@ export const Sidebar: React.FC = () => {
          name,
          data,
          priceValues,
-         setPriceValues,
+         minInput,
+         maxInput,
+         changePriceInput,
+         applyPriceFilter,
+         handlePriceChange,
          hasBrand,
          toggleBrand,
          hasColor,

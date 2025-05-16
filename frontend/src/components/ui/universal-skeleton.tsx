@@ -14,7 +14,7 @@ interface Props {
    productPickModel?: boolean;
    activeColorOrModelText?: boolean;
    productPrice?: boolean;
-   cartItems?: boolean;
+   checkoutItems?: boolean;
    productImage?: boolean;
    productReviews?: boolean;
    length?: number;
@@ -36,6 +36,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
    productImage,
    productReviews,
    length,
+   checkoutItems,
 }) => {
    if (searchItems) {
       return (
@@ -135,6 +136,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
             </div>
          </div>
       ));
+   } else if (checkoutItems) {
+      return <Skeleton className="w-full h-full" />;
    }
 
    return null;
