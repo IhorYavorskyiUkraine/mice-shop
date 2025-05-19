@@ -14,6 +14,8 @@ const refreshToken = async () => {
         mutation {
           refresh {
             message
+				accessToken
+				refreshToken
           }
         }
       `,

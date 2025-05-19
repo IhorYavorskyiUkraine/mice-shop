@@ -4,7 +4,7 @@ import { useSet } from 'react-use';
 import { ProfileTabButton } from './profile-tab-button';
 import { profileTabs } from './profile-tabs.data';
 import Liked from './tabs-content/liked/liked';
-import { Orders } from './tabs-content/orders/orders';
+import Orders from './tabs-content/orders/orders';
 import UserInfo from './tabs-content/user-info/user-info';
 
 export const ProfileMobileTabs: React.FC = () => {

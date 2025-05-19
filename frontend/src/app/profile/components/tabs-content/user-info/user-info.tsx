@@ -131,7 +131,7 @@ const UserInfo: React.FC = () => {
    return (
       <FormProvider {...form}>
          <form
-            className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]"
+            className="px-[10px] lg:min-h-screen py-[10px] lg:px-[30px] lg:py-[30px]"
             onSubmit={form.handleSubmit(onSubmit)}
          >
             {renderField("Ім'я", 'firstName', firstName, "Введіть ваше ім'я")}

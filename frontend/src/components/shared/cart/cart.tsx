@@ -55,7 +55,7 @@ export const Cart: React.FC = () => {
                               Кошик порожній :(
                            </p>
                         </div>
-                        <Button>
+                        <Button onClick={() => setOpen(false)}>
                            <Link href="/shop">Перейти до магазину</Link>
                         </Button>
                      </div>

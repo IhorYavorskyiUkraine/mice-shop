@@ -14,7 +14,7 @@ import { links } from './header.data';
 export const Header: React.FC = () => {
    const isAuthenticated = useAuthStore(state => state.isAuthenticated);
    const pathname = usePathname();
-   const isProfilePage = pathname === '/profile';
+   const isProfilePage = pathname.startsWith('/profile/');
 
    const renderProfileIcon = () => {
       if (!isAuthenticated && !isProfilePage) {

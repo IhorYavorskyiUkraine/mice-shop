@@ -7,7 +7,7 @@ const cookieOptions = {
    path: '/',
 };
 
-const checkTokens = async () => {
+const getTokens = async () => {
    const cookieStore = await cookies();
    return {
       accessToken: cookieStore.get('accessToken')?.value,
@@ -36,13 +36,14 @@ const refreshTokens = async (refreshToken: string) => {
 };
 
 const clearTokens = async () => {
-   await fetch('http://localhost:8000/api/', {
-      method: 'DELETE',
+   await fetch('http://localhost:8000/api/clear-cookies', {
+      method: 'POST',
+      credentials: 'include',
    });
 };
 
 export const verifyTokens = async () => {
-   const { accessToken, refreshToken } = await checkTokens();
+   const { accessToken, refreshToken } = await getTokens();
 
    if (!accessToken && !refreshToken) {
       return { needsRedirect: true, redirectPath: '/' };

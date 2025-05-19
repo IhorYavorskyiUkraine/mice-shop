@@ -7,14 +7,14 @@ export function setAuthCookies(
 ) {
    res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 20,
       secure: false,
       sameSite: 'lax',
    });
 
    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
    });

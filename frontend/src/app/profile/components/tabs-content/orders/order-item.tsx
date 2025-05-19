@@ -19,7 +19,7 @@ export const OrderItem: React.FC<Props> = ({ order, isOpen, setIsOpen }) => {
             onClick={setIsOpen}
             className={cn(
                isOpen && 'grid-cols-[auto_1fr]!',
-               'cursor-pointer grid grid-cols-[auto_1fr_auto] items-center ',
+               'cursor-pointer grid grid-cols-[auto_1fr_auto] items-center',
             )}
          >
             <div className="flex flex-col gap-1">

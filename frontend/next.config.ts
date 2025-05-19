@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
          { protocol: 'https', hostname: 'placehold.co' },
       ],
    },
+   experimental: {
+      authInterrupts: true,
+   },
 };
 
 export default nextConfig;

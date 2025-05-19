@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import {
@@ -49,7 +49,7 @@ export class AuthResolver {
       const { accessToken, refreshToken } = getAuthTokens(context.req);
 
       if (!accessToken || !refreshToken) {
-         throw new Error('Access token or refresh token not found');
+         throw new HttpException('Missing tokens', HttpStatus.UNAUTHORIZED);
       }
 
       const { userId } =
@@ -68,9 +68,8 @@ export class AuthResolver {
       const { refreshToken } = getAuthTokens(context.req);
 
       if (!refreshToken) {
-         throw new Error('Refresh token not found');
+         throw new HttpException('Missing tokens', HttpStatus.UNAUTHORIZED);
       }
-
       const { userId } =
          await this.authService.validateRefreshToken(refreshToken);
 
@@ -88,7 +87,7 @@ export class AuthResolver {
       const { accessToken } = getAuthTokens(context.req);
 
       if (!accessToken) {
-         throw new Error('Access token not found');
+         return { message: 'Not authenticated', userId: null };
       }
 
       const { userId } =

@@ -1,11 +1,10 @@
 'use client';
 
-import { ErrorMessage } from '@/components/ui';
+import { ErrorMessage, UniversalSkeleton } from '@/components/ui';
 import { useQuery } from '@apollo/client';
 import dynamic from 'next/dynamic';
 import { GET_USER } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
-import { Orders } from './tabs-content/orders/orders';
 import { ProfileMobileTabs } from './tabs-mobile';
 
 interface Props {
@@ -17,8 +16,25 @@ const UserInfo = dynamic(() => import('./tabs-content/user-info/user-info'), {
    ssr: false,
 });
 
+const Orders = dynamic(() => import('./tabs-content/orders/orders'), {
+   loading: () => (
+      <div className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]">
+         <div className="flex flex-col gap-[30px]">
+            <UniversalSkeleton orderItems />
+         </div>
+      </div>
+   ),
+   ssr: false,
+});
+
 const Liked = dynamic(() => import('./tabs-content/liked/liked'), {
-   loading: () => <p>Загрузка...</p>,
+   loading: () => (
+      <div className="px-[10px] py-[10px] lg:px-md lg:py-md">
+         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            <UniversalSkeleton likedItems />
+         </div>
+      </div>
+   ),
    ssr: false,
 });
 
