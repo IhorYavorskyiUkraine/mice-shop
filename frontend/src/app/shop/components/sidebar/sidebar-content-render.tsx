@@ -34,7 +34,9 @@ export const renderSectionContent = (
                      value={maxInput}
                      onChange={e => changePriceInput(e, 'max')}
                   />
-                  <button onClick={applyPriceFilter}>Ok</button>
+                  <button className="cursor-pointer" onClick={applyPriceFilter}>
+                     Ok
+                  </button>
                </div>
                <DualRangeSlider
                   onPointerDown={e => e.stopPropagation()}

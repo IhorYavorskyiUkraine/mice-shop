@@ -1,4 +1,5 @@
 import { cn } from '@/lib';
+import { ChevronDown } from 'lucide-react';
 import { Skeleton } from './skeleton';
 
 interface Props {
@@ -18,6 +19,8 @@ interface Props {
    productImage?: boolean;
    productReviews?: boolean;
    length?: number;
+   likedItems?: boolean;
+   orderItems?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -37,6 +40,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
    productReviews,
    length,
    checkoutItems,
+   likedItems,
+   orderItems,
 }) => {
    if (searchItems) {
       return (
@@ -138,7 +143,56 @@ export const UniversalSkeleton: React.FC<Props> = ({
       ));
    } else if (checkoutItems) {
       return <Skeleton className="w-full h-full" />;
+   } else if (likedItems) {
+      return Array.from({ length: 4 }).map((_, index) => (
+         <div key={index} className="w-full h-full flex flex-col">
+            <div className="relative w-full pt-[100%] mb-3">
+               <div className="absolute inset-0 block">
+                  <Skeleton className="w-full h-full" />
+               </div>
+            </div>
+            <div className="pb-3 flex flex-col gap-2">
+               <Skeleton className="w-1/2 h-6" />
+               <div className="flex justify-between">
+                  <Skeleton className="w-[40px] h-6" />
+                  <Skeleton className="w-[78px] h-4" />
+               </div>
+            </div>
+         </div>
+      ));
+   } else if (orderItems) {
+      return Array.from({ length: 4 }).map((_, index) => (
+         <div key={index} className="py-sm px-sm border border-primary">
+            <div className="grid grid-cols-[auto_1fr_auto] items-center">
+               <div className="flex flex-col gap-1">
+                  <div className="flex gap-4 items-center">
+                     <Skeleton className="w-[50px] h-[28px]" />
+                     <Skeleton className="w-[80px] h-5" />
+                  </div>
+                  <div className="flex mt-1">
+                     <Skeleton className="w-[80px] h-[28px]" />
+                  </div>
+                  <div className="mt-2 flex gap-2 flex-wrap sm:flex sm:justify-start md:hidden">
+                     {[...Array(3)].map((_, i) => (
+                        <Skeleton key={i} className="w-[50px] h-[50px]" />
+                     ))}
+                  </div>
+               </div>
+               <div className="hidden md:flex justify-center">
+                  <div className="flex gap-2 flex-wrap justify-center">
+                     {[...Array(3)].map((_, i) => (
+                        <Skeleton key={i} className="w-[50px] h-[50px]" />
+                     ))}
+                  </div>
+               </div>
+               <div className="flex justify-end">
+                  <button>
+                     <ChevronDown />
+                  </button>
+               </div>
+            </div>
+         </div>
+      ));
    }
-
    return null;
 };

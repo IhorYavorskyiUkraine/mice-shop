@@ -60,12 +60,13 @@ export const useSidebarFilters = () => {
       resetColors();
       const { min, max } = getPriceRange();
       setPriceValues([min, max]);
+      setMinInput(min);
+      setMaxInput(max);
    };
 
    const isChanged = () => {
       const { min: serverMin, max: serverMax } = getPriceRange();
-      const priceChanged =
-         priceValues[0] !== serverMin || priceValues[1] !== serverMax;
+      const priceChanged = minInput !== serverMin || maxInput !== serverMax;
 
       setChanged(
          selectedBrands.size > 0 || selectedColors.size > 0 || priceChanged,
@@ -154,6 +155,8 @@ export const useSidebarFilters = () => {
          },
          offset: 0,
       });
+
+      isChanged();
    };
 
    const handlePriceChange = (value: [number, number]) => {
