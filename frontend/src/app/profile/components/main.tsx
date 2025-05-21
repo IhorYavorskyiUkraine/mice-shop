@@ -1,9 +1,11 @@
 'use client';
 
 import { ErrorMessage, UniversalSkeleton } from '@/components/ui';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
+import { LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { GET_USER } from '../profile.graphql';
+import { toast } from 'sonner';
+import { GET_USER, LOGOUT } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
 import { ProfileMobileTabs } from './tabs-mobile';
 
@@ -40,23 +42,38 @@ const Liked = dynamic(() => import('./tabs-content/liked/liked'), {
 
 export const Main: React.FC<Props> = ({ tab }) => {
    const { data: user, loading, error } = useQuery(GET_USER);
+   const [logout] = useMutation(LOGOUT, {
+      onCompleted: () => {
+         window.location.href = '/';
+         toast.success('Ви успішно вийшли');
+      },
+      onError: error => {
+         toast.error(error.message);
+         window.location.href = '/';
+      },
+   });
 
    if (error) return <ErrorMessage message={error.message} />;
 
    return (
       <div className="grid lg:grid-cols-[auto_1fr] pb-sm">
          <aside>
-            <div className="border-b-[1px] hidden lg:block border-primary py-[10px] pt-md pb-md pr-[30px] ">
-               {loading ? (
-                  <p>Loading...</p>
-               ) : (
-                  <p>{user?.findUserById?.displayName}</p>
-               )}
-               {loading ? (
-                  <p>Loading...</p>
-               ) : (
-                  <p className="text-m1">{user?.findUserById?.email}</p>
-               )}
+            <div className="border-b-[1px] hidden lg:flex items-center justify-between border-primary py-[10px] pt-md pb-md pr-[30px] ">
+               <div>
+                  {loading ? (
+                     <p>Loading...</p>
+                  ) : (
+                     <p>{user?.findUserById?.displayName}</p>
+                  )}
+                  {loading ? (
+                     <p>Loading...</p>
+                  ) : (
+                     <p className="text-m1">{user?.findUserById?.email}</p>
+                  )}
+               </div>
+               <button onClick={() => logout()} className="cursor-pointer">
+                  <LogOut size={20} />
+               </button>
             </div>
             <ProfileTabs />
          </aside>

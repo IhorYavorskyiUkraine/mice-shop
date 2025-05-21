@@ -38,6 +38,8 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
       } catch (e: any) {
          const gqlError = e.graphQLErrors?.[0];
 
+         console.log(gqlError);
+
          if (gqlError?.message) {
             form.setError('email', {
                type: 'server',
@@ -45,7 +47,7 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
             });
          }
 
-         toast.error('Register failed');
+         toast.error('Реєстрація не вдалась');
       }
    };
 

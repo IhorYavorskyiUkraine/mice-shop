@@ -42,7 +42,14 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
       } catch (error: any) {
          const gqlError = error.graphQLErrors?.[0];
 
+         console.log(gqlError);
+
          if (gqlError?.message) {
+            form.setError('email', {
+               type: 'server',
+               message: gqlError.message,
+            });
+
             form.setError('password', {
                type: 'server',
                message: gqlError.message,

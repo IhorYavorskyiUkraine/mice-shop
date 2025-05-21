@@ -1,6 +1,8 @@
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import {
    clearAuthCookies,
    getAuthTokens,
@@ -49,7 +51,11 @@ export class AuthResolver {
       const { accessToken, refreshToken } = getAuthTokens(context.req);
 
       if (!accessToken || !refreshToken) {
-         throw new HttpException('Missing tokens', HttpStatus.UNAUTHORIZED);
+         throwGraphQLError('Missing tokens', {
+            extensions: {
+               code: GraphqlErrorCode.UNAUTHENTICATED,
+            },
+         });
       }
 
       const { userId } =
@@ -68,8 +74,13 @@ export class AuthResolver {
       const { refreshToken } = getAuthTokens(context.req);
 
       if (!refreshToken) {
-         throw new HttpException('Missing tokens', HttpStatus.UNAUTHORIZED);
+         throwGraphQLError('Missing tokens', {
+            extensions: {
+               code: GraphqlErrorCode.UNAUTHENTICATED,
+            },
+         });
       }
+
       const { userId } =
          await this.authService.validateRefreshToken(refreshToken);
 

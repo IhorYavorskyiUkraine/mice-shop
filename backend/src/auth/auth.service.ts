@@ -1,14 +1,10 @@
-import {
-   ConflictException,
-   ForbiddenException,
-   Injectable,
-   UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@prisma/client';
 import { argon2id, hash, verify } from 'argon2';
-import { GraphQLError } from 'graphql';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { LoginArgs, RegisterArgs } from './dto';
@@ -27,7 +23,11 @@ export class AuthService {
 
       try {
          if (!email || !password) {
-            throw new UnauthorizedException('Please enter your credentials');
+            throwGraphQLError('Введіть правильні емейл і пароль', {
+               extensions: {
+                  code: GraphqlErrorCode.INVALID_CREDENTIALS,
+               },
+            });
          }
 
          const user = await this.findUserByEmailOrThrow(email);
@@ -50,8 +50,7 @@ export class AuthService {
 
          return this.generateTokens(user.id);
       } catch (e) {
-         console.error('AuthService Error:', e);
-         throw new ForbiddenException(e.message || 'Authentication failed');
+         throw e;
       }
    }
 
@@ -60,17 +59,29 @@ export class AuthService {
 
       try {
          if (!email || !password || !displayName) {
-            throw new UnauthorizedException('Please enter your credentials');
+            throwGraphQLError('Введіть правильні емейл, пароль і ім’я', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          if (password !== confirmPassword) {
-            throw new ForbiddenException('Passwords do not match');
+            throwGraphQLError('Паролі не співпадають', {
+               extensions: {
+                  code: GraphqlErrorCode.PASSWORDS_DO_NOT_MATCH,
+               },
+            });
          }
 
          const existingUser = await this.userService.findUserByEmail(email);
 
          if (existingUser) {
-            throw new ConflictException('User already exists');
+            throwGraphQLError('Користувач з таким емейлом вже існує', {
+               extensions: {
+                  code: GraphqlErrorCode.EMAIL_ALREADY_EXISTS,
+               },
+            });
          }
 
          const hashedPassword = await hash(password, {
@@ -88,20 +99,16 @@ export class AuthService {
          });
 
          if (!newUser) {
-            throw new ForbiddenException('User could not be created');
+            throwGraphQLError('Створення користувача не вдалося', {
+               extensions: {
+                  code: GraphqlErrorCode.INTERNAL_SERVER_ERROR,
+               },
+            });
          }
 
          return this.generateTokens(newUser.id);
       } catch (e) {
-         console.error('AuthService Error:', e);
-         if (e instanceof ConflictException) {
-            throw new GraphQLError('Перевірте емейл', {
-               extensions: {
-                  code: 'BAD_USER_INPUT',
-                  argumentName: 'email',
-               },
-            });
-         }
+         throw e;
       }
    }
 
@@ -110,15 +117,19 @@ export class AuthService {
          const user = await this.userService.findUserById(userId);
 
          if (!user || !refreshToken) {
-            throw new ForbiddenException('User or refresh token not found');
+            throwGraphQLError('Не вдалося вийти з акаунту', {
+               extensions: {
+                  code: GraphqlErrorCode.NOT_ALLOWED,
+               },
+            });
          }
 
          await this.revokeToken(refreshToken);
          await this.deleteRefreshToken(userId);
 
-         return { message: 'Logged out successful' };
+         return { message: 'Logged out successfully' };
       } catch (e) {
-         throw new ForbiddenException('Logout failed');
+         throw e;
       }
    }
 
@@ -126,28 +137,35 @@ export class AuthService {
       try {
          const user = await this.userService.findUserById(userId);
          if (!user) {
-            throw new ForbiddenException('User not found');
+            throwGraphQLError('Не вдалося знайти користувача', {
+               extensions: {
+                  code: GraphqlErrorCode.USER_NOT_FOUND,
+               },
+            });
          }
 
          const isRevoked = await this.isTokenRevoked(refreshToken);
 
          if (isRevoked) {
-            throw new ForbiddenException('Refresh token is revoked');
+            throwGraphQLError('Refresh token is revoked', {
+               extensions: {
+                  code: GraphqlErrorCode.TOKEN_REVOKED,
+               },
+            });
          }
 
          return this.generateTokens(user.id);
       } catch (e) {
-         console.error(e);
+         throw e;
       }
    }
 
    private async findUserByEmailOrThrow(email: string) {
       const user = await this.userService.findUserByEmail(email);
       if (!user) {
-         throw new GraphQLError('Неправильний пароль або емейл', {
+         throwGraphQLError('Неправильний емейл або пароль', {
             extensions: {
-               code: 'BAD_USER_INPUT',
-               argumentName: 'password',
+               code: GraphqlErrorCode.INVALID_CREDENTIALS,
             },
          });
       }
@@ -157,10 +175,9 @@ export class AuthService {
    private async validatePassword(password: string, hashedPassword: string) {
       const isPasswordCorrect = await verify(hashedPassword, password);
       if (!isPasswordCorrect) {
-         throw new GraphQLError('Неправильний емейл або пароль', {
+         throwGraphQLError('Неправильний емейл або пароль', {
             extensions: {
-               code: 'BAD_USER_INPUT',
-               argumentName: 'Credentials are not correct',
+               code: GraphqlErrorCode.INVALID_CREDENTIALS,
             },
          });
       }
@@ -175,13 +192,16 @@ export class AuthService {
          });
 
          if (!decoded || !decoded.userId) {
-            throw new UnauthorizedException('Invalid access token');
+            throwGraphQLError('Недійсний токен доступу', {
+               extensions: {
+                  code: GraphqlErrorCode.UNAUTHENTICATED,
+               },
+            });
          }
 
          return decoded as { userId: number };
-      } catch (error) {
-         console.error('Error validating access token:', error);
-         throw new UnauthorizedException('Invalid or expired access token');
+      } catch (e) {
+         throw e;
       }
    }
 
@@ -196,12 +216,17 @@ export class AuthService {
             include: { refreshToken: true },
          });
 
-         if (!user) return null;
+         if (!user) {
+            throwGraphQLError('Користувача не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.USER_NOT_FOUND,
+               },
+            });
+         }
 
          return { userId: user.id };
-      } catch (error) {
-         console.error('Error validating refresh token:', error);
-         throw new UnauthorizedException('Invalid refresh token');
+      } catch (e) {
+         throw e;
       }
    }
 
@@ -216,9 +241,13 @@ export class AuthService {
    }
 
    async deleteRefreshToken(userId: number) {
-      await this.prisma.refreshToken.deleteMany({
-         where: { userId },
-      });
+      try {
+         await this.prisma.refreshToken.deleteMany({
+            where: { userId },
+         });
+      } catch (e) {
+         console.warn(e);
+      }
    }
 
    async generateRefreshToken(userId: number) {
@@ -232,15 +261,18 @@ export class AuthService {
          },
       );
 
-      await this.prisma.refreshToken.create({
-         data: {
-            token: refreshToken,
-            userId,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-         },
-      });
-
-      return refreshToken;
+      try {
+         await this.prisma.refreshToken.create({
+            data: {
+               token: refreshToken,
+               userId,
+               expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            },
+         });
+         return refreshToken;
+      } catch (e) {
+         throw e;
+      }
    }
 
    async generateTokens(userId: number) {
@@ -252,12 +284,12 @@ export class AuthService {
 
    //REVOKED TOKENS
    async revokeToken(token: string) {
-      const revokedToken = await this.prisma.revokedToken.create({
-         data: { token },
-      });
-
-      if (!revokedToken) {
-         throw new ForbiddenException('Failed to revoke token');
+      try {
+         await this.prisma.revokedToken.create({
+            data: { token },
+         });
+      } catch (error) {
+         console.warn('Не вдалося забрати токен:', error);
       }
    }
 

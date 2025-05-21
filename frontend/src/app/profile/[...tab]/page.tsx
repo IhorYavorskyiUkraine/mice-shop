@@ -1,6 +1,5 @@
 import { Breadcrumb } from '@/components/shared';
 import { Container } from '@/components/ui';
-import ProtectedRoute from '@/providers/protected-route';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Main } from '../components/main';
@@ -25,11 +24,11 @@ export default async function Profile({
    }
 
    return (
-      <ProtectedRoute>
-         <Container>
-            <Breadcrumb links={[{ name: 'Профіль', path: '/profile' }]} />
-            <Main tab={currentTab} />
-         </Container>
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      <Container>
+         <Breadcrumb links={[{ name: 'Профіль', path: '/profile' }]} />
+         <Main tab={currentTab} />
+      </Container>
+      // </ProtectedRoute>
    );
 }

@@ -16,7 +16,11 @@ export class UserService {
    async findUserByEmail(email: string) {
       try {
          if (!email) {
-            throw new BadRequestException('Email is required');
+            throw new GraphQLError('Введіть правильний емейл', {
+               extensions: {
+                  code: 'BAD_USER_INPUT',
+               },
+            });
          }
 
          const user = await this.prisma.user.findUnique({
@@ -27,7 +31,6 @@ export class UserService {
 
          return user;
       } catch (e) {
-         console.error(e);
          throw e;
       }
    }
