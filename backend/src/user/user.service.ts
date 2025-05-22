@@ -1,11 +1,8 @@
-import {
-   BadRequestException,
-   Injectable,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { argon2id, hash, verify } from 'argon2';
-import { GraphQLError } from 'graphql';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 
@@ -16,9 +13,9 @@ export class UserService {
    async findUserByEmail(email: string) {
       try {
          if (!email) {
-            throw new GraphQLError('Введіть правильний емейл', {
+            throwGraphQLError("Поле 'email' є обов'язковим", {
                extensions: {
-                  code: 'BAD_USER_INPUT',
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
                },
             });
          }
@@ -31,6 +28,7 @@ export class UserService {
 
          return user;
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -38,7 +36,11 @@ export class UserService {
    async findUserById(id: number) {
       try {
          if (!id) {
-            throw new BadRequestException('Id is required');
+            throwGraphQLError('Ідентифікатор користувача не вказано', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const user = await this.prisma.user.findUnique({
@@ -48,7 +50,11 @@ export class UserService {
          });
 
          if (!user) {
-            throw new NotFoundException('User not found');
+            throwGraphQLError('Користувача з таким id не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          return user;
@@ -64,19 +70,35 @@ export class UserService {
             data: {
                ...args,
             },
+            select: {
+               id: true,
+               email: true,
+               displayName: true,
+               createdAt: true,
+               updatedAt: true,
+            },
          });
 
          if (!newUser) {
-            throw new BadRequestException('Failed to create user');
+            throwGraphQLError('Сталася помилка при створенні користувача', {
+               extensions: {
+                  code: GraphqlErrorCode.INTERNAL_SERVER_ERROR,
+               },
+            });
          }
 
          return newUser;
       } catch (e) {
+         console.error(e);
          if (
             e instanceof Prisma.PrismaClientKnownRequestError &&
             e.code === 'P2002'
          ) {
-            throw new BadRequestException('Email already exists');
+            throwGraphQLError('Користувач з такою емейлом вже існує', {
+               extensions: {
+                  code: GraphqlErrorCode.NOT_ALLOWED,
+               },
+            });
          }
 
          throw e;
@@ -84,42 +106,58 @@ export class UserService {
    }
 
    async updateUser(args: UpdateUserArgs, userId: number) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId } });
-      if (!user) throw new NotFoundException('Користувача не знайдено');
-
-      const updateData: any = { ...args };
-
-      if (args.newPassword) {
-         if (!args.oldPassword) {
-            throw new BadRequestException('Потрібно вказати старий пароль');
-         }
-
-         const isValid = await verify(user.password, args.oldPassword);
-         if (!isValid) {
-            throw new GraphQLError('Неправильний пароль', {
+      try {
+         const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+         });
+         if (!user) {
+            throwGraphQLError('Користувача з таким id не знайдено', {
                extensions: {
-                  code: 'BAD_USER_INPUT',
-                  argumentName: 'oldPassword',
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
                },
             });
          }
 
-         const hashedNewPassword = await hash(args.newPassword, {
-            type: argon2id,
-            timeCost: 3,
-            memoryCost: 65536,
-            parallelism: 1,
+         const updateData: any = { ...args };
+
+         if (args.newPassword) {
+            if (!args.oldPassword) {
+               throwGraphQLError('Не вказано старий пароль', {
+                  extensions: {
+                     code: GraphqlErrorCode.BAD_USER_INPUT,
+                  },
+               });
+            }
+
+            const isValid = await verify(user.password, args.oldPassword);
+            if (!isValid) {
+               throwGraphQLError('Неправильний пароль', {
+                  extensions: {
+                     code: GraphqlErrorCode.INVALID_CREDENTIALS,
+                  },
+               });
+            }
+
+            const hashedNewPassword = await hash(args.newPassword, {
+               type: argon2id,
+               timeCost: 3,
+               memoryCost: 65536,
+               parallelism: 1,
+            });
+
+            updateData.password = hashedNewPassword;
+         }
+
+         delete updateData.newPassword;
+         delete updateData.oldPassword;
+
+         return this.prisma.user.update({
+            where: { id: userId },
+            data: updateData,
          });
-
-         updateData.password = hashedNewPassword;
+      } catch (e) {
+         console.error(e);
+         throw e;
       }
-
-      delete updateData.newPassword;
-      delete updateData.oldPassword;
-
-      return this.prisma.user.update({
-         where: { id: userId },
-         data: updateData,
-      });
    }
 }

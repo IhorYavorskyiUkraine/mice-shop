@@ -50,6 +50,7 @@ export class AuthService {
 
          return this.generateTokens(user.id);
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -108,6 +109,7 @@ export class AuthService {
 
          return this.generateTokens(newUser.id);
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -129,6 +131,7 @@ export class AuthService {
 
          return { message: 'Logged out successfully' };
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -156,6 +159,7 @@ export class AuthService {
 
          return this.generateTokens(user.id);
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -201,6 +205,7 @@ export class AuthService {
 
          return decoded as { userId: number };
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -226,6 +231,7 @@ export class AuthService {
 
          return { userId: user.id };
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -246,7 +252,7 @@ export class AuthService {
             where: { userId },
          });
       } catch (e) {
-         console.warn(e);
+         console.error(e);
       }
    }
 
@@ -271,6 +277,7 @@ export class AuthService {
          });
          return refreshToken;
       } catch (e) {
+         console.error(e);
          throw e;
       }
    }
@@ -288,8 +295,8 @@ export class AuthService {
          await this.prisma.revokedToken.create({
             data: { token },
          });
-      } catch (error) {
-         console.warn('Не вдалося забрати токен:', error);
+      } catch (e) {
+         console.error('Не вдалося забрати токен:', e);
       }
    }
 

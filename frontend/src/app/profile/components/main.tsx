@@ -1,6 +1,6 @@
 'use client';
 
-import { ErrorMessage, UniversalSkeleton } from '@/components/ui';
+import { Button, ErrorMessage, UniversalSkeleton } from '@/components/ui';
 import { useMutation, useQuery } from '@apollo/client';
 import { LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -14,7 +14,17 @@ interface Props {
 }
 
 const UserInfo = dynamic(() => import('./tabs-content/user-info/user-info'), {
-   loading: () => <p>Загрузка...</p>,
+   loading: () => (
+      <div className="px-[10px] lg:min-h-screen py-[10px] lg:px-[30px] lg:py-[30px]">
+         <UniversalSkeleton userInfo />
+         <button disabled className="uppercase cursor-pointer text-s">
+            Редагувати пароль
+         </button>
+         <div className="mt-[10px]">
+            <Button className="min-w-[120px]">Редагувати профіль</Button>
+         </div>
+      </div>
+   ),
    ssr: false,
 });
 
@@ -31,7 +41,7 @@ const Orders = dynamic(() => import('./tabs-content/orders/orders'), {
 
 const Liked = dynamic(() => import('./tabs-content/liked/liked'), {
    loading: () => (
-      <div className="px-[10px] py-[10px] lg:px-md lg:py-md">
+      <div className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30PX]">
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
             <UniversalSkeleton likedItems />
          </div>
@@ -59,14 +69,14 @@ export const Main: React.FC<Props> = ({ tab }) => {
       <div className="grid lg:grid-cols-[auto_1fr] pb-sm">
          <aside>
             <div className="border-b-[1px] hidden lg:flex items-center justify-between border-primary py-[10px] pt-md pb-md pr-[30px] ">
-               <div>
+               <div className="flex flex-1 flex-col pr-sm gap-1">
                   {loading ? (
-                     <p>Loading...</p>
+                     <UniversalSkeleton displayName />
                   ) : (
                      <p>{user?.findUserById?.displayName}</p>
                   )}
                   {loading ? (
-                     <p>Loading...</p>
+                     <UniversalSkeleton displayName />
                   ) : (
                      <p className="text-m1">{user?.findUserById?.email}</p>
                   )}

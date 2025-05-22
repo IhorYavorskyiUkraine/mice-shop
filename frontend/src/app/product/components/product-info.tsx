@@ -2,7 +2,13 @@
 
 import { PixelRating } from '@/components/shared';
 import { GET_CART } from '@/components/shared/cart/cart.graphql';
-import { Button, Separator, Title, UniversalSkeleton } from '@/components/ui';
+import {
+   Button,
+   ErrorMessage,
+   Separator,
+   Title,
+   UniversalSkeleton,
+} from '@/components/ui';
 import { Color } from '@/types/color.type';
 import { Model } from '@/types/model.type';
 import { Specs } from '@/types/specs.type';
@@ -31,7 +37,11 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
 
    const [initialized, setInitialized] = useState(false);
 
-   const { data, loading } = useQuery(GET_PRODUCT, {
+   const {
+      data,
+      loading,
+      error: productError,
+   } = useQuery(GET_PRODUCT, {
       variables: { id },
    });
    const { data: likedData, refetch: refetchLiked } = useQuery(GET_LIKED, {
@@ -72,7 +82,10 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
 
    const handleAddToLiked = async () => {
       if (loading || addLikedLoading || addProductLoading) return;
-      if (!activeColor?.code?.[0]?.code) return;
+      if (!activeColor?.code?.[0]?.code) {
+         toast.error('Немає коду товара');
+         return;
+      }
       await addToLiked({
          variables: {
             productCode: activeColor?.code?.[0]?.code,
@@ -172,6 +185,8 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
          );
       }
    }, [activeModel]);
+
+   if (productError) return <ErrorMessage message={productError.message} />;
 
    return (
       <div className="grid lg:grid-cols-2 lg:grid-rows-1 grid-cols-1 gap-6">

@@ -1,4 +1,6 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductService } from 'src/product/product.service';
 import { ProductFiltersArgs } from './dto/filtered-products.dto';
@@ -15,6 +17,14 @@ export class ProductFiltersService {
             limit: 1000,
             offset: 0,
          });
+
+         if (!products) {
+            throwGraphQLError('Продукти не знайдені', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
+         }
 
          const tags = new Set(
             products
@@ -74,6 +84,7 @@ export class ProductFiltersService {
          };
       } catch (e) {
          console.error(e);
+         throw e;
       }
    }
 
@@ -137,6 +148,7 @@ export class ProductFiltersService {
          return { totalPages, totalProducts, currentPage };
       } catch (e) {
          console.error(e);
+         throw e;
       }
    }
 
@@ -223,9 +235,7 @@ export class ProductFiltersService {
          return { products, totalPages, totalProducts, currentPage };
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException(
-            'Error fetching products. Please try again later.',
-         );
+         throw e;
       }
    }
 }

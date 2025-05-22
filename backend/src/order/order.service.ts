@@ -1,7 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { CartService } from 'src/cart/cart.service';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { validateValues } from 'src/utils/validateValues.utils';
@@ -121,8 +123,14 @@ export class OrderService {
 
    async createOrder(args: CreateOrderArgs, res?: Response) {
       validateValues([args.email, args.phone, args.address]);
-      if (!args.orderItems?.length || args.total === 0)
-         throw new Error('Пустий список товарів');
+
+      if (!args.orderItems?.length || args.total === 0) {
+         throwGraphQLError('Замовлення не може бути порожнім', {
+            extensions: {
+               code: GraphqlErrorCode.BAD_USER_INPUT,
+            },
+         });
+      }
 
       const guestToken = res.req.cookies?.guestToken;
 
@@ -141,7 +149,9 @@ export class OrderService {
       });
 
       const cart = await this.cartService.getCart(args.userId, res);
+
       await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
+
       await this.cartService.updateTotalPrice(cart.id);
 
       return order;
@@ -193,8 +203,8 @@ export class OrderService {
 
          return orders;
       } catch (e) {
-         console.error('Error getting orders', e);
-         throw new InternalServerErrorException('Cannot get orders');
+         console.error(e);
+         throw e;
       }
    }
 }

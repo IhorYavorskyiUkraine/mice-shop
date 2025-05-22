@@ -1,9 +1,10 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request } from 'express';
-import { GraphQLError } from 'graphql';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { getAuthTokens } from 'src/utils/cookie.utils';
 import { GetAllProductsArgs } from './dto';
 import { Code } from './models/product-code';
@@ -40,7 +41,11 @@ export class ProductResolver {
    async getLikedProducts(@Context() context: { req: Request }) {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
-         throw new Error('Access token not found');
+         throwGraphQLError('Не знайдено токен авторизації', {
+            extensions: {
+               code: GraphqlErrorCode.UNAUTHENTICATED,
+            },
+         });
       }
 
       const { userId } =
@@ -55,6 +60,7 @@ export class ProductResolver {
       @Context() context: { req: Request },
    ) {
       const { accessToken } = getAuthTokens(context.req);
+
       if (!accessToken) {
          return false;
       }
@@ -72,9 +78,9 @@ export class ProductResolver {
    ) {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
-         throw new GraphQLError('Залогіньтесь', {
+         throwGraphQLError('Не знайдено токен авторизації', {
             extensions: {
-               code: 'UNAUTHENTICATED',
+               code: GraphqlErrorCode.UNAUTHENTICATED,
             },
          });
       }

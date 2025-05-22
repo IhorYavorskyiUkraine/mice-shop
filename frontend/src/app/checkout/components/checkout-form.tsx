@@ -2,13 +2,13 @@
 
 import { CheckboxWithText } from '@/components/shared';
 import { GET_CART } from '@/components/shared/cart/cart.graphql';
+import { ErrorText } from '@/components/shared/error-text';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { TCartItem } from '@/types/cart.type';
 import { City } from '@/types/city.type';
 import { Warehouse } from '@/types/warehouse.type';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useClickAway, useDebounce } from 'react-use';
@@ -20,8 +20,6 @@ import { FormBlock } from './form-block';
 import { ItemsBlock } from './items-block';
 
 export const CheckoutForm: React.FC = () => {
-   const router = useRouter();
-
    const [paymentMethod, setPaymentMethod] = useState<string | null>('online');
    const [query, setQuery] = useState<string>('');
    const [debouncedQuery, setDebouncedQuery] = useState<string>('');
@@ -53,7 +51,6 @@ export const CheckoutForm: React.FC = () => {
       defaultValues: {
          firstName: '',
          lastName: '',
-         middleName: '',
          phone: '',
          city: '',
          warehouse: '',
@@ -66,18 +63,23 @@ export const CheckoutForm: React.FC = () => {
       warehouseSearch,
    ]);
 
-   const { data: cities, loading: isLoadingCities } = useQuery(GET_CITIES, {
+   const {
+      data: cities,
+      loading: isLoadingCities,
+      error: citiesError,
+   } = useQuery(GET_CITIES, {
       skip: !query || !debouncedQuery,
       variables: { query: debouncedQuery },
    });
 
-   const { data: warehouses, loading: isLoadingWarehouses } = useQuery(
-      GET_WAREHOUSES,
-      {
-         skip: !cityRef,
-         variables: { args: { cityRef, search: warehouseDebouncedSearch } },
-      },
-   );
+   const {
+      data: warehouses,
+      loading: isLoadingWarehouses,
+      error: warehousesError,
+   } = useQuery(GET_WAREHOUSES, {
+      skip: !cityRef,
+      variables: { args: { cityRef, search: warehouseDebouncedSearch } },
+   });
 
    const [createOrder, { loading: createOrderLoading }] = useMutation(
       CREATE_ORDER,
@@ -112,7 +114,7 @@ export const CheckoutForm: React.FC = () => {
                   address: `${data.city}, ${data.warehouse}`,
                   phone: data.phone,
                   email: data.email,
-                  name: `${data.firstName} ${data.lastName} ${data.middleName}`,
+                  name: `${data.firstName} ${data.lastName}`,
                   orderItems: cartData?.getCart?.items.map(
                      (item: TCartItem) => ({
                         codeId: item.color.code[0].id,
@@ -202,12 +204,6 @@ export const CheckoutForm: React.FC = () => {
                   />
                   <InputWithValidations
                      disabled={createOrderLoading || isLoadingCart}
-                     placeholder="По батькові"
-                     name="middleName"
-                     className="max-w-[400px]"
-                  />
-                  <InputWithValidations
-                     disabled={createOrderLoading || isLoadingCart}
                      placeholder="Телефон"
                      name="phone"
                      className="max-w-[400px]"
@@ -251,6 +247,12 @@ export const CheckoutForm: React.FC = () => {
                         name="city"
                         value={cityName || query}
                      />
+                     {citiesError && (
+                        <ErrorText
+                           text={citiesError.message}
+                           className="mt-2"
+                        />
+                     )}
                      {isCityDropdownOpen && cities?.getCities?.length > 0 && (
                         <div className="space-y-[10px]flex flex-col">
                            {cities.getCities.map((city: City) => (
@@ -277,6 +279,12 @@ export const CheckoutForm: React.FC = () => {
                            !cityRef || createOrderLoading || isLoadingCart
                         }
                      />
+                     {warehousesError && (
+                        <ErrorText
+                           text={warehousesError.message}
+                           className="mt-2"
+                        />
+                     )}
                      {isWarehouseDropdownOpen &&
                         warehouses?.getWarehouses?.length > 0 && (
                            <div className="space-y-[10px] pt-[10px] px-[10px] flex flex-col">

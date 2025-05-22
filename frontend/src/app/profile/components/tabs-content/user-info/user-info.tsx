@@ -3,6 +3,7 @@
 import { GET_USER, UPDATE_USER } from '@/app/profile/profile.graphql';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { Button } from '@/components/ui';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
@@ -24,7 +25,6 @@ const UserInfo: React.FC = () => {
       defaultValues: {
          firstName: '',
          lastName: '',
-         middleName: '',
          email: '',
          phone: '',
          newPassword: '',
@@ -35,13 +35,11 @@ const UserInfo: React.FC = () => {
    useEffect(() => {
       if (user?.findUserById) {
          const { displayName, email, phone } = user.findUserById;
-         const [firstName = '', lastName = '', middleName = ''] =
-            displayName?.split(' ') ?? [];
+         const [firstName = '', lastName = ''] = displayName?.split(' ') ?? [];
 
          form.reset({
             firstName,
             lastName,
-            middleName,
             email,
             phone: phone || '',
          });
@@ -59,7 +57,7 @@ const UserInfo: React.FC = () => {
                args: {
                   email,
                   phone,
-                  displayName: [data.firstName, data.lastName, data.middleName]
+                  displayName: [data.firstName, data.lastName]
                      .filter(name => !!name && name.trim().length > 0)
                      .join(' '),
                   oldPassword: data.oldPassword ? data.oldPassword : undefined,
@@ -110,6 +108,8 @@ const UserInfo: React.FC = () => {
                className="max-w-[400px]"
                mask={name === 'phone' ? '+38 (000) 000-00-00' : undefined}
             />
+         ) : isLoadingUser ? (
+            <Skeleton className="w-[200px] h-[30px] mb-2" />
          ) : (
             <p>{value || 'Відсутній'}</p>
          )}
@@ -122,11 +122,8 @@ const UserInfo: React.FC = () => {
       phone = '',
    } = user?.findUserById || {};
 
-   const [
-      firstName = 'Відсутнє',
-      lastName = 'Відсутнє',
-      middleName = 'Відсутнє',
-   ] = displayName.split(' ');
+   const [firstName = 'Відсутнє', lastName = 'Відсутнє'] =
+      displayName.split(' ');
 
    return (
       <FormProvider {...form}>
@@ -140,12 +137,6 @@ const UserInfo: React.FC = () => {
                'lastName',
                lastName,
                'Введіть ваше прізвище',
-            )}
-            {renderField(
-               'По батькові',
-               'middleName',
-               middleName,
-               'Введіть ваше по батькові',
             )}
             {renderField(
                'Електронна пошта',

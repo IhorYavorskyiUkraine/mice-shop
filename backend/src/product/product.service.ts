@@ -1,9 +1,6 @@
-import {
-   BadRequestException,
-   Injectable,
-   InternalServerErrorException,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GetAllProductsArgs } from './dto';
 
@@ -26,10 +23,18 @@ export class ProductService {
          } = args;
 
          if (limit !== undefined && limit <= 0) {
-            throw new BadRequestException('Limit must be a positive number');
+            throwGraphQLError('Невірне значення limit', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
          if (offset !== undefined && offset < 0) {
-            throw new BadRequestException('Offset cannot be negative');
+            throwGraphQLError('Невірне значення offset', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const products = await this.prisma.product.findMany({
@@ -66,17 +71,19 @@ export class ProductService {
 
          return products;
       } catch (e) {
-         console.error('Error fetching products:', e);
-         throw new InternalServerErrorException(
-            'Error fetching products. Please try again later.',
-         );
+         console.error(e);
+         throw e;
       }
    }
 
    async getProductById(id: number) {
       try {
          if (!id || id <= 0) {
-            throw new BadRequestException('Invalid product ID');
+            throwGraphQLError('Невірне значення id', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const product = await this.prisma.product.findUnique({
@@ -106,7 +113,11 @@ export class ProductService {
          });
 
          if (!product) {
-            throw new NotFoundException('Product not found');
+            throwGraphQLError('Продукт не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const rating = this.calcRating(product.reviews);
@@ -114,10 +125,8 @@ export class ProductService {
 
          return product;
       } catch (e) {
-         console.error('Error fetching product:', e);
-         throw new InternalServerErrorException(
-            'Error fetching product. Please try again later.',
-         );
+         console.error(e);
+         throw e;
       }
    }
 
@@ -143,7 +152,11 @@ export class ProductService {
          });
 
          if (!user) {
-            throw new NotFoundException('User not found');
+            throwGraphQLError('Користувач не знайдений', {
+               extensions: {
+                  code: GraphqlErrorCode.FORBIDDEN,
+               },
+            });
          }
 
          const productsInfo = user.likedModels.map(model => ({
@@ -155,9 +168,7 @@ export class ProductService {
          return productsInfo;
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException(
-            'Failed to fetch liked products',
-         );
+         throw e;
       }
    }
 
@@ -178,20 +189,28 @@ export class ProductService {
          });
 
          if (!user) {
-            throw new NotFoundException('User not found');
+            throwGraphQLError('Користувач не знайдений', {
+               extensions: {
+                  code: GraphqlErrorCode.FORBIDDEN,
+               },
+            });
          }
 
          return user.likedModels.length > 0;
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException('Failed to check like status');
+         throw e;
       }
    }
 
    async getProductInfoByCode(code: string) {
       try {
          if (!code) {
-            throw new BadRequestException('Invalid product code');
+            throwGraphQLError('Невірне значення code', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const product = await this.prisma.code.findUnique({
@@ -206,12 +225,17 @@ export class ProductService {
          });
 
          if (!product) {
-            throw new NotFoundException('Product not found');
+            throwGraphQLError('Продукт не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          return product;
       } catch (e) {
          console.error(e);
+         throw e;
       }
    }
 
@@ -223,7 +247,11 @@ export class ProductService {
          });
 
          if (!product) {
-            throw new NotFoundException('Product not found');
+            throwGraphQLError('Продукт не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const user = await this.prisma.user.findUnique({
@@ -260,11 +288,11 @@ export class ProductService {
                },
             });
 
-            return { message: `${product.model.name} додана у список бажань` };
+            return { message: `${product.model.name} доданий у список бажань` };
          }
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException('Could not like model');
+         throw e;
       }
    }
 
@@ -277,15 +305,17 @@ export class ProductService {
          });
 
          if (!categories) {
-            throw new NotFoundException('No categories found');
+            throwGraphQLError('Категорії не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          return categories;
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException(
-            'Error fetching categories. Please try again later.',
-         );
+         throw e;
       }
    }
 

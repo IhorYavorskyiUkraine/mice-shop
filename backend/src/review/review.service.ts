@@ -1,4 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateReviewArgs, GetProductReviewsArgs } from './dto';
 
@@ -11,14 +13,21 @@ export class ReviewService {
          const { productId, orderBy, limit, offset } = args;
 
          if (!productId || productId <= 0) {
-            throw new BadRequestException(
-               'Product ID is required and must be a positive number.',
-            );
+            throwGraphQLError('Невірний ідентифікатор товару', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          if (limit < 0 || offset < 0) {
-            throw new BadRequestException(
-               'Limit and offset must be greater than or equal to 0.',
+            throwGraphQLError(
+               "Значення 'limit' або 'offset' не може бути від'ємним",
+               {
+                  extensions: {
+                     code: GraphqlErrorCode.BAD_USER_INPUT,
+                  },
+               },
             );
          }
 
@@ -43,7 +52,7 @@ export class ReviewService {
          return { reviews, totalPages, totalReviews, currentPage };
       } catch (e) {
          console.error(e);
-         throw new BadRequestException('Error fetching product reviews');
+         throw e;
       }
    }
 
@@ -52,9 +61,11 @@ export class ReviewService {
          const { productId, rating, comment } = args;
 
          if (!productId || productId <= 0) {
-            throw new BadRequestException(
-               'Product ID is required and must be a positive number.',
-            );
+            throwGraphQLError('Невірний ідентифікатор товару', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const review = await this.prisma.review.create({
@@ -72,6 +83,7 @@ export class ReviewService {
          return review;
       } catch (e) {
          console.error(e);
+         throw e;
       }
    }
 
@@ -92,6 +104,7 @@ export class ReviewService {
          return { totalPages, totalReviews, currentPage };
       } catch (e) {
          console.error(e);
+         throw e;
       }
    }
 }

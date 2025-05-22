@@ -21,6 +21,8 @@ interface Props {
    length?: number;
    likedItems?: boolean;
    orderItems?: boolean;
+   displayName?: boolean;
+   userInfo?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -42,6 +44,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
    checkoutItems,
    likedItems,
    orderItems,
+   displayName,
+   userInfo,
 }) => {
    if (searchItems) {
       return (
@@ -193,6 +197,24 @@ export const UniversalSkeleton: React.FC<Props> = ({
             </div>
          </div>
       ));
+   } else if (displayName) {
+      return <Skeleton className="w-full h-[30px]" />;
+   } else if (userInfo) {
+      return Array.from({ length: 5 }).map((_, index) => {
+         const labels = [
+            "Ім'я",
+            'Прізвище',
+            'Електронна пошта',
+            'Номер телефону',
+         ];
+
+         return (
+            <div key={index} className="mb-md">
+               <p className="mb-2">{labels[index]}</p>
+               <Skeleton className="w-[200px] h-[30px] mb-2" />
+            </div>
+         );
+      });
    }
    return null;
 };

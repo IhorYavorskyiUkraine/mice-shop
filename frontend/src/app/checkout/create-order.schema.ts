@@ -11,12 +11,6 @@ export const createOrderSchema = z.object({
       .min(2, { message: 'Прізвище повинно містити щонайменше 2 символи' })
       .max(50, { message: 'Прізвище занадто довге' }),
 
-   middleName: z
-      .string({ required_error: 'По батькові є обов’язковим для заповнення' })
-      .min(2, { message: 'По батькові повинно містити щонайменше 2 символи' })
-      .max(50, { message: 'По батькові занадто довге' })
-      .optional(),
-
    email: z
       .string({ required_error: 'Email є обов’язковим для заповнення' })
       .email({ message: 'Введіть коректну електронну адресу' }),

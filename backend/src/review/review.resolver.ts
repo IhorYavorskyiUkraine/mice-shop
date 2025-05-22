@@ -6,7 +6,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateReviewArgs, GetProductReviewsArgs } from './dto';
 import { PaginatedReviewsResponse } from './models/paginated-reviews.model';
-import { Review } from './review.model';
+import { Review } from './models/review.model';
 import { ReviewService } from './review.service';
 
 @Resolver()

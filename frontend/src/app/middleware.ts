@@ -1,4 +1,15 @@
+import { jwtVerify } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
+
+async function verifyToken(token: string) {
+   try {
+      const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET!);
+      const { payload } = await jwtVerify(token, secret);
+      return payload;
+   } catch {
+      return null;
+   }
+}
 
 export async function middleware(request: NextRequest) {
    const accessToken = request.cookies.get('accessToken')?.value;
@@ -8,11 +19,17 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/', request.url));
    }
 
-   if (!accessToken && refreshToken) {
+   if (accessToken) {
+      const isValid = await verifyToken(accessToken);
+      if (isValid) {
+         return NextResponse.next();
+      }
+   }
+
+   if (refreshToken) {
       try {
          const res = await fetch('http://localhost:8000/graphql', {
             method: 'POST',
-            credentials: 'include',
             headers: {
                'Content-Type': 'application/json',
                Cookie: `refreshToken=${refreshToken}`,
@@ -32,16 +49,18 @@ export async function middleware(request: NextRequest) {
 
             response.cookies.set('accessToken', newAccess, {
                httpOnly: true,
-               secure: false,
+               secure: true,
                sameSite: 'lax',
                maxAge: 20,
+               path: '/',
             });
 
             response.cookies.set('refreshToken', newRefresh, {
                httpOnly: true,
-               secure: false,
+               secure: true,
                sameSite: 'lax',
                maxAge: 60 * 60 * 24 * 7,
+               path: '/',
             });
 
             return response;
@@ -49,12 +68,12 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL('/', request.url));
          }
       } catch (err) {
-         console.error('Refresh failed in middleware', err);
+         console.error('Ошибка refresh токена:', err);
          return NextResponse.redirect(new URL('/', request.url));
       }
    }
 
-   return NextResponse.next();
+   return NextResponse.redirect(new URL('/', request.url));
 }
 
 export const config = {

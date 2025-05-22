@@ -1,11 +1,9 @@
-import {
-   BadRequestException,
-   Injectable,
-   InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
+import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { validateValues } from 'src/utils/validateValues.utils';
 import { v4 as uuidv4 } from 'uuid';
@@ -22,7 +20,7 @@ export class CartService {
 
    async getCart(userId?: number, res?: Response) {
       try {
-         if (!userId && (!res || !this.getGuestTokenFromRequest(res))) {
+         if (!userId && !this.getGuestTokenFromRequest(res)) {
             return this.createCart(userId, res);
          }
 
@@ -53,12 +51,10 @@ export class CartService {
             },
          });
 
-         return cart || this.createCart(userId, res);
+         return cart || (await this.createCart(userId, res));
       } catch (e) {
-         console.error('Error fetching cart', e);
-         throw new InternalServerErrorException(
-            'Error fetching cart. Please try again later.',
-         );
+         console.error(e);
+         throw e;
       }
    }
 
@@ -66,12 +62,15 @@ export class CartService {
       try {
          if (!userId) {
             if (!res) {
-               throw new BadRequestException(
-                  'Response object is required for guest carts',
-               );
+               throwGraphQLError('Параметр res не передано', {
+                  extensions: {
+                     code: GraphqlErrorCode.NOT_ALLOWED,
+                  },
+               });
             }
 
             const guestToken = this.generateGuestToken();
+
             this.setGuestToken(res, guestToken);
 
             return await this.prisma.cart.create({
@@ -109,8 +108,8 @@ export class CartService {
             },
          });
       } catch (e) {
-         console.error('Failed to create cart', e);
-         throw new InternalServerErrorException('Failed to create cart');
+         console.error(e);
+         throw e;
       }
    }
 
@@ -131,7 +130,11 @@ export class CartService {
          });
 
          if (!model) {
-            throw new BadRequestException('Model not found');
+            throwGraphQLError('Модель не знайдена', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          let cart = await this.getCart(userId, res);
@@ -162,10 +165,7 @@ export class CartService {
          return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
-         if (e instanceof BadRequestException) throw e;
-         throw new InternalServerErrorException(
-            'Failed to add product to cart',
-         );
+         throw e;
       }
    }
 
@@ -179,7 +179,11 @@ export class CartService {
          });
 
          if (!cart) {
-            throw new BadRequestException('Cart not found');
+            throwGraphQLError('Кошик не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const totalPrice = cart.items.reduce(
@@ -193,9 +197,7 @@ export class CartService {
          });
       } catch (e) {
          console.error(e);
-         throw new InternalServerErrorException(
-            'Failed to update cart total price',
-         );
+         throw e;
       }
    }
 
@@ -209,13 +211,21 @@ export class CartService {
          validateValues([modelId, colorId, quantity]);
 
          if (quantity < 0) {
-            throw new BadRequestException('Quantity cannot be negative');
+            throwGraphQLError('Кількість товару не може бути меньше 0', {
+               extensions: {
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
+               },
+            });
          }
 
          const cart = await this.getCart(userId, res);
 
          if (!cart) {
-            throw new BadRequestException('Cart not found');
+            throwGraphQLError('Кошик не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const cartItem = await this.prisma.cartItem.findFirst({
@@ -227,7 +237,11 @@ export class CartService {
          });
 
          if (!cartItem) {
-            throw new BadRequestException('Product not found in cart');
+            throwGraphQLError('Кошик не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const product = await this.prisma.color.findFirst({
@@ -241,12 +255,21 @@ export class CartService {
          });
 
          if (!product) {
-            throw new BadRequestException('Product not found');
+            throwGraphQLError('Продукт не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          if (quantity > product.stock) {
-            throw new BadRequestException(
-               `Not enough stock available. Only ${product.stock} items left.`,
+            throwGraphQLError(
+               `Недостатньо одиниць товару. У наявності лише ${product.stock} шт.`,
+               {
+                  extensions: {
+                     code: GraphqlErrorCode.BAD_USER_INPUT,
+                  },
+               },
             );
          }
 
@@ -269,10 +292,7 @@ export class CartService {
          return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
-         if (e instanceof BadRequestException) throw e;
-         throw new InternalServerErrorException(
-            'Failed to update product in cart',
-         );
+         throw e;
       }
    }
 
@@ -282,7 +302,11 @@ export class CartService {
 
          const cart = await this.getCart(userId, res);
          if (!cart) {
-            throw new BadRequestException('Cart not found');
+            throwGraphQLError('Кошик не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          const cartItem = await this.prisma.cartItem.findFirst({
@@ -293,7 +317,11 @@ export class CartService {
          });
 
          if (!cartItem) {
-            throw new BadRequestException('Product not found in cart');
+            throwGraphQLError('Продукт не знайдено', {
+               extensions: {
+                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
+               },
+            });
          }
 
          await this.prisma.cartItem.delete({
@@ -307,10 +335,7 @@ export class CartService {
          return this.getCart(userId, res);
       } catch (e) {
          console.error(e);
-         if (e instanceof BadRequestException) throw e;
-         throw new InternalServerErrorException(
-            'Failed to remove product from cart',
-         );
+         throw e;
       }
    }
 

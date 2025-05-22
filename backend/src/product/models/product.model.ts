@@ -1,5 +1,5 @@
 import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
-import { Review } from 'src/review/review.model';
+import { Review } from 'src/review/models/review.model';
 import { Code } from './product-code';
 import { Brand } from './productBrand.model';
 import { Category } from './productCategory.model';

@@ -32,7 +32,6 @@ export const GET_PRODUCT = gql`
          reviews {
             user {
                displayName
-               # TODO: image
             }
             rating
             comment

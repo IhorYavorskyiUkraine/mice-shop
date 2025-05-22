@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Review } from '../review.model';
+import { Review } from './review.model';
 
 @ObjectType()
 export class PaginatedReviewsResponse {

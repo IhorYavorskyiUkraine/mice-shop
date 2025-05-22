@@ -52,8 +52,6 @@ export class OrderResolver {
          context.res,
       );
 
-      if (!order) throw new Error('Order creation failed');
-
       return {
          message: 'Order created successfully',
          success: true,
