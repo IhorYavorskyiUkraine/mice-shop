@@ -1,18 +1,10 @@
 import { Container } from '@/components/ui';
-import { Metadata } from 'next';
 import { BreadcrumbWithName } from '../components/breadcrumb/breadcrumb-with-name';
 import { ProductInfo } from '../components/product-info';
 import { ProductTabs } from '../components/product-tabs/product-tabs';
 
-interface GenerateMetadataProps {
-   params: { id: string };
-   searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export async function generateMetadata({
-   params,
-}: GenerateMetadataProps): Promise<Metadata> {
-   const { id } = await params;
+export async function generateMetadata({ params }: { params: any }) {
+   const { id } = params;
 
    try {
       const response = await fetch('http://localhost:8000/graphql', {
@@ -47,13 +39,9 @@ export async function generateMetadata({
    }
 }
 
-interface PageProps {
-   params: { id: string };
-   searchParams?: { [key: string]: string | string[] | undefined };
-}
+export default async function ProductPage({ params }: { params: any }) {
+   const { id } = params;
 
-export default async function ProductPage({ params }: PageProps) {
-   const { id } = await params;
    return (
       <Container>
          <BreadcrumbWithName id={Number(id)} />

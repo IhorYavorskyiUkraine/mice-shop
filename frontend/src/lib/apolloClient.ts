@@ -28,16 +28,20 @@ const refreshToken = async () => {
 
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
    if (graphQLErrors?.some(err => err.extensions?.code === 'UNAUTHENTICATED')) {
+      console.log('UNAUTHENTICATED error detected', graphQLErrors);
       return new Observable(observer => {
          refreshToken()
             .then(() => {
-               forward(operation).subscribe({
-                  next: observer.next.bind(observer),
-                  error: observer.error.bind(observer),
-                  complete: observer.complete.bind(observer),
-               });
+               setTimeout(() => {
+                  forward(operation).subscribe({
+                     next: observer.next.bind(observer),
+                     error: observer.error.bind(observer),
+                     complete: observer.complete.bind(observer),
+                  });
+               }, 50);
             })
             .catch(err => {
+               console.error('Refresh failed', err);
                observer.error(err);
             });
       });

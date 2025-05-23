@@ -18,6 +18,7 @@ const useFilterSet = (initialSet = new Set<string>()) => {
 
 export const useSidebarFilters = () => {
    const [priceValues, setPriceValues] = useState<[number, number]>([0, 0]);
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [debouncedPrice, setDebouncedPrice] = useState<[number, number]>([
       0, 0,
    ]);

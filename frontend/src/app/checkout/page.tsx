@@ -15,9 +15,10 @@ const CART_QUERY = `query GetCart {
 export default async function CheckoutPage() {
    const cookieStore = await cookies();
    const accessToken = cookieStore.get('accessToken')?.value;
+   const refreshToken = cookieStore.get('refreshToken')?.value;
    const guestToken = cookieStore.get('guestToken')?.value;
 
-   if (!accessToken && !guestToken) {
+   if (!accessToken && !guestToken && !refreshToken) {
       redirect('/');
    }
 

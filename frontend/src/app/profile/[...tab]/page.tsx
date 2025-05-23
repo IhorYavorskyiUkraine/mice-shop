@@ -8,11 +8,7 @@ export const metadata: Metadata = {
    title: 'PixelMouse | Profile',
 };
 
-export default async function Profile({
-   params,
-}: {
-   params: { tab: string[] };
-}) {
+export default async function Profile({ params }: { params: any }) {
    const { tab } = await params;
 
    const currentTab = tab[0];

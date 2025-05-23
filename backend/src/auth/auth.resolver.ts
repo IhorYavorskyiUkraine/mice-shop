@@ -71,7 +71,7 @@ export class AuthResolver {
    @UseGuards(RefreshTokenGuard)
    @Mutation(() => AuthResponse)
    async refresh(@Context() context: { req: Request; res: Response }) {
-      const { refreshToken } = getAuthTokens(context.req);
+      const { accessToken, refreshToken } = getAuthTokens(context.req);
 
       if (!refreshToken) {
          throwGraphQLError('Missing tokens', {
@@ -81,15 +81,27 @@ export class AuthResolver {
          });
       }
 
+      const payload = await this.authService.validateAccessToken(
+         accessToken,
+         false,
+      );
+
+      if (payload.userId) {
+         return {
+            message: 'Already authenticated',
+            userId: payload.userId,
+         };
+      }
+
       const { userId } =
          await this.authService.validateRefreshToken(refreshToken);
 
-      const { accessToken, refreshToken: newRefreshToken } =
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
          await this.authService.refresh(userId, refreshToken);
 
-      setAuthCookies(context.res, accessToken, newRefreshToken);
+      setAuthCookies(context.res, newAccessToken, newRefreshToken);
 
-      return { message: 'Refresh successful', accessToken, refreshToken };
+      return { message: 'Refresh successful', newAccessToken, newRefreshToken };
    }
 
    @UseGuards(JwtGuard)

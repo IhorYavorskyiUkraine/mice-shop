@@ -8,6 +8,7 @@ import Orders from './tabs-content/orders/orders';
 import UserInfo from './tabs-content/user-info/user-info';
 
 export const ProfileMobileTabs: React.FC = () => {
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [_, { has, toggle }] = useSet(new Set([1]));
    return (
       <div className="flex flex-col gap-[30px] pb-md lg:hidden pt-md lg:pr-md">

@@ -9,7 +9,8 @@ import { City } from '@/types/city.type';
 import { Warehouse } from '@/types/warehouse.type';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useClickAway, useDebounce } from 'react-use';
 import { toast } from 'sonner';
@@ -20,6 +21,9 @@ import { FormBlock } from './form-block';
 import { ItemsBlock } from './items-block';
 
 export const CheckoutForm: React.FC = () => {
+   const router = useRouter();
+
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [paymentMethod, setPaymentMethod] = useState<string | null>('online');
    const [query, setQuery] = useState<string>('');
    const [debouncedQuery, setDebouncedQuery] = useState<string>('');
@@ -168,6 +172,12 @@ export const CheckoutForm: React.FC = () => {
       setIsCityDropdownOpen(true);
    };
 
+   useEffect(() => {
+      if (cartData?.getCart.items.length === 0) {
+         router.push('/');
+      }
+   }, [cartData?.getCart.items]);
+
    const handleWarehouseInputChange = (
       e: React.ChangeEvent<HTMLInputElement>,
    ) => {
@@ -218,11 +228,13 @@ export const CheckoutForm: React.FC = () => {
                      render={({ field }) => (
                         <>
                            <CheckboxWithText
+                              loading={createOrderLoading || isLoadingCart}
                               text="Оплата онлайн"
                               checked={field.value === 'online'}
                               onCheckedChange={() => field.onChange('online')}
                            />
                            <CheckboxWithText
+                              loading={createOrderLoading || isLoadingCart}
                               text="Оплата при отриманні"
                               checked={field.value === 'cash'}
                               onCheckedChange={() => field.onChange('cash')}
@@ -262,6 +274,7 @@ export const CheckoutForm: React.FC = () => {
                                  onClick={() =>
                                     handleCityChange(city.ref, city.name)
                                  }
+                                 loading={createOrderLoading || isLoadingCart}
                                  active={city.ref === cityRef}
                               />
                            ))}
@@ -299,6 +312,9 @@ export const CheckoutForm: React.FC = () => {
                                              warehouse.description,
                                           )
                                        }
+                                       loading={
+                                          createOrderLoading || isLoadingCart
+                                       }
                                        active={warehouse.ref === warehouseRef}
                                     />
                                  ),
@@ -309,7 +325,7 @@ export const CheckoutForm: React.FC = () => {
                </FormBlock>
             </form>
             <ItemsBlock
-               loading={createOrderLoading}
+               loading={createOrderLoading || isLoadingCart}
                items={cartData?.getCart.items || []}
                totalPrice={cartData?.getCart?.totalPrice}
                onSubmit={form.handleSubmit(onSubmit)}

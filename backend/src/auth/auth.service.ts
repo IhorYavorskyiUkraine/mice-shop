@@ -189,18 +189,32 @@ export class AuthService {
       return true;
    }
 
-   async validateAccessToken(accessToken: string) {
+   async validateAccessToken(accessToken: string, refresh = true) {
       try {
+         if (!accessToken) {
+            if (refresh) {
+               throwGraphQLError('Недійсний токен доступу', {
+                  extensions: {
+                     code: GraphqlErrorCode.UNAUTHENTICATED,
+                  },
+               });
+            }
+            return { userId: null };
+         }
+
          const decoded = await this.jwtService.verify(accessToken, {
             secret: this.config.get('JWT_SECRET'),
          });
 
          if (!decoded || !decoded.userId) {
-            throwGraphQLError('Недійсний токен доступу', {
-               extensions: {
-                  code: GraphqlErrorCode.UNAUTHENTICATED,
-               },
-            });
+            if (refresh) {
+               throwGraphQLError('Недійсний токен доступу', {
+                  extensions: {
+                     code: GraphqlErrorCode.UNAUTHENTICATED,
+                  },
+               });
+            }
+            return { userId: null };
          }
 
          return decoded as { userId: number };

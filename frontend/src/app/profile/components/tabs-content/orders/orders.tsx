@@ -11,6 +11,7 @@ import { OrderItem } from './order-item';
 import { GET_ORDERS } from './orders.graphql';
 
 const Orders: React.FC = () => {
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const [_, { has, toggle }] = useSet(new Set());
 
    const { data, loading, error } = useQuery(GET_ORDERS, {

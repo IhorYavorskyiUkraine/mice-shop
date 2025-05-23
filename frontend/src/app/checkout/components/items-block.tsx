@@ -1,7 +1,7 @@
 'use client';
 
 import { CartItem } from '@/components/shared/cart/cart-item';
-import { Button, UniversalSkeleton } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { TCartItem } from '@/types/cart.type';
 
 interface Props {
@@ -23,9 +23,7 @@ export const ItemsBlock: React.FC<Props> = ({
       return 'товарів';
    };
 
-   return loading ? (
-      <UniversalSkeleton checkoutItems />
-   ) : (
+   return (
       <div className="px-[10px] self-start border-[2px] border-primary py-[10px] lg:px-[30px] lg:py-[30px]">
          <div className="space-y-[30px] mb-md">
             {items?.map((item: TCartItem) => (
