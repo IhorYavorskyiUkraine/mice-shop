@@ -3,7 +3,6 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
-import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateReviewArgs, GetProductReviewsArgs } from './dto';
 import { PaginatedReviewsResponse } from './models/paginated-reviews.model';
 import { Review } from './models/review.model';
@@ -27,10 +26,10 @@ export class ReviewResolver {
       @Args('args') args: CreateReviewArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-
-      const { userId } =
-         await this.authService.validateAccessToken(accessToken);
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.reviewService.createReview(args, userId);
    }

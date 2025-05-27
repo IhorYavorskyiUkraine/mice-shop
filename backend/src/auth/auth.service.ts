@@ -3,10 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from '@prisma/client';
 import { argon2id, hash, verify } from 'argon2';
+import { Request, Response } from 'express';
 import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
 import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
+import { getAuthTokens, setAuthCookies } from 'src/utils/cookie.utils';
 import { LoginArgs, RegisterArgs } from './dto';
 
 @Injectable()
@@ -324,5 +326,37 @@ export class AuthService {
 
    async cleanUpExpiredTokens() {
       await this.prisma.revokedToken.deleteMany();
+   }
+
+   async getValidUserIdOrThrow(req: Request, res?: Response): Promise<number> {
+      const { accessToken, refreshToken } = getAuthTokens(req);
+
+      if (accessToken) {
+         const payload = await this.validateAccessToken(accessToken, false);
+         if (payload?.userId) return payload.userId;
+      }
+
+      if (!refreshToken) {
+         throwGraphQLError('Не знайдено токен авторизації', {
+            extensions: { code: GraphqlErrorCode.UNAUTHENTICATED },
+         });
+      }
+
+      const { userId } = await this.validateRefreshToken(refreshToken);
+
+      if (!userId) {
+         throwGraphQLError('Не знайдено користувача', {
+            extensions: { code: GraphqlErrorCode.UNAUTHENTICATED },
+         });
+      }
+
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+         await this.refresh(userId, refreshToken);
+
+      if (res) {
+         setAuthCookies(res, newAccessToken, newRefreshToken);
+      }
+
+      return userId;
    }
 }

@@ -1,7 +1,6 @@
 import { Args, Context, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CartService } from './cart.service';
 import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
@@ -16,14 +15,10 @@ export class CartResolver {
 
    @Query(() => Cart)
    async getCart(@Context() context: { req: Request; res: Response }) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.cartService.getCart(userId, context.res);
    }
@@ -33,14 +28,10 @@ export class CartResolver {
       @Args('args') args: AddProductArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.cartService.addProduct({ ...args, userId }, context.res);
    }
@@ -50,14 +41,10 @@ export class CartResolver {
       @Args('args') args: UpdateProductArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.cartService.updateProduct({ ...args, userId }, context.res);
    }
@@ -67,14 +54,10 @@ export class CartResolver {
       @Args('modelId', { type: () => Int }) modelId: number,
       @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.cartService.removeProduct(modelId, userId, context.res);
    }

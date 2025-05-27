@@ -3,7 +3,6 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
-import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateOrderArgs, CreateTTHArgs, getWarehousesArgs } from './dto';
 import { CreateOrderResponse } from './models/create-order-res.model';
 import { Order } from './models/order.model';
@@ -38,14 +37,10 @@ export class OrderResolver {
       @Args('args') args: CreateOrderArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       const order = await this.orderService.createOrder(
          { ...args, userId },
@@ -61,14 +56,10 @@ export class OrderResolver {
    @UseGuards(JwtGuard)
    @Query(() => [Order])
    async getOrders(@Context() context: { req: Request; res: Response }) {
-      const { accessToken } = getAuthTokens(context.req);
-      let userId: number | undefined;
-
-      if (accessToken) {
-         const payload =
-            await this.authService.validateAccessToken(accessToken);
-         userId = payload.userId;
-      }
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.orderService.getOrders(userId, context.res);
    }

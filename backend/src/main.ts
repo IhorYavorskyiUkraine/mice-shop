@@ -6,6 +6,7 @@ async function bootstrap() {
    const app = await NestFactory.create(AppModule);
    app.setGlobalPrefix('api');
    app.use(cookieParser());
+   // app.use(RefreshMiddleware);
    app.enableCors({
       origin: process.env.FRONTEND_URL,
       credentials: true,

@@ -1,11 +1,8 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtGuard } from 'src/auth/guard';
-import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
-import { throwGraphQLError } from 'src/common/errors/graphql-errors';
-import { getAuthTokens } from 'src/utils/cookie.utils';
 import { CreateUserArgs, UpdateUserArgs } from './dto';
 import { User } from './user.model';
 import { UserService } from './user.service';
@@ -23,18 +20,11 @@ export class UserResolver {
    }
 
    @Query(() => User)
-   async findUserById(@Context() context: { req: Request }) {
-      const { accessToken } = getAuthTokens(context.req);
-      if (!accessToken) {
-         throwGraphQLError('Не знайдено токен авторизації', {
-            extensions: {
-               code: GraphqlErrorCode.UNAUTHENTICATED,
-            },
-         });
-      }
-
-      const { userId } =
-         await this.authService.validateAccessToken(accessToken);
+   async findUserById(@Context() context: { req: Request; res: Response }) {
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.userService.findUserById(userId);
    }
@@ -48,19 +38,12 @@ export class UserResolver {
    @Mutation(() => User)
    async updateUser(
       @Args('args') args: UpdateUserArgs,
-      @Context() context: { req: Request },
+      @Context() context: { req: Request; res: Response },
    ) {
-      const { accessToken } = getAuthTokens(context.req);
-      if (!accessToken) {
-         throwGraphQLError('Не знайдено токен авторизації', {
-            extensions: {
-               code: GraphqlErrorCode.UNAUTHENTICATED,
-            },
-         });
-      }
-
-      const { userId } =
-         await this.authService.validateAccessToken(accessToken);
+      const userId = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
       return this.userService.updateUser(args, userId);
    }

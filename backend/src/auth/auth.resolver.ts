@@ -50,7 +50,7 @@ export class AuthResolver {
    async logout(@Context() context: { req: Request; res: Response }) {
       const { accessToken, refreshToken } = getAuthTokens(context.req);
 
-      if (!accessToken || !refreshToken) {
+      if (!refreshToken) {
          throwGraphQLError('Missing tokens', {
             extensions: {
                code: GraphqlErrorCode.UNAUTHENTICATED,
@@ -101,7 +101,11 @@ export class AuthResolver {
 
       setAuthCookies(context.res, newAccessToken, newRefreshToken);
 
-      return { message: 'Refresh successful', newAccessToken, newRefreshToken };
+      return {
+         message: 'Refresh successful',
+         accessToken: newAccessToken,
+         refreshToken: newRefreshToken,
+      };
    }
 
    @UseGuards(JwtGuard)

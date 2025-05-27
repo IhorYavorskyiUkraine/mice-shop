@@ -4,7 +4,8 @@ import { GET_USER, UPDATE_USER } from '@/app/profile/profile.graphql';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { Button } from '@/components/ui';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useMutation, useQuery } from '@apollo/client';
+import { useProtectedQuery } from '@/lib/utils/protected-query';
+import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -15,7 +16,7 @@ const UserInfo: React.FC = () => {
    const [profileEditing, setProfileEditing] = useState(false);
    const [passwordEditing, setPasswordEditing] = useState(false);
 
-   const { data: user, loading: isLoadingUser } = useQuery(GET_USER);
+   const { data: user, loading: isLoadingUser } = useProtectedQuery(GET_USER);
    const [updateUser, { loading: isUpdating }] = useMutation(UPDATE_USER, {
       refetchQueries: [GET_USER],
    });
