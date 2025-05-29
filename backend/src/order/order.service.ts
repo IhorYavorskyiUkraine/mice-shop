@@ -121,18 +121,14 @@ export class OrderService {
       return data.data?.[0] || null;
    }
 
-   async createOrder(args: CreateOrderArgs, res?: Response) {
+   async createOrder(args: CreateOrderArgs) {
       validateValues([args.email, args.phone, args.address]);
 
       if (!args.orderItems?.length || args.total === 0) {
          throwGraphQLError('Замовлення не може бути порожнім', {
-            extensions: {
-               code: GraphqlErrorCode.BAD_USER_INPUT,
-            },
+            code: GraphqlErrorCode.BAD_USER_INPUT,
          });
       }
-
-      const guestToken = res.req.cookies?.guestToken;
 
       const order = await this.prisma.order.create({
          data: {
@@ -144,11 +140,11 @@ export class OrderService {
                   code: { connect: { id: item.codeId } },
                })),
             },
-            ...(guestToken && { token: guestToken }),
+            ...(args.guestToken && { token: args.guestToken }),
          },
       });
 
-      const cart = await this.cartService.getCart(args.userId, res);
+      const cart = await this.cartService.getCart(args.userId, args.guestToken);
 
       await this.prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
 

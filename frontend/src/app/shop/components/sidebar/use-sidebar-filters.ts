@@ -49,7 +49,9 @@ export const useSidebarFilters = () => {
    const filters = useShopStore(state => state.filters);
    const setFilters = useShopStore(state => state.setFilters);
 
-   const { data, error } = useQuery(GET_PRODUCT_FILTERS);
+   const { data, loading, error, refetch } = useQuery(GET_PRODUCT_FILTERS, {
+      notifyOnNetworkStatusChange: true,
+   });
 
    const getPriceRange = () => ({
       min: data?.getAllProductFilters?.price.min ?? 0,
@@ -213,6 +215,8 @@ export const useSidebarFilters = () => {
       isChanged,
       changed,
       data,
+      refetch,
+      loading,
       error,
    };
 };

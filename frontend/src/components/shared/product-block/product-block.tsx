@@ -1,14 +1,10 @@
 'use client';
 
-import {
-   Container,
-   ErrorMessage,
-   Title,
-   UniversalSkeleton,
-} from '@/components/ui';
+import { Container, Title, UniversalSkeleton } from '@/components/ui';
 import { cn } from '@/lib';
 import { Product } from '@/types/product.type';
 import { useQuery } from '@apollo/client';
+import { ServerError } from '../errors/server-error';
 import { GET_ALL_PRODUCTS } from '../header/header.graphql';
 import { ProductBlockItem } from './product-block-item';
 
@@ -19,15 +15,13 @@ interface Props {
 }
 
 export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
-   const { data, loading, error } = useQuery(GET_ALL_PRODUCTS, {
+   const { data, loading, error, refetch } = useQuery(GET_ALL_PRODUCTS, {
       variables: {
          args: { limit: 4, [tag]: 'desc', offset: 0 },
       },
       notifyOnNetworkStatusChange: true,
       fetchPolicy: 'network-only',
    });
-
-   if (error) return <ErrorMessage message={error.message} />;
 
    return (
       <section>
@@ -38,7 +32,20 @@ export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
                size="xl"
             />
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-               {loading ? (
+               {error?.networkError ? (
+                  <div className="col-span-full flex flex-col items-center justify-center">
+                     <ServerError
+                        onRetry={() => {
+                           refetch().catch(err => {
+                              console.error(
+                                 'Помилка повторної спроби:',
+                                 err.message,
+                              );
+                           });
+                        }}
+                     />
+                  </div>
+               ) : loading ? (
                   <UniversalSkeleton productBlockItem />
                ) : data?.getAllProducts?.length ? (
                   data.getAllProducts.map((product: Product) => (
@@ -46,7 +53,7 @@ export const ProductBlock: React.FC<Props> = ({ title, className, tag }) => {
                   ))
                ) : (
                   <div className="col-span-full text-center py-10">
-                     Товарів не знайдено
+                     Товарів не знайдено
                   </div>
                )}
             </div>

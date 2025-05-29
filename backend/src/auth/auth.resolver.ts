@@ -52,9 +52,7 @@ export class AuthResolver {
 
       if (!refreshToken) {
          throwGraphQLError('Missing tokens', {
-            extensions: {
-               code: GraphqlErrorCode.UNAUTHENTICATED,
-            },
+            code: GraphqlErrorCode.UNAUTHENTICATED,
          });
       }
 
@@ -75,9 +73,7 @@ export class AuthResolver {
 
       if (!refreshToken) {
          throwGraphQLError('Missing tokens', {
-            extensions: {
-               code: GraphqlErrorCode.UNAUTHENTICATED,
-            },
+            code: GraphqlErrorCode.UNAUTHENTICATED,
          });
       }
 

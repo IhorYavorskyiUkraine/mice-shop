@@ -2,13 +2,8 @@
 
 import { PixelRating } from '@/components/shared';
 import { GET_CART } from '@/components/shared/cart/cart.graphql';
-import {
-   Button,
-   ErrorMessage,
-   Separator,
-   Title,
-   UniversalSkeleton,
-} from '@/components/ui';
+import { ServerError } from '@/components/shared/errors/server-error';
+import { Button, Separator, Title, UniversalSkeleton } from '@/components/ui';
 import { Color } from '@/types/color.type';
 import { Model } from '@/types/model.type';
 import { Specs } from '@/types/specs.type';
@@ -24,6 +19,7 @@ import {
    GET_LIKED,
    GET_PRODUCT,
 } from '../product.graphql';
+import { useProductStore } from '../store';
 import { ProductPickColor } from './product-pick-color';
 import { ProductPickModel } from './product-pick-model';
 
@@ -37,9 +33,12 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
 
    const [initialized, setInitialized] = useState(false);
 
+   const setError = useProductStore(state => state.setError);
+
    const {
       data,
       loading,
+      refetch: refetchProduct,
       error: productError,
    } = useQuery(GET_PRODUCT, {
       variables: { id },
@@ -186,7 +185,17 @@ export const ProductInfo: React.FC<Props> = ({ id }) => {
       }
    }, [activeModel]);
 
-   if (productError) return <ErrorMessage message={productError.message} />;
+   if (productError?.networkError) {
+      setError(productError.networkError);
+      return (
+         <div className="h-screen py-md">
+            <ServerError
+               text="Вибачте, не вдалося завантажити цей товар. Спробуйте пізніше або оновіть сторінку."
+               onRetry={() => window.location.reload()}
+            />
+         </div>
+      );
+   }
 
    return (
       <div className="grid lg:grid-cols-2 lg:grid-rows-1 grid-cols-1 gap-6">

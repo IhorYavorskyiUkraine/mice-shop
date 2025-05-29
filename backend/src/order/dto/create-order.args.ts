@@ -40,6 +40,9 @@ export class CreateOrderArgs {
    @Field({ nullable: true })
    userId?: number;
 
+   @Field({ nullable: true })
+   guestToken?: string;
+
    @Field(() => String)
    paymentMethod: 'online' | 'cash';
 }

@@ -9,8 +9,13 @@ interface Props {
 }
 
 export const BreadcrumbWithName: React.FC<Props> = ({ id }) => {
-   const { data } = useQuery(GET_PRODUCT, {
+   const { data, error } = useQuery(GET_PRODUCT, {
       variables: { id },
    });
+
+   if (error) {
+      return null;
+   }
+
    return <Breadcrumb links={[{ name: data?.getProductById.name }]} />;
 };

@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Response } from 'express';
 import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
 import { throwGraphQLError } from 'src/common/errors/graphql-errors';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { validateValues } from 'src/utils/validateValues.utils';
-import { v4 as uuidv4 } from 'uuid';
 import { AddProductArgs } from './dto/addProduct.args';
 import { UpdateProductArgs } from './dto/updateProduct.args';
 
@@ -18,15 +16,13 @@ export class CartService {
       private config: ConfigService,
    ) {}
 
-   async getCart(userId?: number, res?: Response) {
+   async getCart(userId?: number, guestToken?: string) {
       try {
-         if (!userId && !this.getGuestTokenFromRequest(res)) {
-            return this.createCart(userId, res);
+         if (!userId && !guestToken) {
+            return this.createCart(userId, guestToken);
          }
 
-         const whereCondition = userId
-            ? { userId }
-            : { token: this.getGuestTokenFromRequest(res) };
+         const whereCondition = userId ? { userId } : { token: guestToken };
 
          let cart = await this.prisma.cart.findUnique({
             where: whereCondition,
@@ -51,27 +47,21 @@ export class CartService {
             },
          });
 
-         return cart || (await this.createCart(userId, res));
+         return cart || (await this.createCart(userId, guestToken));
       } catch (e) {
          console.error(e);
          throw e;
       }
    }
 
-   async createCart(userId?: number, res?: Response) {
+   async createCart(userId?: number, guestToken?: string) {
       try {
          if (!userId) {
-            if (!res) {
-               throwGraphQLError('Параметр res не передано', {
-                  extensions: {
-                     code: GraphqlErrorCode.NOT_ALLOWED,
-                  },
+            if (!guestToken) {
+               throwGraphQLError('Не знайдено токен авторизації', {
+                  code: GraphqlErrorCode.UNAUTHENTICATED,
                });
             }
-
-            const guestToken = this.generateGuestToken();
-
-            this.setGuestToken(res, guestToken);
 
             return await this.prisma.cart.create({
                data: {
@@ -115,7 +105,7 @@ export class CartService {
 
    async addProduct(
       args: AddProductArgs & { userId?: number },
-      res?: Response,
+      guestToken?: string,
    ) {
       try {
          const { modelId, colorId, userId } = args;
@@ -131,13 +121,11 @@ export class CartService {
 
          if (!model) {
             throwGraphQLError('Модель не знайдена', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
-         let cart = await this.getCart(userId, res);
+         let cart = await this.getCart(userId, guestToken);
 
          const cartItem = await this.findCartItem(cart.id, modelId, colorId);
 
@@ -162,7 +150,7 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId, res);
+         return this.getCart(userId, guestToken);
       } catch (e) {
          console.error(e);
          throw e;
@@ -180,9 +168,7 @@ export class CartService {
 
          if (!cart) {
             throwGraphQLError('Кошик не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -203,7 +189,7 @@ export class CartService {
 
    async updateProduct(
       args: UpdateProductArgs & { userId: number },
-      res?: Response,
+      guestToken?: string,
    ) {
       try {
          const { modelId, userId, colorId, quantity } = args;
@@ -212,19 +198,15 @@ export class CartService {
 
          if (quantity < 0) {
             throwGraphQLError('Кількість товару не може бути меньше 0', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
-         const cart = await this.getCart(userId, res);
+         const cart = await this.getCart(userId, guestToken);
 
          if (!cart) {
             throwGraphQLError('Кошик не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -238,9 +220,7 @@ export class CartService {
 
          if (!cartItem) {
             throwGraphQLError('Кошик не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -256,9 +236,7 @@ export class CartService {
 
          if (!product) {
             throwGraphQLError('Продукт не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -266,9 +244,7 @@ export class CartService {
             throwGraphQLError(
                `Недостатньо одиниць товару. У наявності лише ${product.stock} шт.`,
                {
-                  extensions: {
-                     code: GraphqlErrorCode.BAD_USER_INPUT,
-                  },
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
                },
             );
          }
@@ -289,23 +265,21 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId, res);
+         return this.getCart(userId, guestToken);
       } catch (e) {
          console.error(e);
          throw e;
       }
    }
 
-   async removeProduct(modelId: number, userId?: number, res?: Response) {
+   async removeProduct(modelId: number, userId?: number, guestToken?: string) {
       try {
          validateValues(modelId);
 
-         const cart = await this.getCart(userId, res);
+         const cart = await this.getCart(userId, guestToken);
          if (!cart) {
             throwGraphQLError('Кошик не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -318,9 +292,7 @@ export class CartService {
 
          if (!cartItem) {
             throwGraphQLError('Продукт не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -332,7 +304,7 @@ export class CartService {
 
          await this.updateTotalPrice(cart.id);
 
-         return this.getCart(userId, res);
+         return this.getCart(userId, guestToken);
       } catch (e) {
          console.error(e);
          throw e;
@@ -347,29 +319,5 @@ export class CartService {
       return this.prisma.cartItem.findFirst({
          where: { cartId, modelId, colorId },
       });
-   }
-
-   private generateGuestToken(): string {
-      return this.jwtService.sign(
-         { userId: uuidv4() },
-         {
-            secret: this.config.get('JWT_SECRET'),
-            expiresIn: this.config.get('JWT_SECRET_EXPIRES_IN'),
-         },
-      );
-   }
-
-   private setGuestToken(res: Response, token: string): void {
-      res.cookie('guestToken', token, {
-         httpOnly: true,
-         secure: this.config.get('NODE_ENV') === 'production',
-         sameSite: 'lax',
-         maxAge: this.config.get('CART_TOKEN_MAX_AGE'),
-      });
-   }
-
-   private getGuestTokenFromRequest(res: Response): string | undefined {
-      if (!res?.req?.cookies) return undefined;
-      return res.req.cookies.guestToken;
    }
 }

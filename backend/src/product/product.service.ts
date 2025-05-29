@@ -24,16 +24,12 @@ export class ProductService {
 
          if (limit !== undefined && limit <= 0) {
             throwGraphQLError('Невірне значення limit', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
          if (offset !== undefined && offset < 0) {
             throwGraphQLError('Невірне значення offset', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -80,9 +76,7 @@ export class ProductService {
       try {
          if (!id || id <= 0) {
             throwGraphQLError('Невірне значення id', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -114,9 +108,7 @@ export class ProductService {
 
          if (!product) {
             throwGraphQLError('Продукт не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -153,9 +145,7 @@ export class ProductService {
 
          if (!user) {
             throwGraphQLError('Користувач не знайдений', {
-               extensions: {
-                  code: GraphqlErrorCode.FORBIDDEN,
-               },
+               code: GraphqlErrorCode.FORBIDDEN,
             });
          }
 
@@ -190,9 +180,7 @@ export class ProductService {
 
          if (!user) {
             throwGraphQLError('Користувач не знайдений', {
-               extensions: {
-                  code: GraphqlErrorCode.FORBIDDEN,
-               },
+               code: GraphqlErrorCode.FORBIDDEN,
             });
          }
 
@@ -207,9 +195,7 @@ export class ProductService {
       try {
          if (!code) {
             throwGraphQLError('Невірне значення code', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -226,9 +212,7 @@ export class ProductService {
 
          if (!product) {
             throwGraphQLError('Продукт не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -248,9 +232,7 @@ export class ProductService {
 
          if (!product) {
             throwGraphQLError('Продукт не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -306,9 +288,7 @@ export class ProductService {
 
          if (!categories) {
             throwGraphQLError('Категорії не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 

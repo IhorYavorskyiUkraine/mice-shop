@@ -15,12 +15,10 @@ export class CartResolver {
 
    @Query(() => Cart)
    async getCart(@Context() context: { req: Request; res: Response }) {
-      const userId = await this.authService.getValidUserIdOrThrow(
-         context.req,
-         context.res,
-      );
+      const { userId, guestToken } =
+         await this.authService.getValidUserIdOrThrow(context.req, context.res);
 
-      return this.cartService.getCart(userId, context.res);
+      return this.cartService.getCart(userId, guestToken);
    }
 
    @Mutation(() => Cart)
@@ -28,12 +26,10 @@ export class CartResolver {
       @Args('args') args: AddProductArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
-         context.req,
-         context.res,
-      );
+      const { userId, guestToken } =
+         await this.authService.getValidUserIdOrThrow(context.req, context.res);
 
-      return this.cartService.addProduct({ ...args, userId }, context.res);
+      return this.cartService.addProduct({ ...args, userId }, guestToken);
    }
 
    @Mutation(() => Cart)
@@ -41,12 +37,10 @@ export class CartResolver {
       @Args('args') args: UpdateProductArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
-         context.req,
-         context.res,
-      );
+      const { userId, guestToken } =
+         await this.authService.getValidUserIdOrThrow(context.req, context.res);
 
-      return this.cartService.updateProduct({ ...args, userId }, context.res);
+      return this.cartService.updateProduct({ ...args, userId }, guestToken);
    }
 
    @Mutation(() => Cart)
@@ -54,11 +48,9 @@ export class CartResolver {
       @Args('modelId', { type: () => Int }) modelId: number,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
-         context.req,
-         context.res,
-      );
+      const { userId, guestToken } =
+         await this.authService.getValidUserIdOrThrow(context.req, context.res);
 
-      return this.cartService.removeProduct(modelId, userId, context.res);
+      return this.cartService.removeProduct(modelId, userId, guestToken);
    }
 }

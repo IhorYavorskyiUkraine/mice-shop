@@ -6,7 +6,6 @@ import {
    DrawerContent,
    DrawerHeader,
    DrawerTitle,
-   ErrorMessage,
 } from '@/components/ui';
 import { TCartItem } from '@/types/cart.type';
 import { useQuery } from '@apollo/client';
@@ -14,11 +13,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Drawer } from '../drawer';
+import { ServerError } from '../errors/server-error';
 import { CartItem } from './cart-item';
 import { GET_CART } from './cart.graphql';
 
 export const Cart: React.FC = () => {
-   const { data, error } = useQuery(GET_CART);
+   const { data, error, refetch } = useQuery(GET_CART);
    const [open, setOpen] = useState(false);
 
    return (
@@ -46,7 +46,12 @@ export const Cart: React.FC = () => {
                   x
                </DrawerClose>
             </DrawerHeader>
-            {(error?.message && <ErrorMessage message={error.message} />) || (
+            {(error?.networkError && (
+               <ServerError
+                  onRetry={refetch}
+                  text="Вибачте, не вдалося завантажити кошик"
+               />
+            )) || (
                <div className="flex flex-col h-full">
                   {data?.getCart.items?.length === 0 ? (
                      <div className="flex flex-col flex-1 justify-between">

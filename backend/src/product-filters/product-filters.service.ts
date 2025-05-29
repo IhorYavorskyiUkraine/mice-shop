@@ -20,9 +20,7 @@ export class ProductFiltersService {
 
          if (!products) {
             throwGraphQLError('Продукти не знайдені', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 

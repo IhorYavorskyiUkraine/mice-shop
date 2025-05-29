@@ -21,7 +21,7 @@ export class UserResolver {
 
    @Query(() => User)
    async findUserById(@Context() context: { req: Request; res: Response }) {
-      const userId = await this.authService.getValidUserIdOrThrow(
+      const { userId } = await this.authService.getValidUserIdOrThrow(
          context.req,
          context.res,
       );
@@ -40,7 +40,7 @@ export class UserResolver {
       @Args('args') args: UpdateUserArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
+      const { userId } = await this.authService.getValidUserIdOrThrow(
          context.req,
          context.res,
       );

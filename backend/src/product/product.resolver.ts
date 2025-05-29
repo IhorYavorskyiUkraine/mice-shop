@@ -42,9 +42,7 @@ export class ProductResolver {
       const { accessToken } = getAuthTokens(context.req);
       if (!accessToken) {
          throwGraphQLError('Не знайдено токен авторизації', {
-            extensions: {
-               code: GraphqlErrorCode.UNAUTHENTICATED,
-            },
+            code: GraphqlErrorCode.UNAUTHENTICATED,
          });
       }
 
@@ -76,7 +74,7 @@ export class ProductResolver {
       @Args('productCode') productCode: string,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
+      const { userId } = await this.authService.getValidUserIdOrThrow(
          context.req,
          context.res,
       );

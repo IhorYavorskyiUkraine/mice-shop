@@ -29,28 +29,30 @@ const refreshToken = async () => {
    return data;
 };
 
-const errorLink = onError(({ graphQLErrors, operation, forward }) => {
-   if (graphQLErrors) {
-      for (const err of graphQLErrors) {
-         if (err.extensions?.code === 'UNAUTHENTICATED') {
-            return new Observable(observer => {
-               refreshToken()
-                  .then(() => {
-                     forward(operation).subscribe({
-                        next: observer.next.bind(observer),
-                        error: observer.error.bind(observer),
-                        complete: observer.complete.bind(observer),
+const errorLink = onError(
+   ({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+         for (const err of graphQLErrors) {
+            if (err.extensions?.code === 'UNAUTHENTICATED') {
+               return new Observable(observer => {
+                  refreshToken()
+                     .then(() => {
+                        forward(operation).subscribe({
+                           next: observer.next.bind(observer),
+                           error: observer.error.bind(observer),
+                           complete: observer.complete.bind(observer),
+                        });
+                     })
+                     .catch(err => {
+                        console.error('Refresh failed', err);
+                        observer.error(err);
                      });
-                  })
-                  .catch(err => {
-                     console.error('Refresh failed', err);
-                     observer.error(err);
-                  });
-            });
+               });
+            }
          }
       }
-   }
-});
+   },
+);
 
 const httpLink = new HttpLink({
    uri: 'http://localhost:8000/graphql',

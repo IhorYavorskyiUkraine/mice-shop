@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, ErrorMessage } from '@/components/ui';
+import { ServerError } from '@/components/shared/errors/server-error';
+import { Button } from '@/components/ui';
 import { renderSectionContent } from './sidebar-content-render';
 import { sidebarData } from './sidebar-data.data';
 import { SidebarItem } from './sidebar-item';
@@ -23,7 +24,9 @@ export const Sidebar: React.FC = () => {
       resetAll,
       applyPriceFilter,
       changed,
+      loading,
       error,
+      refetch,
    } = useSidebarFilters();
 
    const content = (name: string) =>
@@ -42,7 +45,21 @@ export const Sidebar: React.FC = () => {
          toggleColor,
       );
 
-   if (error) return <ErrorMessage message={error.message} />;
+   if (error) {
+      if (error?.networkError) {
+         return (
+            <ServerError
+               className="hidden lg:flex"
+               text="Вибачте, не вдалося завантажити фільтри. Спробуйте пізніше або оновіть сторінку."
+               onRetry={() => {
+                  refetch().catch(err => {
+                     console.error('Помилка повторної спроби:', err.message);
+                  });
+               }}
+            />
+         );
+      }
+   }
 
    return (
       <aside className="p-[10px] hidden lg:block sticky top-[108px] z-40 border-2 border-black">
@@ -53,9 +70,10 @@ export const Sidebar: React.FC = () => {
                      <SidebarItem
                         key={item.id}
                         title={item.title}
-                        open={isSectionExpanded(item.name)}
+                        open={loading ? false : isSectionExpanded(item.name)}
                         setOpen={() => toggleSection(item.name)}
                         content={content(item.name)}
+                        loading={loading}
                      />
                      {index !== sidebarData.length - 1 && (
                         <div className="w-full h-[2px] bg-black" />
@@ -63,7 +81,7 @@ export const Sidebar: React.FC = () => {
                   </div>
                ),
          )}
-         {changed ? (
+         {!loading && changed ? (
             <Button className="w-full mt-[10px]" onClick={resetAll}>
                Очистити
             </Button>

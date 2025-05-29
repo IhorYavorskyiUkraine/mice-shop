@@ -1,10 +1,11 @@
 'use client';
 
-import { Button, ErrorMessage, UniversalSkeleton } from '@/components/ui';
+import { ServerError } from '@/components/shared/errors/server-error';
+import { Button, UniversalSkeleton } from '@/components/ui';
 import { useMutation, useQuery } from '@apollo/client';
 import { LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { toast } from 'sonner';
+import { useEffect } from 'react';
 import { GET_USER, LOGOUT } from '../profile.graphql';
 import { ProfileTabs } from './profile-tabs';
 import { ProfileMobileTabs } from './tabs-mobile';
@@ -55,15 +56,37 @@ export const Main: React.FC<Props> = ({ tab }) => {
    const [logout] = useMutation(LOGOUT, {
       onCompleted: () => {
          window.location.href = '/';
-         toast.success('Ви успішно вийшли');
       },
       onError: error => {
-         toast.error(error.message);
          window.location.href = '/';
       },
    });
 
-   if (error) return <ErrorMessage message={error.message} />;
+   useEffect(() => {
+      if (error) {
+         const isAuthError =
+            error.message.includes('UNAUTHENTICATED') ||
+            error.message.includes('invalid signature') ||
+            error.message.includes('Недійсний токен доступу');
+
+         if (isAuthError) {
+            logout();
+         }
+      }
+   }, [error, logout]);
+
+   if (error) {
+      if (error?.networkError) {
+         return (
+            <div className="h-screen">
+               <ServerError
+                  text="Вибачте, не вдалося завантажити ваш профіль. Спробуйте пізніше або оновіть сторінку."
+                  onRetry={() => window.location.reload()}
+               />
+            </div>
+         );
+      }
+   }
 
    return (
       <div className="grid lg:grid-cols-[auto_1fr] pb-sm">

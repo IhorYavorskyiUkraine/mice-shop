@@ -26,7 +26,7 @@ export class ReviewResolver {
       @Args('args') args: CreateReviewArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
+      const { userId } = await this.authService.getValidUserIdOrThrow(
          context.req,
          context.res,
       );

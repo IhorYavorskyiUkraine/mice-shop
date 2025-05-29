@@ -24,31 +24,37 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
       },
    });
 
-   const [register, { loading }] = useMutation(REGISTER);
-
-   const onSubmit = async (data: TRegister) => {
-      try {
-         if (loading) return;
-
-         await register({ variables: { args: data } });
-
+   const [register, { loading }] = useMutation(REGISTER, {
+      onCompleted: () => {
          form.reset();
          toast.success('Ви успішно зареєструвались');
          setIsOpen();
-      } catch (e: any) {
-         const gqlError = e.graphQLErrors?.[0];
+      },
+      onError: error => {
+         const gqlError = error.graphQLErrors?.[0];
+         const code = gqlError?.extensions?.code;
 
-         console.log(gqlError);
-
-         if (gqlError?.message) {
-            form.setError('email', {
-               type: 'server',
-               message: gqlError.message,
-            });
+         if (gqlError) {
+            if (error.networkError) {
+               toast.error('Помилка мережі. Спробуйте пізніше.');
+               return;
+            }
+            if (code === 'EMAIL_ALREADY_EXISTS') {
+               form.setError('email', {
+                  type: 'server',
+                  message: error.message,
+               });
+               return;
+            }
+            toast.error(error.message || 'Сталася помилка. Спробуйте пізніше.');
+            return;
          }
+      },
+   });
 
-         toast.error('Реєстрація не вдалась');
-      }
+   const onSubmit = async (data: TRegister) => {
+      if (loading) return;
+      await register({ variables: { args: data } });
    };
 
    return (

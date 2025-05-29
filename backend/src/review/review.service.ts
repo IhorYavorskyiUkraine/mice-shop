@@ -14,9 +14,7 @@ export class ReviewService {
 
          if (!productId || productId <= 0) {
             throwGraphQLError('Невірний ідентифікатор товару', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -24,9 +22,7 @@ export class ReviewService {
             throwGraphQLError(
                "Значення 'limit' або 'offset' не може бути від'ємним",
                {
-                  extensions: {
-                     code: GraphqlErrorCode.BAD_USER_INPUT,
-                  },
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
                },
             );
          }
@@ -62,9 +58,7 @@ export class ReviewService {
 
          if (!productId || productId <= 0) {
             throwGraphQLError('Невірний ідентифікатор товару', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 

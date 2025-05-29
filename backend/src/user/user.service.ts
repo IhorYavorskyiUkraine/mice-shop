@@ -14,9 +14,7 @@ export class UserService {
       try {
          if (!email) {
             throwGraphQLError("Поле 'email' є обов'язковим", {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -37,9 +35,7 @@ export class UserService {
       try {
          if (!id) {
             throwGraphQLError('Ідентифікатор користувача не вказано', {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             });
          }
 
@@ -51,9 +47,7 @@ export class UserService {
 
          if (!user) {
             throwGraphQLError('Користувача з таким id не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -81,9 +75,7 @@ export class UserService {
 
          if (!newUser) {
             throwGraphQLError('Сталася помилка при створенні користувача', {
-               extensions: {
-                  code: GraphqlErrorCode.INTERNAL_SERVER_ERROR,
-               },
+               code: GraphqlErrorCode.INTERNAL_SERVER_ERROR,
             });
          }
 
@@ -95,9 +87,7 @@ export class UserService {
             e.code === 'P2002'
          ) {
             throwGraphQLError('Користувач з такою емейлом вже існує', {
-               extensions: {
-                  code: GraphqlErrorCode.NOT_ALLOWED,
-               },
+               code: GraphqlErrorCode.NOT_ALLOWED,
             });
          }
 
@@ -112,9 +102,7 @@ export class UserService {
          });
          if (!user) {
             throwGraphQLError('Користувача з таким id не знайдено', {
-               extensions: {
-                  code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
-               },
+               code: GraphqlErrorCode.RESOURCE_NOT_FOUND,
             });
          }
 
@@ -123,18 +111,14 @@ export class UserService {
          if (args.newPassword) {
             if (!args.oldPassword) {
                throwGraphQLError('Не вказано старий пароль', {
-                  extensions: {
-                     code: GraphqlErrorCode.BAD_USER_INPUT,
-                  },
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
                });
             }
 
             const isValid = await verify(user.password, args.oldPassword);
             if (!isValid) {
                throwGraphQLError('Неправильний пароль', {
-                  extensions: {
-                     code: GraphqlErrorCode.INVALID_CREDENTIALS,
-                  },
+                  code: GraphqlErrorCode.INVALID_CREDENTIALS,
                });
             }
 

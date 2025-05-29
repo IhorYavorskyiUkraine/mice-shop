@@ -23,6 +23,7 @@ interface Props {
    orderItems?: boolean;
    displayName?: boolean;
    userInfo?: boolean;
+   filters?: boolean;
 }
 
 export const UniversalSkeleton: React.FC<Props> = ({
@@ -46,6 +47,7 @@ export const UniversalSkeleton: React.FC<Props> = ({
    orderItems,
    displayName,
    userInfo,
+   filters,
 }) => {
    if (searchItems) {
       return (
@@ -129,7 +131,10 @@ export const UniversalSkeleton: React.FC<Props> = ({
       return <Skeleton className="w-full h-full" />;
    } else if (productReviews) {
       return Array.from({ length: 8 }).map((_, index) => (
-         <div key={index} className="border-primary border-2 p-4">
+         <div
+            key={index}
+            className="border-primary border-2 p-4 mb-[30px] last:mb-0"
+         >
             <div className="flex gap-4">
                <div>
                   <Skeleton className="size-[50px] rounded-full" />
@@ -215,6 +220,8 @@ export const UniversalSkeleton: React.FC<Props> = ({
             </div>
          );
       });
+   } else if (filters) {
+      return <Skeleton className="w-[100px] h-[30px]" />;
    }
    return null;
 };

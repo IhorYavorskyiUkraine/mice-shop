@@ -23,39 +23,48 @@ export const Login: React.FC<Props> = ({ setIsOpen }) => {
       },
    });
 
-   const [login, { loading }] = useMutation(LOGIN);
-   const { setAuth } = useAuthStore();
-
-   const onSubmit = async (data: TLogin) => {
-      try {
-         if (loading) return;
-
-         const res = await login({ variables: { args: data } });
-
-         setAuth({
-            isAuthenticated: true,
-            userId: res.data.login.userId,
-         });
+   const [login, { loading }] = useMutation(LOGIN, {
+      onCompleted: () => {
          form.reset();
          toast.success('Ви успішно увійшли');
          setIsOpen();
-      } catch (error: any) {
+      },
+      onError: error => {
          const gqlError = error.graphQLErrors?.[0];
+         const code = gqlError?.extensions?.code;
 
-         console.log(gqlError);
-
-         if (gqlError?.message) {
-            form.setError('email', {
-               type: 'server',
-               message: gqlError.message,
-            });
-
-            form.setError('password', {
-               type: 'server',
-               message: gqlError.message,
-            });
+         if (gqlError) {
+            if (error.networkError) {
+               toast.error('Помилка мережі. Спробуйте пізніше.');
+               return;
+            }
+            if (code === 'INVALID_CREDENTIALS') {
+               form.setError('email', {
+                  type: 'server',
+                  message: error.message,
+               });
+               form.setError('password', {
+                  type: 'server',
+                  message: error.message,
+               });
+               return;
+            }
+            toast.error(error.message || 'Сталася помилка. Спробуйте пізніше.');
+            return;
          }
-      }
+      },
+   });
+   const { setAuth } = useAuthStore();
+
+   const onSubmit = async (data: TLogin) => {
+      if (loading) return;
+
+      const res = await login({ variables: { args: data } });
+
+      setAuth({
+         isAuthenticated: true,
+         userId: res.data.login.userId,
+      });
    };
 
    return (

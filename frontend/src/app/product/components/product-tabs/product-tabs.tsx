@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useProductStore } from '../../store';
 import { ProductDetails } from './product-details';
 import { ProductTabsButton } from './product-tabs-button';
 import { ProductReviews } from './reviews/product-reviews';
@@ -11,6 +12,12 @@ interface Props {
 
 export const ProductTabs: React.FC<Props> = ({ id }) => {
    const [activeTab, setActiveTab] = useState(1);
+
+   const error = useProductStore(state => state.error);
+
+   if (error) {
+      return null;
+   }
 
    return (
       <div className="pt-md">

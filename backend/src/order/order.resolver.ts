@@ -37,17 +37,17 @@ export class OrderResolver {
       @Args('args') args: CreateOrderArgs,
       @Context() context: { req: Request; res: Response },
    ) {
-      const userId = await this.authService.getValidUserIdOrThrow(
-         context.req,
-         context.res,
-      );
+      const { userId, guestToken } =
+         await this.authService.getValidUserIdOrThrow(context.req, context.res);
 
-      const order = await this.orderService.createOrder(
-         { ...args, userId },
-         context.res,
-      );
+      const order = await this.orderService.createOrder({
+         ...args,
+         userId,
+         guestToken,
+      });
 
       return {
+         orderId: order.id,
          message: 'Order created successfully',
          success: true,
       };
@@ -56,7 +56,7 @@ export class OrderResolver {
    @UseGuards(JwtGuard)
    @Query(() => [Order])
    async getOrders(@Context() context: { req: Request; res: Response }) {
-      const userId = await this.authService.getValidUserIdOrThrow(
+      const { userId } = await this.authService.getValidUserIdOrThrow(
          context.req,
          context.res,
       );

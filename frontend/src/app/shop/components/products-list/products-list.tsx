@@ -1,9 +1,10 @@
 'use client';
 
 import { SortingMobile } from '@/components/shared';
+import { ServerError } from '@/components/shared/errors/server-error';
 import { ProductBlockItem } from '@/components/shared/product-block/product-block-item';
 import { SortByDropdown } from '@/components/shared/sorting-component';
-import { ErrorMessage, Title, UniversalSkeleton } from '@/components/ui';
+import { Title, UniversalSkeleton } from '@/components/ui';
 import { Product } from '@/types/product.type';
 import { useQuery } from '@apollo/client';
 import qs from 'qs';
@@ -19,10 +20,11 @@ export const ProductsList: React.FC = () => {
    const setFilters = useShopStore(state => state.setFilters);
    const [initialized, setInitialized] = useState(false);
 
-   const { data, loading, error } = useQuery(GET_FILTERED_PRODUCTS, {
+   const { data, loading, error, refetch } = useQuery(GET_FILTERED_PRODUCTS, {
       variables: {
          args: filters,
       },
+      notifyOnNetworkStatusChange: true,
    });
 
    const parseStringArray = (value: any): string[] => {
@@ -72,7 +74,19 @@ export const ProductsList: React.FC = () => {
       setFilters({ ...filters, offset: (page - 1) * filters.limit });
    };
 
-   if (error) return <ErrorMessage message={error.message} />;
+   if (error) {
+      if (error?.networkError) {
+         return (
+            <ServerError
+               onRetry={() => {
+                  refetch().catch(err => {
+                     console.error('Помилка повторної спроби:', err.message);
+                  });
+               }}
+            />
+         );
+      }
+   }
 
    return (
       <div>

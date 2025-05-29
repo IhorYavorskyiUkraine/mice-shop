@@ -1,5 +1,5 @@
 import { Drawer } from '@/components/shared/drawer';
-import { Button, ErrorMessage } from '@/components/ui';
+import { Button } from '@/components/ui';
 import {
    DrawerContent,
    DrawerHeader,
@@ -28,7 +28,6 @@ export const SidebarMobile: React.FC = () => {
       toggleSection,
       resetAll,
       changed,
-      error,
    } = useSidebarFilters();
 
    const content = (name: string) =>
@@ -46,8 +45,6 @@ export const SidebarMobile: React.FC = () => {
          hasColor,
          toggleColor,
       );
-
-   if (error) return <ErrorMessage message={error.message} />;
 
    return (
       <div className="flex lg:hidden">

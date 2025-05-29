@@ -1,11 +1,10 @@
 'use client';
 
-import { GET_USER, UPDATE_USER } from '@/app/profile/profile.graphql';
+import { GET_USER, LOGOUT, UPDATE_USER } from '@/app/profile/profile.graphql';
 import { InputWithValidations } from '@/components/shared/input-with-validations';
 import { Button } from '@/components/ui';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useProtectedQuery } from '@/lib/utils/protected-query';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -16,9 +15,18 @@ const UserInfo: React.FC = () => {
    const [profileEditing, setProfileEditing] = useState(false);
    const [passwordEditing, setPasswordEditing] = useState(false);
 
-   const { data: user, loading: isLoadingUser } = useProtectedQuery(GET_USER);
+   const { data: user, loading: isLoadingUser } = useQuery(GET_USER);
    const [updateUser, { loading: isUpdating }] = useMutation(UPDATE_USER, {
       refetchQueries: [GET_USER],
+   });
+
+   const [logout] = useMutation(LOGOUT, {
+      onCompleted: () => {
+         window.location.href = '/';
+      },
+      onError: error => {
+         window.location.href = '/';
+      },
    });
 
    const form = useForm<TUpdateUser>({
@@ -213,6 +221,12 @@ const UserInfo: React.FC = () => {
                   </Button>
                </div>
             )}
+            <button
+               onClick={() => logout()}
+               className="uppercase cursor-pointer text-s mt-[10px]"
+            >
+               Вийти з профілю
+            </button>
          </form>
       </FormProvider>
    );

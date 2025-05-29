@@ -99,6 +99,13 @@ export const SearchTrigger: React.FC = () => {
       }
 
       if (error) {
+         if (error?.networkError) {
+            return (
+               <p className="py-sm text-center text-primary md:text-secondary">
+                  Помилка серверу
+               </p>
+            );
+         }
          return (
             <p className="py-sm text-center text-primary md:text-secondary">
                Помилка при завантаженні товарів: {error.message}

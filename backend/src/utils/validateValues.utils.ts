@@ -9,9 +9,7 @@ export const validateValues = (
          throwGraphQLError(
             'Очікувався масив значень, але отримано порожній масив.',
             {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             },
          );
       }
@@ -21,9 +19,7 @@ export const validateValues = (
             throwGraphQLError(
                'Масив містить порожнє або недопустиме значення.',
                {
-                  extensions: {
-                     code: GraphqlErrorCode.BAD_USER_INPUT,
-                  },
+                  code: GraphqlErrorCode.BAD_USER_INPUT,
                },
             );
          }
@@ -33,9 +29,7 @@ export const validateValues = (
          throwGraphQLError(
             'Очікувалося значення, але отримано порожнє або недопустиме.',
             {
-               extensions: {
-                  code: GraphqlErrorCode.BAD_USER_INPUT,
-               },
+               code: GraphqlErrorCode.BAD_USER_INPUT,
             },
          );
       }

@@ -5,7 +5,7 @@ import { Modal as AuthModal } from '@/components/shared/header/components/auth-m
 import { Modal } from '@/components/shared/modal';
 import { Pagination } from '@/components/shared/pagination/pagination';
 import { SortByDropdown } from '@/components/shared/sorting-component';
-import { ErrorMessage, Title, UniversalSkeleton } from '@/components/ui';
+import { Title, UniversalSkeleton } from '@/components/ui';
 import { DivButton } from '@/components/ui/div-button';
 import { useAuthStore } from '@/lib/utils/useAuth/store';
 import { Review } from '@/types/review.type';
@@ -57,7 +57,11 @@ export const ProductReviews: React.FC<Props> = ({ id, active }) => {
       });
    };
 
-   if (error) return <ErrorMessage message={error.message} />;
+   if (error) {
+      if (error?.networkError) {
+         return null;
+      }
+   }
 
    return (
       active && (
