@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
 import { throwGraphQLError } from 'src/common/errors/graphql-errors';
+import { OtpService } from 'src/otp/otp.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { getAuthTokens, setAuthCookies } from 'src/utils/cookie.utils';
@@ -20,6 +21,7 @@ export class AuthService {
       private userService: UserService,
       private jwtService: JwtService,
       private config: ConfigService,
+      private otpService: OtpService,
    ) {}
 
    async login(args: LoginArgs) {
@@ -100,6 +102,8 @@ export class AuthService {
                code: GraphqlErrorCode.INTERNAL_SERVER_ERROR,
             });
          }
+
+         await this.otpService.sendOtpFromEmail(newUser.id, email);
 
          return this.generateTokens(newUser.id);
       } catch (e) {

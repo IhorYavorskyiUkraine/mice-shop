@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { OtpModule } from './otp/otp.module';
 import { ProductFiltersModule } from './product-filters/product-filters.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
@@ -29,6 +30,7 @@ import { UserModule } from './user/user.module';
       CartModule,
       ReviewModule,
       ProductFiltersModule,
+      OtpModule,
    ],
    providers: [AppService, AppResolver],
 })

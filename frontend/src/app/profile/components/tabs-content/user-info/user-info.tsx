@@ -223,7 +223,7 @@ const UserInfo: React.FC = () => {
             )}
             <button
                onClick={() => logout()}
-               className="uppercase cursor-pointer text-s mt-[10px]"
+               className="block lg:hidden uppercase cursor-pointer text-s mt-[10px]"
             >
                Вийти з профілю
             </button>
