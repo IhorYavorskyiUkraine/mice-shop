@@ -3,7 +3,6 @@
 import { ServerError } from '@/components/shared/errors/server-error';
 import { Button, UniversalSkeleton } from '@/components/ui';
 import { useMutation, useQuery } from '@apollo/client';
-import { LogOut } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { GET_USER, LOGOUT } from '../profile.graphql';
@@ -30,6 +29,17 @@ const UserInfo = dynamic(() => import('./tabs-content/user-info/user-info'), {
 });
 
 const Orders = dynamic(() => import('./tabs-content/orders/orders'), {
+   loading: () => (
+      <div className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]">
+         <div className="flex flex-col gap-[30px]">
+            <UniversalSkeleton orderItems />
+         </div>
+      </div>
+   ),
+   ssr: false,
+});
+
+const Addresses = dynamic(() => import('./tabs-content/addresses/addresses'), {
    loading: () => (
       <div className="px-[10px] py-[10px] lg:px-[30px] lg:py-[30px]">
          <div className="flex flex-col gap-[30px]">
@@ -92,7 +102,7 @@ export const Main: React.FC<Props> = ({ tab }) => {
       <div className="grid lg:grid-cols-[auto_1fr] pb-sm">
          <aside>
             <div className="border-b-[1px] hidden lg:flex items-center justify-between border-primary py-[10px] pt-md pb-md pr-[30px] ">
-               <div className="flex flex-1 flex-col pr-sm gap-1">
+               <div>
                   {loading ? (
                      <UniversalSkeleton displayName />
                   ) : (
@@ -104,15 +114,13 @@ export const Main: React.FC<Props> = ({ tab }) => {
                      <p className="text-m1">{user?.findUserById?.email}</p>
                   )}
                </div>
-               <button onClick={() => logout()} className="cursor-pointer">
-                  <LogOut size={20} />
-               </button>
             </div>
             <ProfileTabs />
          </aside>
          <div className="border-l-[1px] border-primary lg:block hidden">
             {tab === 'info' && <UserInfo />}
             {tab === 'orders' && <Orders />}
+            {tab === 'addresses' && <Addresses />}
             {tab === 'liked' && <Liked />}
          </div>
          <ProfileMobileTabs />

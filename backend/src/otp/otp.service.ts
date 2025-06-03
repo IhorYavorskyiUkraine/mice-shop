@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as nodemailer from 'nodemailer';
 import { GraphqlErrorCode } from 'src/common/errors/graphql-error-codes.enum';
 import { throwGraphQLError } from 'src/common/errors/graphql-errors';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class OtpService {
       private configService: ConfigService,
       private userService: UserService,
       private jwt: JwtService,
+      private prisma: PrismaService,
    ) {}
    async sendOtpFromEmail(id: number, email: string) {
       if (!email) {
@@ -29,6 +31,20 @@ export class OtpService {
       );
 
       const link = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+
+      const user = await this.userService.findUserById(id);
+      if (!user) {
+         throwGraphQLError('User not found', {
+            code: GraphqlErrorCode.USER_NOT_FOUND,
+         });
+      }
+
+      await this.prisma.user.update({
+         where: { id: user.id },
+         data: {
+            otp: token,
+         },
+      });
 
       return await this.transporter.sendMail({
          from: `"PIXELMOUSE" <${process.env.EMAIL_FROM}>`,
@@ -57,7 +73,21 @@ export class OtpService {
 
       const user = await this.userService.findUserById(payload.userId);
 
-      return 'success';
+      if (!user) {
+         throwGraphQLError('User not found', {
+            code: GraphqlErrorCode.USER_NOT_FOUND,
+         });
+      }
+
+      await this.prisma.user.update({
+         where: { id: user.id },
+         data: {
+            verified: true,
+            otp: null,
+         },
+      });
+
+      return { message: 'success' };
    }
 
    private transporter = nodemailer.createTransport({

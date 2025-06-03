@@ -13,4 +13,10 @@ export class AuthResponse {
 
    @Field(() => String, { nullable: true })
    refreshToken?: string;
+
+   @Field(() => Boolean, { nullable: true })
+   status?: boolean;
+
+   @Field(() => String, { nullable: true })
+   role?: string;
 }

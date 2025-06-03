@@ -223,9 +223,9 @@ const UserInfo: React.FC = () => {
             )}
             <button
                onClick={() => logout()}
-               className="block lg:hidden uppercase cursor-pointer text-s mt-[10px]"
+               className=" uppercase cursor-pointer text-s mt-[10px]"
             >
-               Вийти з профілю
+               Вихід
             </button>
          </form>
       </FormProvider>

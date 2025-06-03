@@ -12,6 +12,7 @@ import { ProductFiltersModule } from './product-filters/product-filters.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
 import { UserModule } from './user/user.module';
+import { AddressModule } from './address/address.module';
 
 @Module({
    imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './user/user.module';
       ReviewModule,
       ProductFiltersModule,
       OtpModule,
+      AddressModule,
    ],
    providers: [AppService, AppResolver],
 })

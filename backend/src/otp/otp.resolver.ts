@@ -1,4 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { EmailConfirmedResponse } from './models/email-confirmed-response.model';
 import { EmailResponse } from './models/email-response.model';
 import { OtpService } from './otp.service';
 
@@ -14,7 +15,7 @@ export class OtpResolver {
       return this.otpService.sendOtpFromEmail(id, email);
    }
 
-   @Mutation(() => String)
+   @Mutation(() => EmailConfirmedResponse)
    async confirmEmail(@Args('token') token: string) {
       return this.otpService.confirmEmail(token);
    }

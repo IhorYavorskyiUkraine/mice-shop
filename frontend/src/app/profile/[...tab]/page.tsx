@@ -13,7 +13,7 @@ export default async function Profile({ params }: { params: any }) {
 
    const currentTab = tab[0];
 
-   const allowedTabs = ['info', 'orders', 'liked'];
+   const allowedTabs = ['info', 'orders', 'liked', 'addresses'];
 
    if (!allowedTabs.includes(currentTab)) {
       notFound();

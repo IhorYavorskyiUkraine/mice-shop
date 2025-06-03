@@ -21,6 +21,20 @@ model User {
    likedModels  Code[]
    verified     Boolean       @default(false)
    otp          String?
+   addresses    Address[]
+
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Address {
+   id        Int    @id @default(autoincrement())
+   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+   userId    Int
+   name      String
+   phone     String
+   city      String
+   warehouse String
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

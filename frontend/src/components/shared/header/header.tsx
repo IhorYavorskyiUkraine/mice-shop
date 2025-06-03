@@ -1,7 +1,6 @@
 'use client';
 
 import { Container, Logo } from '@/components/ui';
-import { useAuthStore } from '@/lib/utils/useAuth/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -11,13 +10,16 @@ import { Burger } from './components/burger';
 import { SearchTrigger } from './components/search-trigger';
 import { links } from './header.data';
 
-export const Header: React.FC = () => {
-   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+interface Props {
+   isAuth?: boolean;
+}
+
+export const Header: React.FC<Props> = ({ isAuth }) => {
    const pathname = usePathname();
    const isProfilePage = pathname.startsWith('/profile/');
 
    const renderProfileIcon = () => {
-      if (!isAuthenticated && !isProfilePage) {
+      if (!isAuth && !isProfilePage) {
          return <Modal />;
       }
 
@@ -47,19 +49,27 @@ export const Header: React.FC = () => {
                   <Burger />
                   <SearchTrigger />
                </div>
-
                <Logo />
-
                <div className="flex justify-end items-center gap-4">
                   <Cart />
-                  {renderProfileIcon()}
+                  {isAuth ? (
+                     <Modal />
+                  ) : (
+                     <Link href="/profile/info">
+                        <Image
+                           width={24}
+                           height={24}
+                           src="/images/header/user.svg"
+                           alt="user"
+                           className="h-6 w-6 hover:opacity-80 transition"
+                        />
+                     </Link>
+                  )}
                </div>
             </div>
-
             {/* Desktop layout (3 columns) */}
             <div className="hidden md:grid grid-cols-[minmax(160px,auto)_1fr_minmax(160px,auto)] items-center gap-8">
                <Logo />
-
                <nav className="flex justify-center">
                   <ul className="flex gap-8 xl:gap-12">
                      {links.map(link => (
@@ -77,7 +87,6 @@ export const Header: React.FC = () => {
                      ))}
                   </ul>
                </nav>
-
                <div className="flex justify-end gap-6">
                   <SearchTrigger />
                   <Cart />

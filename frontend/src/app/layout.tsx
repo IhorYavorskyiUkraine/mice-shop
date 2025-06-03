@@ -9,11 +9,13 @@ export const metadata: Metadata = {
       'Інтернет-магазин комп’ютерних мишок PIXELMOUSE — обирай ідеальну мишку для ігор, роботи та щоденного користування. Широкий вибір, надійні бренди, швидке оформлення замовлення.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
    children,
 }: Readonly<{
    children: React.ReactNode;
 }>) {
+   // const isAuth = await checkAuth();
+   const isAuth = true;
    return (
       <html lang="en">
          <head>
@@ -21,7 +23,7 @@ export default function RootLayout({
          </head>
          <body>
             <MainProvider>
-               <Header />
+               <Header isAuth={isAuth} />
                {children}
                <Footer />
             </MainProvider>

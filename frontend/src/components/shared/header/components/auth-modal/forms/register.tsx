@@ -27,7 +27,9 @@ export const Register: React.FC<Props> = ({ setIsOpen }) => {
    const [register, { loading }] = useMutation(REGISTER, {
       onCompleted: () => {
          form.reset();
-         toast.success('Ви успішно зареєструвались');
+         toast.success(
+            'Ви успішно зареєструвались, перевірте ваш емейл для підтвердження.',
+         );
          setIsOpen();
       },
       onError: error => {

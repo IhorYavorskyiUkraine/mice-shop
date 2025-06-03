@@ -1,31 +1,41 @@
 import { redirect } from 'next/navigation';
 
-interface Props {
+export default async function VerifyEmailPage({
+   searchParams,
+}: {
    searchParams: { token?: string };
-}
-
-export default function VerifyEmailPage({ searchParams }: Props) {
-   const token = searchParams.token;
+}) {
+   const { token } = await searchParams;
 
    if (!token) {
-      return redirect('/');
+      redirect('/');
    }
 
-   const confirmEmail = async () => {
-      const response = await fetch('http://localhost:8000/graphql', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({ token }),
-      });
+   const res = await fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+         query: `
+        mutation ConfirmEmail($token: String!) {
+          confirmEmail(token: $token) {
+			 	message}
+        }
+      `,
+         variables: { token },
+      }),
+      cache: 'no-store',
+   });
 
-      if (!response.ok) {
-         throw new Error('Failed to verify email');
-      }
+   const data = await res.json();
 
-      return redirect('/');
-   };
+   if (res.ok && data?.data?.confirmEmail.message === 'success') {
+      redirect('/');
+   }
 
-   return <div>+</div>;
+   return (
+      <div className="text-red-600 h-screen text-center mt-10">
+         ❌ Невірний токен або сталася помилка при підтвердженні електронної
+         пошти.
+      </div>
+   );
 }

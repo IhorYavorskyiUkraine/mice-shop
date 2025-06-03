@@ -104,18 +104,20 @@ export class AuthResolver {
       };
    }
 
-   @UseGuards(JwtGuard)
    @Query(() => AuthResponse)
    async isAuthenticated(@Context() context: { req: Request; res: Response }) {
-      const { accessToken } = getAuthTokens(context.req);
+      const { userId } = await this.authService.getValidUserIdOrThrow(
+         context.req,
+         context.res,
+      );
 
-      if (!accessToken) {
-         return { message: 'Not authenticated', userId: null };
+      if (!userId) {
+         return {
+            status: false,
+            userId: null,
+         };
       }
 
-      const { userId } =
-         await this.authService.validateAccessToken(accessToken);
-
-      return { message: 'Authenticated', userId };
+      return { status: true, userId };
    }
 }

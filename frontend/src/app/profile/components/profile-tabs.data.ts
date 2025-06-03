@@ -13,6 +13,12 @@ export const profileTabs = [
    },
    {
       id: 3,
+      name: 'Мої адреси',
+      href: '/profile/addresses',
+      icon: '/images/profile/address.png',
+   },
+   {
+      id: 4,
       name: 'Списки бажань',
       href: '/profile/liked',
       icon: '/images/profile/heart.svg',
